@@ -3,6 +3,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+
 
 # Register view (must match what's referenced in urls.py)
 def register(request):
@@ -23,7 +26,7 @@ def my_collection(request):
     return render(request, 'my_collection.html')
 def profile(request):
     return render(request, 'profile.html')
-# This file contains views for user registration, home, about, and collection pages.
-# The 'register' view handles user registration and login, while 'home', 'about',
-# and 'my_collection' render their respective templates.
+def logout_view(request):
+    logout(request)
+    return redirect('home')
 
