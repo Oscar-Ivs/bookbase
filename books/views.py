@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Book
+from .forms import BookForm
 
 
 # User registration view
@@ -47,3 +48,17 @@ def logout_view(request):
 def my_collection(request):
     books = Book.objects.filter(user=request.user).order_by('title')
     return render(request, 'my_collection.html', {'books': books})
+
+# Add a book form to the collection
+@login_required
+def add_book(request):
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():
+            new_book = form.save(commit=False)
+            new_book.user = request.user  # assign current user
+            new_book.save()
+            return redirect('my_collection')
+    else:
+        form = BookForm()
+    return render(request, 'add_book.html', {'form': form})
