@@ -10,7 +10,7 @@ class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=200)
     description = models.TextField(blank=True)
-    cover_url = models.URLField(blank=True)  # Image from Google Books
+    cover_url = models.URLField(max_length=500, blank=True) # Image from Google Books
     google_book_id = models.CharField(max_length=50, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='unread')
     notes = models.TextField(blank=True)
