@@ -19,3 +19,6 @@ def home(request):
     return render(request, 'home.html')
 def about(request):
     return render(request, 'about.html')
+def my_collection(request):
+    return render(request, 'my_collection.html')
+

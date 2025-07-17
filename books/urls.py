@@ -8,6 +8,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
     path('', views.home, name='home'),
     path('about/', views.about, name='about'),
+    path('collection/', views.my_collection, name='my_collection'),
 ]
 # This file defines URL patterns for the 'books' app, including user registration and authentication views.
 # The 'register' view is for user registration, while 'login' and 'logout' views are provided by Django's built-in authentication system.
