@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">Login</h2>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}  <!-- Username & password fields -->
+    <button type="submit" class="btn btn-success">Login</button>
+  </form>
+  <p class="mt-3">Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+</div>
+{% endblock %}
+<!-- This template extends 'base.html' and provides a login form for users. It includes CSRF protection and renders the form fields as paragraphs. -->
+<!-- The 'static' tag is loaded for any static files needed for styling. -->

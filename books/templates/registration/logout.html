@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+  <h2>You have been logged out.</h2>
+  <a href="{% url 'login' %}" class="btn btn-primary mt-3">Login Again</a>
+</div>
+{% endblock %}
+<!-- This template displays a message after the user logs out, with a button to redirect them back to the login page. -->
+<!-- The 'base.html' template is extended, and static files are loaded for styling. -->
