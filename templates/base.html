@@ -2,25 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>BookBase</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Bootstrap 5 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  {% load static %}
-  <link rel="icon" href="{% static 'favicon.ico' %}">
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
+  <title>{% block title %}BookBase{% endblock %}</title>
 
-  <!-- Navbar -->
+  {% load static %}
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Font Awesome (for social icons) -->
+  <script src="https://kit.fontawesome.com/a2e0b6f0db.js" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="icon" href="{% static 'favicon.ico' %}">
+</head>
+
+<body>
+  <!-- 🔵 Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">📚 BookBase</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
           {% if user.is_authenticated %}
             <li class="nav-item"><a class="nav-link" href="#">My Collection</a></li>
             <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
@@ -34,20 +40,26 @@
     </div>
   </nav>
 
-  <!-- Main Content -->
+  <!-- ⚪ Main content area -->
   <main class="container mt-5">
     {% block content %}{% endblock %}
   </main>
 
-  <!-- Footer -->
+  <!-- ⚫ Footer with social links -->
   <footer class="text-center mt-5 mb-3 text-muted small">
-    &copy; 2025 BookBase • <a href="#">X</a> • <a href="#">Facebook</a>
+    <p class="mb-1">© 2025 BookBase</p>
+    <div class="d-flex justify-content-center gap-3">
+      <a href="https://www.x.com" target="_blank" aria-label="Visit our X feed (opens in a new tab)" rel="noopener">
+        <i class="fa-brands fa-x-twitter fs-4"></i>
+      </a>
+      <a href="https://www.facebook.com" target="_blank" aria-label="Visit our Facebook page (opens in a new tab)" rel="noopener">
+        <i class="fa-brands fa-square-facebook fs-4"></i>
+      </a>
+    </div>
   </footer>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-<!-- This is the base template for the BookBase application. It includes a responsive navbar, main content area, and footer. 
-     The navbar changes based on user authentication status, providing links to login, register, or access user-specific features. 
-     Bootstrap is used for styling and layout. -->
+<!-- This is the base template for the BookBase application. It includes a responsive navigation bar, a main content area, and a footer with social media links. The navigation bar adapts based on user authentication status, showing options for login, registration, and user profile management. -->
