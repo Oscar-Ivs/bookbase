@@ -21,4 +21,9 @@ def about(request):
     return render(request, 'about.html')
 def my_collection(request):
     return render(request, 'my_collection.html')
+def profile(request):
+    return render(request, 'profile.html')
+# This file contains views for user registration, home, about, and collection pages.
+# The 'register' view handles user registration and login, while 'home', 'about',
+# and 'my_collection' render their respective templates.
 
