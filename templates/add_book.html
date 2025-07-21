@@ -6,13 +6,13 @@
   <h2>Add a Book</h2>
 
   <!-- Google Books Search -->
-  <div class="mb-3">
+  <form id="google-search-form" class="mb-3" onsubmit="searchBooks(event)">
     <label for="search-input" class="form-label">Search Google Books</label>
     <div class="input-group">
-      <input type="text" id="search-input" class="form-control" placeholder="Enter book title...">
-      <button class="btn btn-primary" type="button" onclick="searchBooks()">Search</button>
+      <input type="text" id="search-input" class="form-control" placeholder="Enter book title..." required>
+      <button class="btn btn-primary" type="submit">Search</button>
     </div>
-  </div>
+  </form>
 
   <!-- Search Results -->
   <div id="search-results" class="row g-3 mb-4"></div>
@@ -26,9 +26,11 @@
 </div>
 
 <script>
-// Search Google Books API
-function searchBooks() {
+// Handle form submission (search on Enter or button click)
+function searchBooks(event) {
+  event.preventDefault();  // Prevent full page reload
   const query = document.getElementById('search-input').value;
+
   fetch(`/search_google_books/?q=${encodeURIComponent(query)}`)
     .then(res => res.json())
     .then(data => {
@@ -52,7 +54,7 @@ function searchBooks() {
     });
 }
 
-// Autofill form
+// Autofill Django form fields with selected book
 function fillForm(book) {
   document.getElementById('id_title').value = book.title;
   document.getElementById('id_author').value = book.author;
@@ -61,4 +63,5 @@ function fillForm(book) {
 }
 </script>
 {% endblock %}
+
 <!-- This template extends 'base.html' and provides a form for adding books, including a Google Books search feature. -->
