@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .models import Book
 from .forms import BookForm
+from django.shortcuts import get_object_or_404
 
 
 # User registration view
@@ -82,7 +83,6 @@ def edit_book(request, book_id):
     return render(request, 'edit_book.html', {'form': form, 'book': book})
 
 
-# Delete book placeholder (we'll implement this next)
-@login_required
+# Delete book placeholder
 def delete_book(request, book_id):
     return HttpResponse("Delete book placeholder")
