@@ -4,10 +4,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import JsonResponse
 from .models import Book
 from .forms import BookForm
-from django.shortcuts import get_object_or_404
+import requests
 
 
 # User registration view
@@ -52,14 +52,14 @@ def my_collection(request):
     return render(request, 'my_collection.html', {'books': books})
 
 
-# Add a book form to the collection
+# Add a book to the collection
 @login_required
 def add_book(request):
     if request.method == 'POST':
         form = BookForm(request.POST)
         if form.is_valid():
             new_book = form.save(commit=False)
-            new_book.user = request.user  # assign current user
+            new_book.user = request.user
             new_book.save()
             return redirect('my_collection')
     else:
@@ -67,11 +67,10 @@ def add_book(request):
     return render(request, 'add_book.html', {'form': form})
 
 
-# Edit a book (only allowed if current user owns it)
+# Edit an existing book
 @login_required
 def edit_book(request, book_id):
     book = get_object_or_404(Book, id=book_id, user=request.user)
-
     if request.method == 'POST':
         form = BookForm(request.POST, instance=book)
         if form.is_valid():
@@ -79,67 +78,20 @@ def edit_book(request, book_id):
             return redirect('my_collection')
     else:
         form = BookForm(instance=book)
-
     return render(request, 'edit_book.html', {'form': form, 'book': book})
 
-# Delete a book (only allowed if current user owns it)
+
+# Delete a book
 @login_required
 def delete_book(request, book_id):
     book = get_object_or_404(Book, id=book_id, user=request.user)
-
     if request.method == 'POST':
         book.delete()
         return redirect('my_collection')
-
     return render(request, 'delete_book.html', {'book': book})
 
-# Delete book placeholder
-@login_required
-def delete_book(request, book_id):
-    book = get_object_or_404(Book, id=book_id, user=request.user)
 
-    if request.method == 'POST':
-        book.delete()
-        return redirect('my_collection')
-
-    return render(request, 'delete_book.html', {'book': book})
-
-# AJAX view to search Google Books API
-import requests
-from django.http import JsonResponse
-
-# AJAX view to search Google Books
-@login_required
-def google_books_search(request):
-    query = request.GET.get('q', '')
-    if not query:
-        return JsonResponse({'items': []})
-
-    url = 'https://www.googleapis.com/books/v1/volumes'
-    params = {
-        'q': query,
-        'maxResults': 5,
-    }
-
-    response = requests.get(url, params=params)
-    data = response.json()
-
-    results = []
-    for item in data.get('items', []):
-        volume = item.get('volumeInfo', {})
-        results.append({
-            'title': volume.get('title', ''),
-            'authors': ', '.join(volume.get('authors', [])),
-            'description': volume.get('description', ''),
-            'thumbnail': volume.get('imageLinks', {}).get('thumbnail', ''),
-        })
-
-    return JsonResponse({'items': results})
-
-import requests
-from django.http import JsonResponse
-
-# Google Books API search view
+# Google Books API search (AJAX endpoint)
 @login_required
 def search_google_books(request):
     query = request.GET.get('q')
@@ -155,14 +107,12 @@ def search_google_books(request):
     if response.status_code == 200:
         data = response.json()
         for item in data.get('items', []):
-            volume = item['volumeInfo']
+            volume = item.get('volumeInfo', {})
             results.append({
                 'title': volume.get('title', ''),
-                'author': ', '.join(volume.get('authors', ['Unknown'])),
-                'description': volume.get('description', '')[:300],
+                'author': ', '.join(volume.get('authors', [])),
+                'description': volume.get('description', ''),
                 'cover_url': volume.get('imageLinks', {}).get('thumbnail', ''),
             })
 
     return JsonResponse({'books': results})
-
-

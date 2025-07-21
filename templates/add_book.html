@@ -26,42 +26,53 @@
 </div>
 
 <script>
-// Handle form submission (search on Enter or button click)
+// Google Books API Search (runs on form submit or button press)
 function searchBooks(event) {
-  event.preventDefault();  // Prevent full page reload
-  const query = document.getElementById('search-input').value;
+  event.preventDefault();
+  const query = document.getElementById('search-input').value.trim();
+  if (!query) return;
 
   fetch(`/search_google_books/?q=${encodeURIComponent(query)}`)
     .then(res => res.json())
     .then(data => {
       const container = document.getElementById('search-results');
-      container.innerHTML = ''; // Clear old results
+      container.innerHTML = '';
 
-      data.books.forEach(book => {
+      data.books.forEach((book, index) => {
         const card = document.createElement('div');
         card.className = 'col-md-4';
+
+        const bookData = {
+          title: book.title || '',
+          author: book.author || '',
+          description: book.description || '',
+          cover_url: book.cover_url || ''
+        };
+
         card.innerHTML = `
           <div class="card h-100">
             <img src="${book.cover_url}" class="card-img-top" alt="Cover image">
             <div class="card-body">
               <h5 class="card-title">${book.title}</h5>
               <p class="card-text">Author: ${book.author}</p>
-              <button class="btn btn-outline-secondary" onclick='fillForm(${JSON.stringify(book)})'>Use this</button>
+              <button class="btn btn-outline-secondary" type="button"
+                onclick='fillForm(${JSON.stringify(bookData).replace(/'/g, "&apos;")})'>
+                Use this
+              </button>
             </div>
           </div>`;
         container.appendChild(card);
       });
-    });
+    })
+    .catch(error => console.error('Search error:', error));
 }
 
-// Autofill Django form fields with selected book
+// Autofill Django form with selected book info
 function fillForm(book) {
-  document.getElementById('id_title').value = book.title;
-  document.getElementById('id_author').value = book.author;
-  document.getElementById('id_description').value = book.description;
-  document.getElementById('id_cover_url').value = book.cover_url;
+  document.getElementById('id_title').value = book.title || '';
+  document.getElementById('id_author').value = book.author || '';
+  document.getElementById('id_description').value = book.description || '';
+  document.getElementById('id_cover_url').value = book.cover_url || '';
 }
 </script>
 {% endblock %}
-
-<!-- This template extends 'base.html' and provides a form for adding books, including a Google Books search feature. -->
