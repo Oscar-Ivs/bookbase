@@ -103,3 +103,36 @@ def delete_book(request, book_id):
         return redirect('my_collection')
 
     return render(request, 'delete_book.html', {'book': book})
+
+# AJAX view to search Google Books API
+import requests
+from django.http import JsonResponse
+
+# AJAX view to search Google Books
+@login_required
+def google_books_search(request):
+    query = request.GET.get('q', '')
+    if not query:
+        return JsonResponse({'items': []})
+
+    url = 'https://www.googleapis.com/books/v1/volumes'
+    params = {
+        'q': query,
+        'maxResults': 5,
+    }
+
+    response = requests.get(url, params=params)
+    data = response.json()
+
+    results = []
+    for item in data.get('items', []):
+        volume = item.get('volumeInfo', {})
+        results.append({
+            'title': volume.get('title', ''),
+            'authors': ', '.join(volume.get('authors', [])),
+            'description': volume.get('description', ''),
+            'thumbnail': volume.get('imageLinks', {}).get('thumbnail', ''),
+        })
+
+    return JsonResponse({'items': results})
+
