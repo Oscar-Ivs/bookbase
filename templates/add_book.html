@@ -1,16 +1,64 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block content %}
-  <div class="container mt-4">
-    <h1 class="text-center mb-4">Add a Book</h1>
+<div class="container mt-4">
+  <h2>Add a Book</h2>
 
-    <form method="post" novalidate>
-      {% csrf_token %}
-      {{ form.as_p }}
-
-      <div class="text-center mt-3">
-        <button type="submit" class="btn btn-primary">Add Book</button>
-      </div>
-    </form>
+  <!-- Google Books Search -->
+  <div class="mb-3">
+    <label for="search-input" class="form-label">Search Google Books</label>
+    <div class="input-group">
+      <input type="text" id="search-input" class="form-control" placeholder="Enter book title...">
+      <button class="btn btn-primary" type="button" onclick="searchBooks()">Search</button>
+    </div>
   </div>
+
+  <!-- Search Results -->
+  <div id="search-results" class="row g-3 mb-4"></div>
+
+  <!-- Manual Entry Form -->
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Add Book</button>
+  </form>
+</div>
+
+<script>
+// Search Google Books API
+function searchBooks() {
+  const query = document.getElementById('search-input').value;
+  fetch(`/search_google_books/?q=${encodeURIComponent(query)}`)
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById('search-results');
+      container.innerHTML = ''; // Clear old results
+
+      data.books.forEach(book => {
+        const card = document.createElement('div');
+        card.className = 'col-md-4';
+        card.innerHTML = `
+          <div class="card h-100">
+            <img src="${book.cover_url}" class="card-img-top" alt="Cover image">
+            <div class="card-body">
+              <h5 class="card-title">${book.title}</h5>
+              <p class="card-text">Author: ${book.author}</p>
+              <button class="btn btn-outline-secondary" onclick='fillForm(${JSON.stringify(book)})'>Use this</button>
+            </div>
+          </div>`;
+        container.appendChild(card);
+      });
+    });
+}
+
+// Autofill form
+function fillForm(book) {
+  document.getElementById('id_title').value = book.title;
+  document.getElementById('id_author').value = book.author;
+  document.getElementById('id_description').value = book.description;
+  document.getElementById('id_cover_url').value = book.cover_url;
+}
+</script>
 {% endblock %}
-<!-- This template extends 'base.html' and provides a form for adding a new book to the user's collection. -->
+<!-- This template extends 'base.html' and provides a form for adding books, including a Google Books search feature. -->
