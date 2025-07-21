@@ -1,9 +1,10 @@
 # books/views.py
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from .models import Book
 from .forms import BookForm
 
@@ -49,6 +50,7 @@ def my_collection(request):
     books = Book.objects.filter(user=request.user).order_by('title')
     return render(request, 'my_collection.html', {'books': books})
 
+
 # Add a book form to the collection
 @login_required
 def add_book(request):
@@ -63,11 +65,24 @@ def add_book(request):
         form = BookForm()
     return render(request, 'add_book.html', {'form': form})
 
-# Edit a book in the collection
+
+# Edit a book (only allowed if current user owns it)
 @login_required
 def edit_book(request, book_id):
-    return HttpResponse("Edit book placeholder")
+    book = get_object_or_404(Book, id=book_id, user=request.user)
 
+    if request.method == 'POST':
+        form = BookForm(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            return redirect('my_collection')
+    else:
+        form = BookForm(instance=book)
+
+    return render(request, 'edit_book.html', {'form': form, 'book': book})
+
+
+# Delete book placeholder (we'll implement this next)
 @login_required
 def delete_book(request, book_id):
     return HttpResponse("Delete book placeholder")
