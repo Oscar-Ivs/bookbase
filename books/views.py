@@ -94,5 +94,12 @@ def delete_book(request, book_id):
     return render(request, 'delete_book.html', {'book': book})
 
 # Delete book placeholder
+@login_required
 def delete_book(request, book_id):
-    return HttpResponse("Delete book placeholder")
+    book = get_object_or_404(Book, id=book_id, user=request.user)
+
+    if request.method == 'POST':
+        book.delete()
+        return redirect('my_collection')
+
+    return render(request, 'delete_book.html', {'book': book})
