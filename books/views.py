@@ -136,3 +136,33 @@ def google_books_search(request):
 
     return JsonResponse({'items': results})
 
+import requests
+from django.http import JsonResponse
+
+# Google Books API search view
+@login_required
+def search_google_books(request):
+    query = request.GET.get('q')
+    if not query:
+        return JsonResponse({'books': []})
+
+    response = requests.get('https://www.googleapis.com/books/v1/volumes', params={
+        'q': query,
+        'maxResults': 6,
+    })
+
+    results = []
+    if response.status_code == 200:
+        data = response.json()
+        for item in data.get('items', []):
+            volume = item['volumeInfo']
+            results.append({
+                'title': volume.get('title', ''),
+                'author': ', '.join(volume.get('authors', ['Unknown'])),
+                'description': volume.get('description', '')[:300],
+                'cover_url': volume.get('imageLinks', {}).get('thumbnail', ''),
+            })
+
+    return JsonResponse({'books': results})
+
+

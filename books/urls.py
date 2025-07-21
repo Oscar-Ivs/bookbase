@@ -15,7 +15,7 @@ urlpatterns = [
     path('book/<int:book_id>/edit/', views.edit_book, name='edit_book'),
     path('book/<int:book_id>/delete/', views.delete_book, name='delete_book'),
     path('api/search-books/', views.google_books_search, name='google_books_search'),
-
+    path('search_google_books/', views.search_google_books, name='search_google_books'),
 
 
 ]
