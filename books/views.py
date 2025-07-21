@@ -62,3 +62,12 @@ def add_book(request):
     else:
         form = BookForm()
     return render(request, 'add_book.html', {'form': form})
+
+# Edit a book in the collection
+@login_required
+def edit_book(request, book_id):
+    return HttpResponse("Edit book placeholder")
+
+@login_required
+def delete_book(request, book_id):
+    return HttpResponse("Delete book placeholder")

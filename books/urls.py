@@ -12,6 +12,9 @@ urlpatterns = [
     path('collection/', views.my_collection, name='my_collection'),
     path('profile/', views.profile, name='profile'),
     path('add/', views.add_book, name='add_book'),
+    path('book/<int:book_id>/edit/', views.edit_book, name='edit_book'),
+    path('book/<int:book_id>/delete/', views.delete_book, name='delete_book'),
+
 
 ]
 # This file defines URL patterns for the 'books' app, including user registration and authentication views.
