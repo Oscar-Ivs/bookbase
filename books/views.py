@@ -82,6 +82,16 @@ def edit_book(request, book_id):
 
     return render(request, 'edit_book.html', {'form': form, 'book': book})
 
+# Delete a book (only allowed if current user owns it)
+@login_required
+def delete_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id, user=request.user)
+
+    if request.method == 'POST':
+        book.delete()
+        return redirect('my_collection')
+
+    return render(request, 'delete_book.html', {'book': book})
 
 # Delete book placeholder
 def delete_book(request, book_id):
