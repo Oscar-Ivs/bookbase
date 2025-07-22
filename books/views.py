@@ -126,29 +126,29 @@ def search_google_books(request):
         return JsonResponse({'error': str(e)}, status=500)
 
 
-    # Build the Google Books API request URL
+# Build the Google Books API request URL
+def fetch_books(request):
+    query = request.GET.get('q', 'fiction')
+    order = request.GET.get('order', 'relevance')
+    max_results = 20
+
     url = f"https://www.googleapis.com/books/v1/volumes?q={query}&orderBy={order}&maxResults={max_results}"
 
     try:
-        # Send GET request to Google Books API
         response = requests.get(url)
         data = response.json()
-        books = []
 
-        # Extract key fields from each book in the response
+        books = []
         for item in data.get('items', []):
             volume = item.get('volumeInfo', {})
             books.append({
                 'title': volume.get('title', 'Untitled'),
                 'author': ', '.join(volume.get('authors', [])),
-                'description': volume.get('description', '')[:200],  # limit to 200 chars
+                'description': volume.get('description', '')[:200],
                 'thumbnail': volume.get('imageLinks', {}).get('thumbnail', ''),
             })
 
-        # Return books as JSON response
-        return JsonResponse({'books': books})
-    
-    except Exception as e:
-        # Return error if request or parsing fails
-        return JsonResponse({'error': str(e)}, status=500)
+        return JsonResponse({'books': books})  # ✅ Correct return
 
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)  # ✅ Fallback return

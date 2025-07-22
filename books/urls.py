@@ -22,6 +22,10 @@ urlpatterns = [
 
     # Google Books API search
     path('search_google_books/', views.search_google_books, name='search_google_books'),
+
+    # AJAX endpoint to fetch books for homepage
+    path('get_books/', views.fetch_books, name='fetch_books'),
+
 ]
 
 # This file defines all URL patterns for the 'books' app,
