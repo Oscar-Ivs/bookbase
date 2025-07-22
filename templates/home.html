@@ -5,30 +5,37 @@
   <p>Your personal book collection tracker.</p>
 </div>
 
-<div class="container mt-4">
-  <h2 class="text-center mb-4">📚 Discover Books</h2>
-  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 px-2">
-  <!-- Genre selector -->
-  <div class="mb-2">
-    <label for="genreSelect" class="form-label fw-semibold mb-0">Genre:</label>
-    <select id="genreSelect" class="form-select form-select-sm w-auto d-inline-block ms-2">
+<!-- Top discovery row: center Discover Books + Search bar -->
+<div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-2 mb-3">
+  <h2 class="mb-0">📚 Discover Books</h2>
+  <div class="input-group input-group-sm" style="width: 220px;">
+    <input type="text" id="searchInput" class="form-control" placeholder="Search..." aria-label="Search books">
+    <button class="btn btn-primary" type="button" id="searchButton">Search</button>
+  </div>
+</div>
+
+<!-- Sort + Genre controls: left and right aligned -->
+<div class="d-flex justify-content-between align-items-center mb-3 px-2 flex-wrap gap-2">
+  <div class="d-flex align-items-center gap-2">
+    <label for="genreSelect" class="mb-0">Genre:</label>
+    <select id="genreSelect" class="form-select form-select-sm" style="width: auto;">
       <option value="fiction">Fiction</option>
-      <option value="history">History</option>
       <option value="science">Science</option>
-      <option value="biography">Biography</option>
+      <option value="history">History</option>
       <option value="fantasy">Fantasy</option>
+      <option value="romance">Romance</option>
+      <!-- Add more genres as needed -->
     </select>
   </div>
-
-  <!-- Sort selector -->
-  <div class="mb-2">
-    <label for="sortSelect" class="form-label fw-semibold mb-0">Sort by:</label>
-    <select id="sortSelect" class="form-select form-select-sm w-auto d-inline-block ms-2">
+  <div class="d-flex align-items-center gap-2 ms-auto">
+    <label for="sortSelect" class="mb-0">Sort by:</label>
+    <select id="sortSelect" class="form-select form-select-sm" style="width: auto;">
       <option value="relevance">Relevance</option>
       <option value="newest">Newest</option>
     </select>
   </div>
 </div>
+<!-- Book cards grid -->
 
   <div class="row g-3 justify-content-center" id="book-card-grid">
   
