@@ -35,6 +35,13 @@
   </div>
 </div>
 
+<!-- Loading spinner -->
+<div id="loadingSpinner" class="text-center my-3 d-none">
+  <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+
 <!-- Dynamic book cards -->
 <div class="row g-3 justify-content-center" id="book-card-grid"></div>
 {% endblock %}
@@ -47,15 +54,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const searchButton = document.getElementById('searchButton');
   const genreSelect = document.getElementById('genreSelect');
   const sortSelect = document.getElementById('sortSelect');
+  const spinner = document.getElementById('loadingSpinner');
 
   function fetchBooks() {
     const query = searchInput.value.trim() || genreSelect.value;
     const sort = sortSelect.value;
 
+    // Show spinner and clear results
+    spinner.classList.remove('d-none');
+    container.innerHTML = '';
+
     fetch(`/get_books/?q=${encodeURIComponent(query)}&order=${sort}`)
       .then(response => response.json())
       .then(data => {
-        container.innerHTML = ''; // Clear old results
+        spinner.classList.add('d-none');
+
+        if (!data.books || data.books.length === 0) {
+          container.innerHTML = '<p class="text-center text-muted">No books found.</p>';
+          return;
+        }
 
         data.books.forEach((book, index) => {
           const card = `
@@ -75,16 +92,18 @@ document.addEventListener('DOMContentLoaded', () => {
                   </div>
                 </div>
               </div>
-            </div>`;
+            </div>
+          `;
           container.innerHTML += card;
         });
       })
       .catch(error => {
         console.error('Error fetching books:', error);
+        spinner.classList.add('d-none');
+        container.innerHTML = '<p class="text-danger text-center">Something went wrong. Try again.</p>';
       });
   }
 
-  // Trigger search
   searchButton.addEventListener('click', fetchBooks);
   searchInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
@@ -92,13 +111,10 @@ document.addEventListener('DOMContentLoaded', () => {
       fetchBooks();
     }
   });
-
-  // Trigger on genre or sort change
   genreSelect.addEventListener('change', fetchBooks);
   sortSelect.addEventListener('change', fetchBooks);
 
-  // Initial fetch
-  fetchBooks();
+  fetchBooks(); // load initial
 });
 </script>
 {% endblock %}
