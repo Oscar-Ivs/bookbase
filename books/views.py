@@ -130,25 +130,29 @@ def search_google_books(request):
 def fetch_books(request):
     query = request.GET.get('q', 'fiction')
     order = request.GET.get('order', 'relevance')
-    max_results = 20
+    start_index = int(request.GET.get('startIndex', 0))
+    max_results = 24  # Load 24 books per batch
 
-    url = f"https://www.googleapis.com/books/v1/volumes?q={query}&orderBy={order}&maxResults={max_results}"
+    url = (
+        f"https://www.googleapis.com/books/v1/volumes?"
+        f"q={query}&orderBy={order}&startIndex={start_index}&maxResults={max_results}"
+    )
 
     try:
         response = requests.get(url)
         data = response.json()
-
         books = []
+
         for item in data.get('items', []):
             volume = item.get('volumeInfo', {})
             books.append({
                 'title': volume.get('title', 'Untitled'),
                 'author': ', '.join(volume.get('authors', [])),
-                'description': volume.get('description', '')[:200],
+                'description': volume.get('description', '')[:300],
                 'thumbnail': volume.get('imageLinks', {}).get('thumbnail', ''),
             })
 
-        return JsonResponse({'books': books})  # ✅ Correct return
-
+        return JsonResponse({'books': books})
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)  # ✅ Fallback return
+        return JsonResponse({'error': str(e)}, status=500)
+
