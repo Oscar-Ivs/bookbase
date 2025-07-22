@@ -5,7 +5,7 @@
   <p>Your personal book collection tracker.</p>
 </div>
 
-<!-- Discover Books + Search Bar -->
+<!-- Top discovery row: center Discover Books + Search bar -->
 <div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-2 mb-3">
   <h2 class="mb-0">📚 Discover Books</h2>
   <div class="input-group input-group-sm" style="width: 220px;">
@@ -14,7 +14,7 @@
   </div>
 </div>
 
-<!-- Sort + Genre -->
+<!-- Sort + Genre controls -->
 <div class="d-flex justify-content-between align-items-center mb-3 px-2 flex-wrap gap-2">
   <div class="d-flex align-items-center gap-2">
     <label for="genreSelect" class="mb-0">Genre:</label>
@@ -35,15 +35,22 @@
   </div>
 </div>
 
-<!-- Spinner -->
+<!-- Loading spinner -->
 <div id="loadingSpinner" class="text-center my-3 d-none">
   <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
     <span class="visually-hidden">Loading...</span>
   </div>
 </div>
 
-<!-- Dynamic Books -->
-<div class="row g-3 justify-content-center" id="book-card-grid"></div>
+<!-- Book grid container -->
+<div class="container">
+  <div class="row g-3 justify-content-center" id="book-card-grid"></div>
+
+  <!-- Load More Button (inside container, before footer) -->
+  <div class="text-center mt-4">
+    <button id="loadMoreBtn" class="btn btn-outline-secondary d-none">Load More</button>
+  </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
@@ -55,21 +62,37 @@ document.addEventListener('DOMContentLoaded', () => {
   const genreSelect = document.getElementById('genreSelect');
   const sortSelect = document.getElementById('sortSelect');
   const spinner = document.getElementById('loadingSpinner');
+  const loadMoreBtn = document.getElementById('loadMoreBtn');
 
-  function fetchBooks() {
+  let startIndex = 0;
+  const maxResults = 24;
+  let currentQuery = '';
+  let currentSort = '';
+
+  function fetchBooks(isNewSearch = false) {
     const query = searchInput.value.trim() || genreSelect.value;
     const sort = sortSelect.value;
 
-    spinner.classList.remove('d-none');
-    container.innerHTML = '';
+    if (isNewSearch) {
+      container.innerHTML = '';
+      startIndex = 0;
+    }
 
-    fetch(`/get_books/?q=${encodeURIComponent(query)}&order=${sort}`)
+    currentQuery = query;
+    currentSort = sort;
+
+    spinner.classList.remove('d-none');
+    loadMoreBtn.classList.add('d-none');
+
+    fetch(`/get_books/?q=${encodeURIComponent(query)}&order=${sort}&startIndex=${startIndex}`)
       .then(response => response.json())
       .then(data => {
         spinner.classList.add('d-none');
 
         if (!data.books || data.books.length === 0) {
-          container.innerHTML = '<p class="text-center text-muted">No books found.</p>';
+          if (isNewSearch || startIndex === 0) {
+            container.innerHTML = '<p class="text-center text-muted">No books found.</p>';
+          }
           return;
         }
 
@@ -87,8 +110,10 @@ document.addEventListener('DOMContentLoaded', () => {
                   </div>
                   <div class="mt-auto">
                     <button class="btn btn-outline-primary btn-sm w-100"
-                      data-bs-toggle="collapse" data-bs-target="#desc${index}">More</button>
-                    <div class="collapse mt-2" id="desc${index}">
+                            data-bs-toggle="collapse" data-bs-target="#desc${startIndex + index}">
+                      More
+                    </button>
+                    <div class="collapse mt-2" id="desc${startIndex + index}">
                       <p class="small">${book.description}</p>
                     </div>
                   </div>
@@ -96,8 +121,11 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
             </div>
           `;
-          container.innerHTML += card;
+          container.insertAdjacentHTML('beforeend', card);
         });
+
+        startIndex += maxResults;
+        loadMoreBtn.classList.remove('d-none');
       })
       .catch(error => {
         console.error('Error fetching books:', error);
@@ -106,18 +134,20 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
-  searchButton.addEventListener('click', fetchBooks);
-  searchInput.addEventListener('keydown', (e) => {
+  // Triggers
+  searchButton.addEventListener('click', () => fetchBooks(true));
+  searchInput.addEventListener('keydown', e => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      fetchBooks();
+      fetchBooks(true);
     }
   });
-  genreSelect.addEventListener('change', fetchBooks);
-  sortSelect.addEventListener('change', fetchBooks);
+  genreSelect.addEventListener('change', () => fetchBooks(true));
+  sortSelect.addEventListener('change', () => fetchBooks(true));
+  loadMoreBtn.addEventListener('click', () => fetchBooks(false));
 
-  // Load books on first page load
-  fetchBooks();
+  // Load first batch
+  fetchBooks(true);
 });
 </script>
 {% endblock %}
