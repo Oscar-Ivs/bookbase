@@ -16,9 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('books.urls')),  # This pulls in app's URLs
+    path('get_books/', views.fetch_books, name='fetch_books'),  # AJAX endpoint for homepage books
 ]
 
