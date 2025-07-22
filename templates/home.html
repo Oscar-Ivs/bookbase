@@ -7,64 +7,40 @@
 
 <div class="container mt-4">
   <h2 class="text-center mb-4">📚 Discover Books</h2>
-  <div class="row g-3 justify-content-center" id="book-card-grid">
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 px-2">
+  <!-- Genre selector -->
+  <div class="mb-2">
+    <label for="genreSelect" class="form-label fw-semibold mb-0">Genre:</label>
+    <select id="genreSelect" class="form-select form-select-sm w-auto d-inline-block ms-2">
+      <option value="fiction">Fiction</option>
+      <option value="history">History</option>
+      <option value="science">Science</option>
+      <option value="biography">Biography</option>
+      <option value="fantasy">Fantasy</option>
+    </select>
+  </div>
 
-    {% comment %} COPY ONLY FROM HERE {% endcomment %}
-     <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 d-flex">
-      <div class="card flex-fill shadow-sm" style="width: 100%; max-width: 300px; height: 100%; max-height: 400px;">
-        <img
-          src="https://books.google.com/books/content?id=ZxGnDwAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
-          class="card-img-top" alt="Book Cover" style="object-fit: cover; height: 180px;">
-        <div class="card-body p-2">
-          <h6 class="card-title mb-1">Book Title</h6>
-          <p class="card-text small text-muted">Author Name</p>
-          <button class="btn btn-outline-primary btn-sm w-100" data-bs-toggle="collapse"
-            data-bs-target="#desc1">More</button>
-          <div class="collapse mt-2" id="desc1">
-            <p class="small">This is a sample book description.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    {% comment %} TO HERE. Paste multiple times to test layout. {% endcomment %}
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 d-flex">
-      <div class="card flex-fill shadow-sm" style="width: 100%; max-width: 300px; height: 100%; max-height: 400px;">
-        <img
-          src="https://books.google.com/books/content?id=ZxGnDwAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
-          class="card-img-top" alt="Book Cover" style="object-fit: cover; height: 180px;">
-        <div class="card-body p-2">
-          <h6 class="card-title mb-1">Book Title</h6>
-          <p class="card-text small text-muted">Author Name</p>
-          <button class="btn btn-outline-primary btn-sm w-100" data-bs-toggle="collapse"
-            data-bs-target="#desc1">More</button>
-          <div class="collapse mt-2" id="desc1">
-            <p class="small">This is a sample book description.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 d-flex">
-      <div class="card flex-fill shadow-sm" style="width: 100%; max-width: 300px; height: 100%; max-height: 400px;">
-        <img
-          src="https://books.google.com/books/content?id=ZxGnDwAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
-          class="card-img-top" alt="Book Cover" style="object-fit: cover; height: 180px;">
-        <div class="card-body p-2">
-          <h6 class="card-title mb-1">Book Title</h6>
-          <p class="card-text small text-muted">Author Name</p>
-          <button class="btn btn-outline-primary btn-sm w-100" data-bs-toggle="collapse"
-            data-bs-target="#desc1">More</button>
-          <div class="collapse mt-2" id="desc1">
-            <p class="small">This is a sample book description.</p>
-          </div>
-        </div>
-      </div>
-    </div>
+  <!-- Sort selector -->
+  <div class="mb-2">
+    <label for="sortSelect" class="form-label fw-semibold mb-0">Sort by:</label>
+    <select id="sortSelect" class="form-select form-select-sm w-auto d-inline-block ms-2">
+      <option value="relevance">Relevance</option>
+      <option value="newest">Newest</option>
+    </select>
+  </div>
+</div>
+
+  <div class="row g-3 justify-content-center" id="book-card-grid">
+  
 {% endblock %}
 
 {% block scripts %}
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  fetch('/get_books/')
+function loadBooks() {
+  const genre = document.getElementById('genreSelect').value;
+  const sort = document.getElementById('sortSelect').value;
+
+  fetch(`/get_books/?q=${genre}&order=${sort}`)
     .then(response => response.json())
     .then(data => {
       const container = document.getElementById('book-card-grid');
@@ -92,6 +68,15 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch(error => {
       console.error('Error fetching books:', error);
     });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadBooks(); // initial load
+
+  // Re-fetch on filter change
+  document.getElementById('genreSelect').addEventListener('change', loadBooks);
+  document.getElementById('sortSelect').addEventListener('change', loadBooks);
 });
 </script>
 {% endblock %}
+
