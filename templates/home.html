@@ -20,12 +20,14 @@
   <div class="d-flex align-items-center gap-2">
     <label for="genreSelect" class="mb-0">Genre:</label>
     <select id="genreSelect" class="form-select form-select-sm" style="width: auto;">
+      <option value="">All genres</option>
       <option value="fiction">Fiction</option>
       <option value="science">Science</option>
       <option value="history">History</option>
       <option value="fantasy">Fantasy</option>
       <option value="romance">Romance</option>
     </select>
+
   </div>
   <div class="d-flex align-items-center gap-2 ms-auto">
     <label for="sortSelect" class="mb-0">Sort by:</label>
@@ -75,7 +77,9 @@ document.addEventListener('DOMContentLoaded', () => {
       startIndex = 0;
     }
 
-    const query = searchInput.value.trim() || genreSelect.value;
+    const searchTerm = searchInput.value.trim();
+    const genreTerm = genreSelect.value.trim();
+    const query = searchTerm || genreTerm || 'book'; // fallback if both are empty
     const sort = sortSelect.value;
 
     currentQuery = query;
@@ -91,12 +95,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!data.books || data.books.length === 0) {
           if (reset) {
-            container.innerHTML =
-              '<div class="text-center text-muted py-5">' +
-                '<i class="bi bi-book-x fs-1 d-block mb-3"></i>' +
-                '<h5>No books found</h5>' +
-                '<p class="small">Try a different search or check your spelling.</p>' +
-              '</div>';
+            container.innerHTML = `
+              <div class="text-center text-muted py-5">
+                <i class="bi bi-book-x fs-1 d-block mb-3"></i>
+                <h5>No books found</h5>
+                <p class="small">Try a different search or check your spelling.</p>
+              </div>`;
           }
           return;
         }
