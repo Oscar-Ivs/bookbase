@@ -24,7 +24,6 @@
       <option value="history">History</option>
       <option value="fantasy">Fantasy</option>
       <option value="romance">Romance</option>
-      <!-- Add more genres as needed -->
     </select>
   </div>
   <div class="d-flex align-items-center gap-2 ms-auto">
@@ -35,10 +34,9 @@
     </select>
   </div>
 </div>
-<!-- Book cards grid -->
 
-  <div class="row g-3 justify-content-center" id="book-card-grid">
-  
+<!-- Dynamic book cards -->
+<div class="row g-3 justify-content-center" id="book-card-grid"></div>
 {% endblock %}
 
 {% block scripts %}
@@ -57,24 +55,27 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch(`/get_books/?q=${encodeURIComponent(query)}&order=${sort}`)
       .then(response => response.json())
       .then(data => {
-        container.innerHTML = '';  // clear previous results
+        container.innerHTML = ''; // Clear old results
 
         data.books.forEach((book, index) => {
           const card = `
             <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 d-flex">
               <div class="card flex-fill shadow-sm" style="width: 100%; max-width: 300px; height: auto;">
                 <img src="${book.thumbnail}" class="card-img-top" alt="Book Cover" style="object-fit: cover; height: 180px;">
-                <div class="card-body p-2">
-                  <h6 class="card-title mb-1">${book.title}</h6>
-                  <p class="card-text small text-muted">${book.author}</p>
-                  <button class="btn btn-outline-primary btn-sm w-100" data-bs-toggle="collapse" data-bs-target="#desc${index}">More</button>
-                  <div class="collapse mt-2" id="desc${index}">
-                    <p class="small">${book.description}</p>
+                <div class="card-body d-flex flex-column p-2">
+                  <div>
+                    <h6 class="card-title mb-1">${book.title}</h6>
+                    <p class="card-text small text-muted">${book.author}</p>
+                  </div>
+                  <div class="mt-auto">
+                    <button class="btn btn-outline-primary btn-sm w-100" data-bs-toggle="collapse" data-bs-target="#desc${index}">More</button>
+                    <div class="collapse mt-2" id="desc${index}">
+                      <p class="small">${book.description}</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          `;
+            </div>`;
           container.innerHTML += card;
         });
       })
@@ -83,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
-  // Trigger search when clicking button or pressing Enter
+  // Trigger search
   searchButton.addEventListener('click', fetchBooks);
   searchInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
@@ -96,10 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
   genreSelect.addEventListener('change', fetchBooks);
   sortSelect.addEventListener('change', fetchBooks);
 
-  // Initial fetch on page load
+  // Initial fetch
   fetchBooks();
 });
 </script>
 {% endblock %}
-
-
