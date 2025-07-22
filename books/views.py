@@ -91,28 +91,36 @@ def delete_book(request, book_id):
     return render(request, 'delete_book.html', {'book': book})
 
 
-# Google Books API search (AJAX endpoint)
-@login_required
-def search_google_books(request):
-    query = request.GET.get('q')
-    if not query:
-        return JsonResponse({'books': []})
+# View to fetch books from the Google Books API
+def fetch_books(request):
+    # Get optional query params (default to 'fiction' and 'relevance')
+    query = request.GET.get('q', 'fiction')
+    order = request.GET.get('order', 'relevance')  # or 'newest'
+    max_results = 20
 
-    response = requests.get('https://www.googleapis.com/books/v1/volumes', params={
-        'q': query,
-        'maxResults': 6,
-    })
+    # Build the Google Books API request URL
+    url = f"https://www.googleapis.com/books/v1/volumes?q={query}&orderBy={order}&maxResults={max_results}"
 
-    results = []
-    if response.status_code == 200:
+    try:
+        # Send GET request to Google Books API
+        response = requests.get(url)
         data = response.json()
+        books = []
+
+        # Extract key fields from each book in the response
         for item in data.get('items', []):
             volume = item.get('volumeInfo', {})
-            results.append({
-                'title': volume.get('title', ''),
+            books.append({
+                'title': volume.get('title', 'Untitled'),
                 'author': ', '.join(volume.get('authors', [])),
-                'description': volume.get('description', ''),
-                'cover_url': volume.get('imageLinks', {}).get('thumbnail', ''),
+                'description': volume.get('description', '')[:200],  # limit to 200 chars
+                'thumbnail': volume.get('imageLinks', {}).get('thumbnail', ''),
             })
 
-    return JsonResponse({'books': results})
+        # Return books as JSON response
+        return JsonResponse({'books': books})
+    
+    except Exception as e:
+        # Return error if request or parsing fails
+        return JsonResponse({'error': str(e)}, status=500)
+
