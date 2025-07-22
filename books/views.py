@@ -98,6 +98,34 @@ def fetch_books(request):
     order = request.GET.get('order', 'relevance')  # or 'newest'
     max_results = 20
 
+# AJAX view for form auto-fill — searches Google Books by title
+def search_google_books(request):
+    query = request.GET.get('q', '')
+    if not query:
+        return JsonResponse({'error': 'No query provided'}, status=400)
+
+    url = f'https://www.googleapis.com/books/v1/volumes?q={query}&maxResults=5'
+
+    try:
+        response = requests.get(url)
+        data = response.json()
+        results = []
+
+        for item in data.get('items', []):
+            info = item.get('volumeInfo', {})
+            results.append({
+                'title': info.get('title', ''),
+                'author': ', '.join(info.get('authors', [])) if 'authors' in info else '',
+                'description': info.get('description', ''),
+                'cover_url': info.get('imageLinks', {}).get('thumbnail', ''),
+            })
+
+        return JsonResponse({'results': results})
+    
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
     # Build the Google Books API request URL
     url = f"https://www.googleapis.com/books/v1/volumes?q={query}&orderBy={order}&maxResults={max_results}"
 
