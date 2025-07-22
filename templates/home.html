@@ -43,47 +43,63 @@
 
 {% block scripts %}
 <script>
-function loadBooks() {
-  const genre = document.getElementById('genreSelect').value;
-  const sort = document.getElementById('sortSelect').value;
+document.addEventListener('DOMContentLoaded', () => {
+  const container = document.getElementById('book-card-grid');
+  const searchInput = document.getElementById('searchInput');
+  const searchButton = document.getElementById('searchButton');
+  const genreSelect = document.getElementById('genreSelect');
+  const sortSelect = document.getElementById('sortSelect');
 
-  fetch(`/get_books/?q=${genre}&order=${sort}`)
-    .then(response => response.json())
-    .then(data => {
-      const container = document.getElementById('book-card-grid');
-      container.innerHTML = '';
+  function fetchBooks() {
+    const query = searchInput.value.trim() || genreSelect.value;
+    const sort = sortSelect.value;
 
-      data.books.forEach((book, index) => {
-        const card = `
-          <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 d-flex">
-            <div class="card flex-fill shadow-sm" style="width: 100%; max-width: 300px; height: 100%; max-height: 400px;">
-              <img src="${book.thumbnail}" class="card-img-top" alt="Book Cover" style="object-fit: cover; height: 180px;">
-              <div class="card-body p-2">
-                <h6 class="card-title mb-1">${book.title}</h6>
-                <p class="card-text small text-muted">${book.author}</p>
-                <button class="btn btn-outline-primary btn-sm w-100" data-bs-toggle="collapse" data-bs-target="#desc${index}">More</button>
-                <div class="collapse mt-2" id="desc${index}">
-                  <p class="small">${book.description}</p>
+    fetch(`/get_books/?q=${encodeURIComponent(query)}&order=${sort}`)
+      .then(response => response.json())
+      .then(data => {
+        container.innerHTML = '';  // clear previous results
+
+        data.books.forEach((book, index) => {
+          const card = `
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 d-flex">
+              <div class="card flex-fill shadow-sm" style="width: 100%; max-width: 300px; height: 100%; max-height: 400px;">
+                <img src="${book.thumbnail}" class="card-img-top" alt="Book Cover" style="object-fit: cover; height: 180px;">
+                <div class="card-body p-2">
+                  <h6 class="card-title mb-1">${book.title}</h6>
+                  <p class="card-text small text-muted">${book.author}</p>
+                  <button class="btn btn-outline-primary btn-sm w-100" data-bs-toggle="collapse" data-bs-target="#desc${index}">More</button>
+                  <div class="collapse mt-2" id="desc${index}">
+                    <p class="small">${book.description}</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        `;
-        container.innerHTML += card;
+          `;
+          container.innerHTML += card;
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching books:', error);
       });
-    })
-    .catch(error => {
-      console.error('Error fetching books:', error);
-    });
-}
+  }
 
-document.addEventListener('DOMContentLoaded', () => {
-  loadBooks(); // initial load
+  // Trigger search when clicking button or pressing Enter
+  searchButton.addEventListener('click', fetchBooks);
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      fetchBooks();
+    }
+  });
 
-  // Re-fetch on filter change
-  document.getElementById('genreSelect').addEventListener('change', loadBooks);
-  document.getElementById('sortSelect').addEventListener('change', loadBooks);
+  // Trigger on genre or sort change
+  genreSelect.addEventListener('change', fetchBooks);
+  sortSelect.addEventListener('change', fetchBooks);
+
+  // Initial fetch on page load
+  fetchBooks();
 });
 </script>
 {% endblock %}
+
 
