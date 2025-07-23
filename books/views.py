@@ -109,19 +109,19 @@ def search_google_books(request):
     try:
         response = requests.get(url)
         data = response.json()
-        results = []
+        books = []
 
         for item in data.get('items', []):
             info = item.get('volumeInfo', {})
-            results.append({
+            books.append({
                 'title': info.get('title', ''),
                 'author': ', '.join(info.get('authors', [])) if 'authors' in info else '',
                 'description': info.get('description', ''),
                 'cover_url': info.get('imageLinks', {}).get('thumbnail', ''),
             })
 
-        return JsonResponse({'results': results})
-    
+        return JsonResponse({'books': books})  # ✅ fixed key name
+
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 

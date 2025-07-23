@@ -8,7 +8,7 @@
   <!-- Google Books Search -->
   <form id="google-search-form" class="mb-3" onsubmit="searchBooks(event)">
     <label for="search-input" class="form-label">Search Google Books</label>
-    <div class="input-group">
+    <div class="input-group" style="max-width: 500px;">
       <input type="text" id="search-input" class="form-control" placeholder="Enter book title..." required>
       <button class="btn btn-primary" type="submit">Search</button>
     </div>
@@ -51,7 +51,8 @@ function searchBooks(event) {
 
         card.innerHTML = `
           <div class="card h-100">
-            <img src="${book.cover_url}" class="card-img-top" alt="Cover image">
+            <img src="${book.cover_url || '/static/img/book-placeholder.png'}" class="card-img-top" alt="Cover image"
+                 onerror="this.onerror=null; this.src='/static/img/book-placeholder.png';">
             <div class="card-body">
               <h5 class="card-title">${book.title}</h5>
               <p class="card-text">Author: ${book.author}</p>
