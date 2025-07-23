@@ -58,70 +58,73 @@
 
 {% block scripts %}
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const container = document.getElementById('book-card-grid');
-  const searchInput = document.getElementById('searchInput');
-  const searchButton = document.getElementById('searchButton');
-  const genreSelect = document.getElementById('genreSelect');
-  const sortSelect = document.getElementById('sortSelect');
-  const spinner = document.getElementById('loadingSpinner');
-  const loadMoreBtn = document.getElementById('loadMoreBtn');
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('book-card-grid');
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+    const genreSelect = document.getElementById('genreSelect');
+    const sortSelect = document.getElementById('sortSelect');
+    const spinner = document.getElementById('loadingSpinner');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
 
-  let startIndex = 0;
-  const batchSize = 24;
-  let currentQuery = '';
-  let currentSort = '';
+    let startIndex = 0;
+    const batchSize = 24;
+    let currentQuery = '';
+    let currentSort = '';
 
-  function fetchBooks(reset = false) {
-    if (reset) {
-      container.innerHTML = '';
-      startIndex = 0;
-    }
+    function fetchBooks(reset = false) {
+      if (reset) {
+        container.innerHTML = '';
+        startIndex = 0;
+      }
 
-    const searchTerm = searchInput.value.trim();
-    const genreTerm = genreSelect.value.trim();
-    const query = searchTerm || genreTerm || 'book'; // fallback if both are empty
-    const sort = sortSelect.value;
+      const searchTerm = searchInput.value.trim();
+      const genreTerm = genreSelect.value.trim();
+      const query = searchTerm || genreTerm || 'book'; // fallback if both are empty
+      const sort = sortSelect.value;
 
-    currentQuery = query;
-    currentSort = sort;
+      currentQuery = query;
+      currentSort = sort;
 
-    spinner.classList.remove('d-none');
-    loadMoreBtn.classList.add('d-none');
+      spinner.classList.remove('d-none');
+      loadMoreBtn.classList.add('d-none');
 
-    fetch(`/get_books/?q=${encodeURIComponent(query)}&order=${sort}&startIndex=${startIndex}`)
-      .then(response => response.json())
-      .then(data => {
-        spinner.classList.add('d-none');
+      fetch(`/get_books/?q=${encodeURIComponent(query)}&order=${sort}&startIndex=${startIndex}`)
+        .then(response => response.json())
+        .then(data => {
+          spinner.classList.add('d-none');
 
-        if (!data.books || data.books.length === 0) {
-          if (reset) {
-            container.innerHTML = `
+          if (!data.books || data.books.length === 0) {
+            if (reset) {
+              container.innerHTML = `
               <div class="text-center text-muted py-5">
                 <i class="bi bi-book-x fs-1 d-block mb-3"></i>
                 <h5>No books found</h5>
                 <p class="small">Try a different search or check your spelling.</p>
               </div>`;
+            }
+            return;
           }
-          return;
-        }
+          if (data.books.length === batchSize) {
+            loadMoreBtn.classList.remove('d-none');
+          }
 
-        data.books.forEach((book, index) => {
-  const thumbnail = book.thumbnail || '/static/img/book-placeholder.png';
-  const title = book.title || 'Untitled';
-  const rawAuthor = book.author || 'Unknown Author';
+          data.books.forEach((book, index) => {
+            const thumbnail = book.thumbnail || '/static/img/book-placeholder.png';
+            const title = book.title || 'Untitled';
+            const rawAuthor = book.author || 'Unknown Author';
 
-  // Limit authors displayed to 2 max
-  let author = rawAuthor;
-  if (rawAuthor !== 'Unknown Author') {
-    const authorList = rawAuthor.split(',').map(name => name.trim());
-    author = authorList.length > 2
-      ? `${authorList.slice(0, 2).join(', ')} +${authorList.length - 2} more`
-      : authorList.join(', ');
-  }
+            // Limit authors displayed to 2 max
+            let author = rawAuthor;
+            if (rawAuthor !== 'Unknown Author') {
+              const authorList = rawAuthor.split(',').map(name => name.trim());
+              author = authorList.length > 2
+                ? `${authorList.slice(0, 2).join(', ')} +${authorList.length - 2} more`
+                : authorList.join(', ');
+            }
 
-  const description = book.description || 'No description available.';
-  const card = `
+            const description = book.description || 'No description available.';
+            const card = `
     <div class="col-6 col-md-4 col-lg-3 col-xl-2 d-flex">
       <div class="card flex-fill shadow-sm" style="width: 100%; max-width: 300px;">
         <img src="${thumbnail}" class="card-img-top" alt="Book Cover"
@@ -141,41 +144,43 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>
     </div>`;
-  container.innerHTML += card;
-});
-      })
-      .catch(error => {
-        spinner.classList.add('d-none');
-        container.innerHTML = `<div class="text-center text-danger py-5">Error loading books.</div>`;
-        console.error(error);
-      });
-  }
-
-  // Event bindings
-  searchButton.addEventListener('click', () => fetchBooks(true));
-  searchInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      fetchBooks(true);
+            container.innerHTML += card;
+          });
+        })
+        .catch(error => {
+          spinner.classList.add('d-none');
+          container.innerHTML = `<div class="text-center text-danger py-5">Error loading books.</div>`;
+          console.error(error);
+        });
     }
-  });
-  genreSelect.addEventListener('change', () => fetchBooks(true));
-  sortSelect.addEventListener('change', () => fetchBooks(true));
-  loadMoreBtn.addEventListener('click', () => fetchBooks());
 
-  // Initial load
-  fetchBooks(true);
-});
+    // Event bindings
+    searchButton.addEventListener('click', () => fetchBooks(true));
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        fetchBooks(true);
+      }
+    });
+    genreSelect.addEventListener('change', () => fetchBooks(true));
+    sortSelect.addEventListener('change', () => fetchBooks(true));
+    loadMoreBtn.addEventListener('click', () => fetchBooks());
+
+    // Initial load
+    fetchBooks(true);
+  });
 </script>
 <style>
-#loadMoreBtn:hover {
-  color: rgb(38, 74, 140); /* deep blue text */
-  background-color: rgba(38, 74, 140, 0.08); /* soft highlight */
-  border-color: rgb(38, 74, 140);
-}
+  #loadMoreBtn:hover {
+    color: rgb(38, 74, 140);
+    /* deep blue text */
+    background-color: rgba(38, 74, 140, 0.08);
+    /* soft highlight */
+    border-color: rgb(38, 74, 140);
+  }
 </style>
 
 <script>
-/* Existing JS remains unchanged */
+  /* Existing JS remains unchanged */
 </script>
 {% endblock %}
