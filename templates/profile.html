@@ -8,22 +8,31 @@
   <div class="row justify-content-center">
     <div class="col-md-10 col-lg-8">
       <div class="card shadow-sm p-4" style="background-color: #acbdd8;">
-        <div class="row g-4 align-items-center">
-          <!-- Avatar -->
-          <div class="col-12 col-md-4 text-center">
-            <img src="{{ user.profile.avatar.url|default:'/static/img/avatar-placeholder.png' }}" alt="Avatar"
-              class="rounded-circle border" width="120" height="140"
-              onerror="this.onerror=null; this.src='/static/img/avatar-placeholder.jpg';">
+        <div class="row g-4 align-items-start">
 
+          <!-- Avatar -->
+          <div class="col-md-4 text-center">
+            {% if user.profile.avatar %}
+              <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="rounded-circle border" width="140" height="140">
+            {% else %}
+              <img src="{% static 'img/avatar-placeholder.png' %}" alt="Avatar" class="rounded-circle border" width="140" height="140">
+            {% endif %}
           </div>
 
-          <!-- Bio -->
-          <div class="col-12 col-md-8">
-            <div class="rounded p-3 border" style="background-color: #acbdd8;">
+          <!-- Bio box -->
+          <div class="col-md-8">
+            <div class="position-relative rounded p-3 border" style="background-color: #acbdd8; max-width: 320px;">
               <h5>Bio</h5>
-              <p class="mb-0">{{ user.profile.bio|default:"No bio provided." }}</p>
+              <p id="bio-text" class="mb-0">{{ profile.bio|default:"No bio provided!" }}</p>
+              <form method="POST" enctype="multipart/form-data" id="bio-form" class="d-none mt-2">
+                {% csrf_token %}
+                {{ form.bio }}
+                <button type="submit" class="btn btn-sm btn-primary mt-2">Save</button>
+              </form>
+              <button id="edit-bio-btn" class="btn btn-sm btn-outline-dark position-absolute bottom-0 end-0 m-2">Edit</button>
             </div>
           </div>
+
         </div>
 
         <hr class="my-4">
@@ -35,15 +44,28 @@
             <p><strong>Email:</strong> {{ user.email|default:"N/A" }}</p>
             <p><strong>Member since:</strong> {{ user.date_joined|date:"F d, Y" }}</p>
           </div>
-
-          <!-- Placeholder for future reading stats -->
           <div class="col-md-6">
-            <p><strong>Books in collection:</strong> [Coming Soon]</p>
-            <p><strong>Read / Unread:</strong> [Coming Soon]</p>
+            <p><strong>Books in collection:</strong> {{ total_books }}</p>
+            <p><strong>Read / Unread:</strong> {{ read_count }} / {{ unread_count }}</p>
           </div>
         </div>
+
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  // Toggle edit bio form visibility
+  document.addEventListener("DOMContentLoaded", function () {
+    const editBtn = document.getElementById("edit-bio-btn");
+    const bioText = document.getElementById("bio-text");
+    const bioForm = document.getElementById("bio-form");
+
+    editBtn.addEventListener("click", function () {
+      bioText.classList.toggle("d-none");
+      bioForm.classList.toggle("d-none");
+    });
+  });
+</script>
 {% endblock %}

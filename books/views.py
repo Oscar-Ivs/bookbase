@@ -5,8 +5,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .models import Book
-from .forms import BookForm
+from .models import Book, Profile
+from .forms import BookForm, ProfileForm
 import requests
 
 
@@ -36,7 +36,31 @@ def about(request):
 # Profile page view
 @login_required
 def profile(request):
-    return render(request, 'profile.html')
+    profile, _ = Profile.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = ProfileForm(instance=profile)
+
+    # Count read/unread books for future stats display
+    books = Book.objects.filter(user=request.user)
+    read_count = books.filter(status='read').count()
+    unread_count = books.filter(status='unread').count()
+    total_books = books.count()
+
+    context = {
+        'profile': profile,
+        'form': form,
+        'read_count': read_count,
+        'unread_count': unread_count,
+        'total_books': total_books,
+        'bio_background': '#acbdd8',  # Used in the template
+    }
+    return render(request, 'profile.html', context)
 
 
 # Custom logout view using GET
@@ -91,13 +115,6 @@ def delete_book(request, book_id):
     return render(request, 'delete_book.html', {'book': book})
 
 
-# View to fetch books from the Google Books API
-def fetch_books(request):
-    # Get optional query params (default to 'fiction' and 'relevance')
-    query = request.GET.get('q', 'fiction')
-    order = request.GET.get('order', 'relevance')  # or 'newest'
-    max_results = 20
-
 # AJAX view for form auto-fill — searches Google Books by title
 def search_google_books(request):
     query = request.GET.get('q', '')
@@ -120,7 +137,7 @@ def search_google_books(request):
                 'cover_url': info.get('imageLinks', {}).get('thumbnail', ''),
             })
 
-        return JsonResponse({'books': books})  # ✅ fixed key name
+        return JsonResponse({'books': books})
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
@@ -155,4 +172,3 @@ def fetch_books(request):
         return JsonResponse({'books': books})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
-

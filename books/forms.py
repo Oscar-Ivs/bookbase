@@ -1,6 +1,5 @@
 from django import forms
-from .models import Book
-from .models import Profile
+from .models import Book, Profile
 
 class BookForm(forms.ModelForm):
     class Meta:
@@ -12,6 +11,7 @@ class BookForm(forms.ModelForm):
         }
 
 class ProfileForm(forms.ModelForm):
+    # Allow user to edit bio and avatar
     class Meta:
         model = Profile
         fields = ['bio']
