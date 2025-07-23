@@ -1,7 +1,48 @@
-{% extends 'base.html' %} {% block content %}
-<div class="text-center">
-  <h1>About BookBase</h1>
-  <p>BookBase is your personal book collection tracker built with Django.</p>
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5">
+  <div class="text-center mb-4">
+    <h1>About BookBase</h1>
+    <p class="lead text-muted"><b>Your personal space to track, organize, and rediscover books you love.</b></p>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="card shadow-sm p-4" style="background-color: #acbdd8;">
+        <h4 class="mb-3">📘 <i>What is BookBase?</i></h4>
+        <p>
+          <strong>BookBase</strong> is a modern, personal book tracker that lets users search for titles,
+          log books to their collection, track reading progress, and jot down personal notes. Whether you’re
+          a casual reader or a devoted bibliophile, BookBase helps you keep your reading life organized and meaningful.
+        </p>
+
+        <h4 class="mt-4 mb-3">🛠️ <i>Why we built it</i></h4>
+        <p>
+          This project was created as part of a web development course to demonstrate the integration of front-end and back-end skills.
+          From working with external APIs like Google Books, to implementing search functionality, authentication, and database handling — 
+          BookBase brings together everything in one smooth experience.
+        </p>
+
+        <h4 class="mt-4 mb-3">👤 <i>Features</i></h4>
+        <ul>
+          <li>Search and add books from the Google Books API</li>
+          <li>Manually log your own books</li>
+          <li>Track your reading status (Read / Not Read)</li>
+          <li>Save personal notes for each book</li>
+          <li>Clean, responsive interface built with Bootstrap 5</li>
+        </ul>
+
+        <h4 class="mt-4 mb-3">🚀 <i>What's next?</i></h4>
+        <p>
+          Upcoming improvements include profile customization, reading analytics, page filters, and interactive visual elements.
+          Stay tuned for feature toggles, user preferences, and more!
+        </p>
+
+        <div class="text-end mt-4">
+          <em>Made with 💙 by Oscar I.</em>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
-<!-- This template extends 'base.html' and provides an about page for the BookBase application. It includes a simple message about the application. -->
