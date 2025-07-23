@@ -1,8 +1,49 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block content %}
-<div class="text-center">
-      <h1>Profile</h1>
-  <p>This page will allow users to update their bio, change password, and (optionally) upload an avatar in the future.</p>
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Profile</h2>
+
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+      <div class="card shadow-sm p-4" style="background-color: #acbdd8;">
+        <div class="row g-4 align-items-center">
+          <!-- Avatar -->
+          <div class="col-12 col-md-4 text-center">
+            <img src="{{ user.profile.avatar.url|default:'/static/img/avatar-placeholder.png' }}" alt="Avatar"
+              class="rounded-circle border" width="120" height="140"
+              onerror="this.onerror=null; this.src='/static/img/avatar-placeholder.jpg';">
+
+          </div>
+
+          <!-- Bio -->
+          <div class="col-12 col-md-8">
+            <div class="rounded p-3 border" style="background-color: #acbdd8;">
+              <h5>Bio</h5>
+              <p class="mb-0">{{ user.profile.bio|default:"No bio provided." }}</p>
+            </div>
+          </div>
+        </div>
+
+        <hr class="my-4">
+
+        <!-- Info Section -->
+        <div class="row">
+          <div class="col-md-6">
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email|default:"N/A" }}</p>
+            <p><strong>Member since:</strong> {{ user.date_joined|date:"F d, Y" }}</p>
+          </div>
+
+          <!-- Placeholder for future reading stats -->
+          <div class="col-md-6">
+            <p><strong>Books in collection:</strong> [Coming Soon]</p>
+            <p><strong>Read / Unread:</strong> [Coming Soon]</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
-<!-- This template extends 'base.html' and provides a placeholder for the user's profile page. -->
