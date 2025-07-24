@@ -21,10 +21,12 @@
               {% csrf_token %}
               <input type="file" name="avatar" class="d-none" id="avatar-input"
                 onchange="document.getElementById('avatar-form').submit();">
+              <!-- hidden bio field preserves current text -->
+              <input type="hidden" name="bio" value="{{ profile.bio|default_if_none:'' }}">
+              <input type="file" name="avatar" class="d-none" id="avatar-input"
+                onchange="document.getElementById('avatar-form').submit();">
               <button type="button" class="btn btn-sm btn-outline-dark mt-2"
-                onclick="document.getElementById('avatar-input').click();">
-                Edit Avatar
-              </button>
+                onclick="document.getElementById('avatar-input').click();">Edit Avatar</button>
             </form>
           </div>
 
