@@ -10,25 +10,35 @@
       <div class="card shadow-sm p-4" style="background-color: #acbdd8;">
         <div class="row g-4 align-items-start">
 
-          <!-- Avatar -->
+          <!-- Avatar + Upload -->
           <div class="col-md-4 text-center">
             {% if user.profile.avatar %}
-              <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="rounded-circle border" width="140" height="140">
+              <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="rounded-circle border mb-2" width="140" height="140">
             {% else %}
-              <img src="{% static 'img/avatar-placeholder.png' %}" alt="Avatar" class="rounded-circle border" width="140" height="140">
+              <img src="{% static 'img/avatar-placeholder.png' %}" alt="Avatar" class="rounded-circle border mb-2" width="140" height="140">
             {% endif %}
+
+            <!-- Optional future avatar upload -->
+            <form method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+              {{ form.avatar }}
+              <button type="submit" class="btn btn-sm btn-outline-secondary mt-2">Upload</button>
+            </form>
           </div>
 
           <!-- Bio box -->
           <div class="col-md-8">
-            <div class="position-relative rounded p-3 border" style="background-color: #acbdd8; max-width: 320px;">
+            <div class="position-relative rounded p-3 border bg-white ms-md-3" style="min-height: 150px;">
               <h5>Bio</h5>
               <p id="bio-text" class="mb-0">{{ profile.bio|default:"No bio provided!" }}</p>
+
+              <!-- Edit form -->
               <form method="POST" enctype="multipart/form-data" id="bio-form" class="d-none mt-2">
                 {% csrf_token %}
                 {{ form.bio }}
                 <button type="submit" class="btn btn-sm btn-primary mt-2">Save</button>
               </form>
+
               <button id="edit-bio-btn" class="btn btn-sm btn-outline-dark position-absolute bottom-0 end-0 m-2">Edit</button>
             </div>
           </div>
@@ -50,13 +60,18 @@
           </div>
         </div>
 
+        <!-- Action Buttons -->
+        <div class="text-center mt-4">
+          <a href="{% url 'password_change' %}" class="btn btn-outline-dark btn-sm me-2">Change Password</a>
+          <!-- Future: add email change -->
+        </div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Toggle Bio Script -->
 <script>
-  // Toggle edit bio form visibility
   document.addEventListener("DOMContentLoaded", function () {
     const editBtn = document.getElementById("edit-bio-btn");
     const bioText = document.getElementById("bio-text");

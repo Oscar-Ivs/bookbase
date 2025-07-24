@@ -11,10 +11,9 @@ class BookForm(forms.ModelForm):
         }
 
 class ProfileForm(forms.ModelForm):
-    # Allow user to edit bio and avatar
     class Meta:
         model = Profile
-        fields = ['bio']
+        fields = ['bio', 'avatar']  # Include avatar upload
         widgets = {
             'bio': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
         }
