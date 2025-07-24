@@ -5,9 +5,12 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.conf import settings
 from .models import Book, Profile
-from .forms import BookForm, ProfileForm, UserUpdateForm  # Added UserUpdateForm
+from .forms import BookForm, ProfileForm, UserUpdateForm
 import requests
+import os
+from PIL import Image
 
 
 # User registration view
@@ -33,7 +36,7 @@ def about(request):
     return render(request, 'about.html')
 
 
-# Profile view with support for bio/avatar AND username/email edit
+# ✅ Profile view with avatar replacement, default protection, and image compression
 @login_required
 def profile(request):
     profile, _ = Profile.objects.get_or_create(user=request.user)
@@ -42,12 +45,31 @@ def profile(request):
     user_form = UserUpdateForm(request.POST or None, instance=request.user)
 
     if request.method == 'POST':
-        # Handle avatar/bio form
+        # Handle avatar or bio
         if 'bio' in request.POST or 'avatar' in request.FILES:
             if profile_form.is_valid():
+                # ✅ Delete old avatar if uploading a new one (and it's not placeholder)
+                if 'avatar' in request.FILES and profile.avatar:
+                    old_path = profile.avatar.path
+                    if os.path.isfile(old_path) and not profile.avatar.name.endswith("avatar-placeholder.png"):
+                        os.remove(old_path)
+
                 profile_form.save()
+
+                # ✅ Resize uploaded avatar
+                if 'avatar' in request.FILES:
+                    avatar_path = profile.avatar.path
+                    try:
+                        img = Image.open(avatar_path)
+                        img = img.convert('RGB')
+                        img.thumbnail((300, 300))  # Resize to max 300x300
+                        img.save(avatar_path, format='JPEG', quality=85)
+                    except Exception as e:
+                        print("Image resize error:", e)
+
                 return redirect('profile')
-        # Handle username/email form
+
+        # Handle username/email
         elif 'update_user_form' in request.POST:
             if user_form.is_valid():
                 user_form.save()
@@ -62,7 +84,7 @@ def profile(request):
     context = {
         'profile': profile,
         'form': profile_form,
-        'user_form': user_form,  # Passed to template
+        'user_form': user_form,
         'read_count': read_count,
         'unread_count': unread_count,
         'total_books': total_books,
