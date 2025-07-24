@@ -6,7 +6,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .models import Book, Profile
-from .forms import BookForm, ProfileForm
+from .forms import BookForm, ProfileForm, UserUpdateForm  # Added UserUpdateForm
 import requests
 
 
@@ -33,20 +33,27 @@ def about(request):
     return render(request, 'about.html')
 
 
-# Profile page view
+# Profile view with support for bio/avatar AND username/email edit
 @login_required
 def profile(request):
     profile, _ = Profile.objects.get_or_create(user=request.user)
 
-    if request.method == 'POST':
-        form = ProfileForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            form.save()
-            return redirect('profile')
-    else:
-        form = ProfileForm(instance=profile)
+    profile_form = ProfileForm(request.POST or None, request.FILES or None, instance=profile)
+    user_form = UserUpdateForm(request.POST or None, instance=request.user)
 
-    # Count read/unread books for future stats display
+    if request.method == 'POST':
+        # Handle avatar/bio form
+        if 'bio' in request.POST or 'avatar' in request.FILES:
+            if profile_form.is_valid():
+                profile_form.save()
+                return redirect('profile')
+        # Handle username/email form
+        elif 'update_user_form' in request.POST:
+            if user_form.is_valid():
+                user_form.save()
+                return redirect('profile')
+
+    # Book stats for display
     books = Book.objects.filter(user=request.user)
     read_count = books.filter(status='read').count()
     unread_count = books.filter(status='unread').count()
@@ -54,11 +61,12 @@ def profile(request):
 
     context = {
         'profile': profile,
-        'form': form,
+        'form': profile_form,
+        'user_form': user_form,  # Passed to template
         'read_count': read_count,
         'unread_count': unread_count,
         'total_books': total_books,
-        'bio_background': '#acbdd8',  # Used in the template
+        'bio_background': '#acbdd8',
     }
     return render(request, 'profile.html', context)
 
