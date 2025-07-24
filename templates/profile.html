@@ -8,46 +8,49 @@
   <div class="row justify-content-center">
     <div class="col-md-10 col-lg-8">
       <div class="card shadow-sm p-4" style="background-color: #acbdd8;">
+
         <div class="row g-4 align-items-start">
-
-          <!-- Avatar + Upload -->
+          <!-- Avatar Upload -->
           <div class="col-md-4 text-center">
-            {% if user.profile.avatar %}
-              <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="rounded-circle border mb-2" width="140" height="140">
-            {% else %}
-              <img src="{% static 'img/avatar-placeholder.png' %}" alt="Avatar" class="rounded-circle border mb-2" width="140" height="140">
-            {% endif %}
+            <img
+              src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'img/avatar-placeholder.png' %}{% endif %}"
+              alt="Avatar" class="rounded-circle border mb-2" width="140" height="140">
 
-            <!-- Optional future avatar upload -->
-            <form method="POST" enctype="multipart/form-data">
+            <!-- Avatar auto-upload -->
+            <form method="POST" enctype="multipart/form-data" id="avatar-form">
               {% csrf_token %}
-              {{ form.avatar }}
-              <button type="submit" class="btn btn-sm btn-outline-secondary mt-2">Upload</button>
+              <input type="file" name="avatar" class="d-none" id="avatar-input"
+                onchange="document.getElementById('avatar-form').submit();">
+              <button type="button" class="btn btn-sm btn-outline-dark mt-2"
+                onclick="document.getElementById('avatar-input').click();">
+                Edit Avatar
+              </button>
             </form>
           </div>
 
-          <!-- Bio box -->
+          <!-- Bio Box -->
           <div class="col-md-8">
-            <div class="position-relative rounded p-3 border bg-white ms-md-3" style="min-height: 150px;">
+            <div class="position-relative rounded p-3 border" style="background-color: #acbdd8;">
               <h5>Bio</h5>
               <p id="bio-text" class="mb-0">{{ profile.bio|default:"No bio provided!" }}</p>
 
-              <!-- Edit form -->
+              <!-- Inline bio edit -->
               <form method="POST" enctype="multipart/form-data" id="bio-form" class="d-none mt-2">
                 {% csrf_token %}
                 {{ form.bio }}
                 <button type="submit" class="btn btn-sm btn-primary mt-2">Save</button>
               </form>
 
-              <button id="edit-bio-btn" class="btn btn-sm btn-outline-dark position-absolute bottom-0 end-0 m-2">Edit</button>
+              <button id="edit-bio-btn"
+                class="btn btn-sm btn-outline-dark position-absolute bottom-0 end-0 m-2">Edit</button>
             </div>
           </div>
-
         </div>
 
+        <!-- Divider -->
         <hr class="my-4">
 
-        <!-- Info Section -->
+        <!-- User Info -->
         <div class="row">
           <div class="col-md-6">
             <p><strong>Username:</strong> {{ user.username }}</p>
@@ -56,21 +59,24 @@
           </div>
           <div class="col-md-6">
             <p><strong>Books in collection:</strong> {{ total_books }}</p>
-            <p><strong>Read / Unread:</strong> {{ read_count }} / {{ unread_count }}</p>
+            <p><strong>Unread:</strong> {{ unread_count }}</p>
+            <p><strong>Read:</strong> <span class="text-success fw-bold">{{ read_count }}</span></p>
           </div>
         </div>
 
+
         <!-- Action Buttons -->
-        <div class="text-center mt-4">
-          <a href="{% url 'password_change' %}" class="btn btn-outline-dark btn-sm me-2">Change Password</a>
-          <!-- Future: add email change -->
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <a href="#" class="btn btn-outline-dark btn-sm disabled">Edit Username / Email</a>
+          <a href="{% url 'password_change' %}" class="btn btn-outline-dark btn-sm">Change Password</a>
         </div>
+
       </div>
     </div>
   </div>
 </div>
 
-<!-- Toggle Bio Script -->
+<!-- Bio Toggle Script -->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const editBtn = document.getElementById("edit-bio-btn");
@@ -83,4 +89,5 @@
     });
   });
 </script>
+
 {% endblock %}
