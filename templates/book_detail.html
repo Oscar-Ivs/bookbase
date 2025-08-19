@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+  <a href="{% url 'my_collection' %}" class="btn btn-sm btn-outline-secondary mb-3">&larr; Back to My Collection</a>
+
+  <div class="row g-4">
+    <!-- Left: Cover + status + meta -->
+    <div class="col-12 col-lg-3">
+      <div class="card shadow-sm">
+        <div class="ratio ratio-2x3">
+          <img
+            src="{{ book.cover_url|default:'/static/img/book-placeholder.png' }}"
+            alt="{{ book.title }}"
+            class="card-img-top object-fit-contain"
+            onerror="this.onerror=null; this.src='/static/img/book-placeholder.png';">
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ book.title }}</h5>
+          <p class="mb-1 text-muted">{{ book.author }}</p>
+          <p class="mb-2">
+            {% if book.status == 'read' %}
+              <span class="badge bg-success">Read</span>
+            {% else %}
+              <span class="badge bg-danger">Unread</span>
+            {% endif %}
+          </p>
+          {% if added_when %}
+            <p class="small text-muted mb-0">Added: {{ added_when|date:"M d, Y" }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Quick actions -->
+      <div class="d-grid gap-2 mt-3">
+        <a href="{% url 'edit_book' book.id %}" class="btn btn-outline-primary btn-sm">Edit</a>
+        <a href="{% url 'delete_book' book.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
+      </div>
+    </div>
+
+    <!-- Middle: Description -->
+    <div class="col-12 col-lg-5">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h6 class="mb-2">Description</h6>
+          {% if book.description %}
+            <p class="mb-0">{{ book.description }}</p>
+          {% else %}
+            <p class="text-muted mb-0">No description available.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Notes -->
+    <div class="col-12 col-lg-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h6 class="mb-2">Notes</h6>
+          {% if book.notes %}
+            <div class="border rounded p-2 bg-light">{{ book.notes }}</div>
+          {% else %}
+            <p class="text-muted mb-0">No notes yet.</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- (Future) Comments section can go below -->
+      {# <div class="card shadow-sm mt-3"> ... </div> #}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -11,6 +11,7 @@ from .forms import BookForm, ProfileForm, UserUpdateForm
 import requests
 import os
 from PIL import Image
+from django.utils import timezone
 
 
 # User registration view
@@ -202,3 +203,18 @@ def fetch_books(request):
         return JsonResponse({'books': books})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+
+@login_required
+def book_detail(request, book_id):
+    """
+    Show a single book with: cover + status (left), description (middle), notes (right).
+    Only the owner can view their book.
+    """
+    book = get_object_or_404(Book, id=book_id, user=request.user)
+
+    context = {
+        "book": book,
+        "added_when": getattr(book, "created_at", None) or getattr(book, "added_at", None) or None,  # optional
+    }
+    return render(request, 'book_detail.html', context)
