@@ -2,62 +2,54 @@
 
 {% block content %}
 <div class="container mt-4">
+  <div class="row g-4">
 
-    <!-- Back Button -->
-    <a href="{% url 'my_collection' %}" class="btn btn-outline-secondary mb-3">&larr; Back to My Collection</a>
+    <!-- Column 1: Cover + Meta -->
+    <div class="col-12 col-md-6 col-lg-3 text-center">
+      <img src="{{ book.cover_url|default:'/static/img/book-placeholder.png' }}"
+           alt="Book Cover"
+           class="img-fluid rounded shadow-sm mb-3"
+           style="max-height: 400px; object-fit: contain; background-color: transparent;"
+           onerror="this.onerror=null; this.src='/static/img/book-placeholder.png';">
 
-    <div class="row g-4">
-        <!-- Left column: cover + meta -->
-        <div class="col-md-3 text-center">
-            <!-- Consistent ratio box for covers -->
-            <div class="ratio ratio-2x3 border rounded shadow-sm mb-3"
-                style="max-width: 250px; margin: auto; background-color: #fff;">
-                <img src="{{ book.cover_url|default:'/static/img/book-placeholder.png' }}" alt="Book Cover"
-                    class="img-fluid rounded object-fit-contain"
-                    onerror="this.onerror=null; this.src='/static/img/book-placeholder.png';">
-            </div>
+      <h5 class="fw-bold">{{ book.title }}</h5>
+      <p class="text-muted">{{ book.author }}</p>
 
-            <h5 class="fw-bold">{{ book.title }}</h5>
-            <p class="text-muted">{{ book.author }}</p>
+      <p>
+        {% if book.status == 'read' %}
+          <span class="badge bg-success">Read</span>
+        {% else %}
+          <span class="badge bg-danger">Unread</span>
+        {% endif %}
+      </p>
 
-            <p>
-                {% if book.status == 'read' %}
-                <span class="badge bg-success">Read</span>
-                {% else %}
-                <span class="badge bg-danger">Unread</span>
-                {% endif %}
-            </p>
-
-            <div class="d-flex justify-content-center gap-2">
-                <a href="{% url 'edit_book' book.id %}" class="btn btn-outline-primary btn-sm">Edit</a>
-                <a href="{% url 'delete_book' book.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
-            </div>
-        </div>
-
-
-        <!-- Middle column: Description -->
-        <div class="col-md-6">
-            <div class="custom-card shadow-sm">
-                <h5>Description</h5>
-                {% if book.description %}
-                <p>{{ book.description }}</p>
-                {% else %}
-                <p class="text-muted">No description available.</p>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Right column: Notes -->
-        <div class="col-md-3">
-            <div class="custom-card shadow-sm">
-                <h5>Notes</h5>
-                {% if book.notes %}
-                <p>{{ book.notes }}</p>
-                {% else %}
-                <p class="text-muted">No notes yet.</p>
-                {% endif %}
-            </div>
-        </div>
+      <div class="d-flex justify-content-center gap-2">
+        <a href="{% url 'edit_book' book.id %}" class="btn btn-outline-primary btn-sm">Edit</a>
+        <a href="{% url 'delete_book' book.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
+      </div>
     </div>
+
+    <!-- Column 2 & 3 combined for tablet, split on desktop -->
+    <div class="col-12 col-md-6 col-lg-9">
+      <div class="row g-4">
+        <!-- Description -->
+        <div class="col-12 col-lg-8">
+          <div class="p-3 border rounded" style="background-color: #acbdd8;">
+            <h5>Description</h5>
+            <p>{{ book.description|default:"No description provided." }}</p>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="col-12 col-lg-4">
+          <div class="p-3 border rounded" style="background-color: #acbdd8;">
+            <h5>Notes</h5>
+            <p>{{ book.notes|default:"No notes added." }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
 {% endblock %}
