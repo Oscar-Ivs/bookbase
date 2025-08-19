@@ -70,7 +70,7 @@ function searchBooks(event, reset = false) {
         };
 
         col.innerHTML = `
-          <div class="card flex-fill shadow-sm" style="width: 100%; max-width: 300px;">
+          <div class="card flex-fill shadow-sm book-card" style="width: 100%; max-width: 300px;">
             <div class="ratio-2x3 mb-2">
               <img src="${book.cover_url || '/static/img/book-placeholder.png'}"
                    class="card-img-top object-fit-cover"
