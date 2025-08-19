@@ -37,7 +37,7 @@ def about(request):
     return render(request, 'about.html')
 
 
-# ✅ Profile view with avatar replacement, default protection, and image compression
+# Profile view with avatar replacement, default protection, and image compression
 @login_required
 def profile(request):
     profile, _ = Profile.objects.get_or_create(user=request.user)
@@ -49,7 +49,7 @@ def profile(request):
         # Handle avatar or bio
         if 'bio' in request.POST or 'avatar' in request.FILES:
             if profile_form.is_valid():
-                # ✅ Delete old avatar if uploading a new one (and it's not placeholder)
+                # Delete old avatar if uploading a new one (and it's not placeholder)
                 if 'avatar' in request.FILES and profile.avatar:
                     old_path = profile.avatar.path
                     if os.path.isfile(old_path) and not profile.avatar.name.endswith("avatar-placeholder.png"):
@@ -57,7 +57,7 @@ def profile(request):
 
                 profile_form.save()
 
-                # ✅ Resize uploaded avatar
+                # Resize uploaded avatar
                 if 'avatar' in request.FILES:
                     avatar_path = profile.avatar.path
                     try:
@@ -149,11 +149,17 @@ def delete_book(request, book_id):
 # AJAX view for form auto-fill — searches Google Books by title
 def search_google_books(request):
     query = request.GET.get('q', '')
+    start_index = int(request.GET.get('startIndex', 0))
+    max_results = int(request.GET.get('maxResults', 6))  # default 6 per batch
+
     if not query:
         return JsonResponse({'error': 'No query provided'}, status=400)
 
-    # ✅ Use projection=full to fetch full descriptions
-    url = f'https://www.googleapis.com/books/v1/volumes?q={query}&maxResults=5&projection=full'
+    # Correct API request with startIndex + maxResults + full description
+    url = (
+        f'https://www.googleapis.com/books/v1/volumes'
+        f'?q={query}&startIndex={start_index}&maxResults={max_results}&projection=full'
+    )
 
     try:
         response = requests.get(url)
@@ -165,7 +171,7 @@ def search_google_books(request):
             books.append({
                 'title': info.get('title', ''),
                 'author': ', '.join(info.get('authors', [])) if 'authors' in info else '',
-                'description': info.get('description', ''),  # ✅ full description, no slicing
+                'description': info.get('description', ''),  # ✅ full description
                 'cover_url': info.get('imageLinks', {}).get('thumbnail', ''),
             })
 
@@ -174,7 +180,8 @@ def search_google_books(request):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
-# Build the Google Books API request URL
+
+# Build the Google Books API request URL for homepage browsing
 def fetch_books(request):
     query = request.GET.get('q', 'fiction')
     order = request.GET.get('order', 'relevance')
