@@ -152,7 +152,8 @@ def search_google_books(request):
     if not query:
         return JsonResponse({'error': 'No query provided'}, status=400)
 
-    url = f'https://www.googleapis.com/books/v1/volumes?q={query}&maxResults=5'
+    # ✅ Use projection=full to fetch full descriptions
+    url = f'https://www.googleapis.com/books/v1/volumes?q={query}&maxResults=5&projection=full'
 
     try:
         response = requests.get(url)
@@ -164,7 +165,7 @@ def search_google_books(request):
             books.append({
                 'title': info.get('title', ''),
                 'author': ', '.join(info.get('authors', [])) if 'authors' in info else '',
-                'description': info.get('description', ''),
+                'description': info.get('description', ''),  # ✅ full description, no slicing
                 'cover_url': info.get('imageLinks', {}).get('thumbnail', ''),
             })
 
@@ -172,7 +173,6 @@ def search_google_books(request):
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
-
 
 # Build the Google Books API request URL
 def fetch_books(request):
