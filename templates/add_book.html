@@ -5,6 +5,10 @@
 <div class="container mt-4">
   <h2>Add a Book</h2>
 
+  <!-- Back button -->
+    <a href="{% url 'my_collection' %}" class="btn btn-outline-secondary btn-sm">← Back</a>
+  </div>
+  
    <!-- Google Books Search -->
   <form id="google-search-form" class="mb-3" onsubmit="searchBooks(event, true)">
     <label for="search-input" class="form-label">Search Google Books</label>
