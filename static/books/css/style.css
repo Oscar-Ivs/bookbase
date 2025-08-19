@@ -1,0 +1,117 @@
+body {
+  background-color: #b8c0d0;
+}
+
+/* Load More button default style */
+#loadMoreBtn {
+  background-color: rgb(157, 163, 175);
+  color: #264a8c; /* fallback color if border fails */
+  border: 1px solid #264a8c;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Hover style */
+#loadMoreBtn:hover {
+  background-color: #5c77ab !important;
+  color: white !important;
+  border-color: #5b82ca !important;
+}
+
+/* Navbar tagline centered */
+.navbar-tagline {
+  font-size: 1.05rem;
+  font-weight: 500;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+/* Mobile fix: Keep max 2 cards per row */
+@media (max-width: 575.98px) {
+  #book-card-grid .col-12 {
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+  }
+}
+
+/* Match profile page card tone */
+.soft-blue {
+  background-color: #acbdd8; /* same as profile card */
+  border: 1px solid rgba(0,0,0,0.08);
+}
+
+/* Keep grid nice on hover but subtle */
+.collection-card:hover {
+  transform: translateY(-2px);
+  transition: transform 120ms ease;
+}
+
+/* Make sure ratio helper exists for 2:3 covers */
+.ratio-2x3 {
+  --bs-aspect-ratio: calc(3 / 2 * 100%); /* height/width * 100% */
+}
+
+/* Enforce contained images inside ratio */
+.object-fit-contain {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+}
+
+/* Reusable card style for profile + book detail */
+.custom-card {
+  background-color: #acbdd8; /* blueish shade */
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+/* Custom primary action button */
+.btn-custom {
+  background-color: #627aa3;
+  color: white;
+  border: none;
+}
+
+.btn-custom:hover {
+  background-color: #264a8c;   /* darker hover */
+  color: #fff;
+}
+
+/* Unified Book Card Style (used everywhere)     */
+
+.book-card {
+  background-color: #acbdd8 !important;   /* unified blueish bg */
+  border: 1px solid rgba(0,0,0,.125);
+  border-radius: .5rem;
+  transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* equal height grid */
+}
+
+/* Hover lift effect */
+.book-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+}
+
+/* Card body flex layout keeps buttons pinned at bottom */
+.book-card .card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.book-card .card-body > div:first-child {
+  flex-grow: 1; /* pushes buttons down */
+}
+
+/* Covers (applies everywhere) */
+.card-img-top {
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: contain;
+  background-color: #f8f9fa;
+}
