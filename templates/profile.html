@@ -19,9 +19,7 @@
             <!-- Avatar auto-upload -->
             <form method="POST" enctype="multipart/form-data" id="avatar-form">
               {% csrf_token %}
-              <input type="file" name="avatar" class="d-none" id="avatar-input"
-                onchange="document.getElementById('avatar-form').submit();">
-              <!-- hidden bio field preserves current text -->
+              <!-- preserve current bio so it isn’t lost -->
               <input type="hidden" name="bio" value="{{ profile.bio|default_if_none:'' }}">
               <input type="file" name="avatar" class="d-none" id="avatar-input"
                 onchange="document.getElementById('avatar-form').submit();">
@@ -46,15 +44,19 @@
               <button id="edit-bio-btn"
                 class="btn btn-sm btn-outline-dark position-absolute bottom-0 end-0 m-2">Edit</button>
             </div>
+
+            <!-- Public toggle under Bio -->
+            <div class="form-check mt-3">
+              {{ form.is_public }}
+              <label class="form-check-label" for="{{ form.is_public.id_for_label }}">
+                Make my profile &amp; collection public
+              </label>
+              <div class="form-text">
+                Other signed-in users will be able to view your profile and books.
+              </div>
+            </div>
           </div>
         </div>
-<div class="form-check mt-2">
-  {{ form.is_public }}
-  <label class="form-check-label" for="{{ form.is_public.id_for_label }}">
-    Make my profile & collection public
-  </label>
-  <div class="form-text">Other signed-in users will be able to view your profile and books.</div>
-</div>
 
         <!-- Divider -->
         <hr class="my-4">
