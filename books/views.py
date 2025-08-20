@@ -37,7 +37,6 @@ def about(request):
     return render(request, 'about.html')
 
 
-# Profile view with avatar replacement, bio, public toggle, and image compression
 @login_required
 def profile(request):
     profile, _ = Profile.objects.get_or_create(user=request.user)
@@ -46,42 +45,37 @@ def profile(request):
     user_form = UserUpdateForm(request.POST or None, instance=request.user)
 
     if request.method == 'POST':
-        # Case 1: Bio update
-        if 'update_bio' in request.POST:
+        # Case 1: Bio or Avatar edit
+        if 'update_bio' in request.POST or 'avatar' in request.FILES:
             if profile_form.is_valid():
-                profile_obj = profile_form.save(commit=False)
-                profile_obj.is_public = profile.is_public  # preserve checkbox
-                profile_obj.save()
-            return redirect('profile')
+                profile_form.save()
 
-        # Case 2: Visibility toggle
+                # Resize uploaded avatar
+                if 'avatar' in request.FILES:
+                    avatar_path = profile.avatar.path
+                    try:
+                        img = Image.open(avatar_path)
+                        img = img.convert('RGB')
+                        img.thumbnail((300, 300))
+                        img.save(avatar_path, format='JPEG', quality=85)
+                    except Exception as e:
+                        print("Image resize error:", e)
+
+                return redirect('profile')
+
+        # Case 2: Visibility toggle only
         elif 'toggle_visibility' in request.POST:
             profile.is_public = request.POST.get("is_public") == "on"
             profile.save(update_fields=["is_public"])
             return redirect('profile')
 
-        # Case 3: Avatar upload
-        elif 'avatar' in request.FILES:
-            if profile_form.is_valid():
-                profile_obj = profile_form.save()
-                # Resize avatar
-                avatar_path = profile_obj.avatar.path
-                try:
-                    img = Image.open(avatar_path)
-                    img = img.convert('RGB')
-                    img.thumbnail((300, 300))
-                    img.save(avatar_path, format='JPEG', quality=85)
-                except Exception as e:
-                    print("Image resize error:", e)
-            return redirect('profile')
-
-        # Case 4: Username/email update
+        # Case 3: Username/email update
         elif 'update_user_form' in request.POST:
             if user_form.is_valid():
                 user_form.save()
-            return redirect('profile')
+                return redirect('profile')
 
-    # Book stats
+    # Book stats for display
     books = Book.objects.filter(user=request.user)
     read_count = books.filter(status='read').count()
     unread_count = books.filter(status='unread').count()
@@ -97,7 +91,6 @@ def profile(request):
         'bio_background': '#acbdd8',
     }
     return render(request, 'profile.html', context)
-
 
 # Custom logout view using GET
 def logout_view(request):
