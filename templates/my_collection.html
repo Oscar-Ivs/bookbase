@@ -9,39 +9,11 @@
   </div>
 
   {% if books %}
-  <div class="row g-3">
-    {% for book in books %}
-    <div class="col-6 col-md-4 col-lg-3 col-xl-2 d-flex">
-      <!-- Whole card is a link -->
-      <a href="{% url 'book_detail' book.id %}"
-         class="card flex-fill shadow-sm text-decoration-none text-dark book-card"
-         style="width:100%; max-width:300px;">
-
-        <!-- Cover with fixed 2:3 box -->
-        <div class="position-relative">
-          <div class="ratio ratio-2x3">
-            <img
-              src="{{ book.cover_url|default:'/static/img/book-placeholder.png' }}"
-              alt="{{ book.title }}"
-              class="card-img-top object-fit-contain"
-              onerror="this.onerror=null; this.src='/static/img/book-placeholder.png';">
-          </div>
-
-          <!-- tiny status badge on cover -->
-          <span class="position-absolute bottom-0 start-0 m-1 badge
-                       {% if book.status == 'read' %}bg-success{% else %}bg-danger{% endif %}">
-            {% if book.status == 'read' %}Read{% else %}Unread{% endif %}
-          </span>
-        </div>
-
-        <div class="card-body p-2">
-          <h6 class="card-title mb-1 text-truncate" title="{{ book.title }}">{{ book.title }}</h6>
-          <p class="card-text small text-muted text-truncate mb-0" title="{{ book.author }}">{{ book.author }}</p>
-        </div>
-      </a>
+    <div class="row g-3">
+      {% for book in books %}
+        {% include "books/_book_card.html" with in_community=False %}
+      {% endfor %}
     </div>
-    {% endfor %}
-  </div>
   {% else %}
     <p class="text-center text-muted">Your collection is empty. Add some books!</p>
   {% endif %}
