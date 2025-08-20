@@ -18,7 +18,10 @@
             <img src="{{ p.avatar_url }}" alt="{{ p.username }}" class="rounded-circle mb-2" style="width:80px;height:80px;object-fit:cover;">
             <h6 class="mb-1">{{ p.username }}</h6>
             <p class="small text-muted mb-2">{{ p.total_books }} books ({{ p.read_count }} read)</p>
-            <a href="{% url 'community_profile' p.username %}" class="btn btn-primary btn-sm w-100">View Profile</a>
+            
+            {% if user.is_authenticated %}
+              <a href="{% url 'community_profile' p.username %}" class="btn btn-primary btn-sm w-100">View Profile</a>
+            {% endif %}
           </div>
         </div>
       </div>
