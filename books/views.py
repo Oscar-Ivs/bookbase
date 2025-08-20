@@ -92,6 +92,7 @@ def profile(request):
     }
     return render(request, 'profile.html', context)
 
+
 # Custom logout view using GET
 def logout_view(request):
     logout(request)
@@ -220,6 +221,9 @@ def book_detail(request, book_id):
         if not book:
             raise Book.DoesNotExist
 
+        # Flag: does this book belong to the logged-in user?
+        is_owner = (book.user == request.user)
+
         book_data = {
             "id": book.id,
             "title": book.title,
@@ -228,6 +232,7 @@ def book_detail(request, book_id):
             "notes": getattr(book, "notes", None),
             "cover_url": book.cover_url or "/static/img/book-placeholder.png",
             "status": book.status,
+            "is_owner": is_owner,   # ✅ pass ownership flag
         }
         return render(request, "book_detail.html", {"book": book_data})
 

@@ -36,7 +36,7 @@
       {% endif %}
 
       <!-- Edit/Delete buttons (DB books only) -->
-      {% if book.id %}
+      {% if book.is_owner %}
         <div class="d-flex justify-content-center gap-2">
           <a href="{% url 'edit_book' book.id %}" class="btn btn-outline-primary btn-sm">Edit</a>
           <a href="{% url 'delete_book' book.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
