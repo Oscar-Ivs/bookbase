@@ -1,3 +1,4 @@
+# books/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout
@@ -36,7 +37,7 @@ def about(request):
     return render(request, 'about.html')
 
 
-# Profile view with avatar replacement, default protection, and image compression
+# Profile view with avatar replacement, bio, public toggle, and image compression
 @login_required
 def profile(request):
     profile, _ = Profile.objects.get_or_create(user=request.user)
@@ -45,37 +46,42 @@ def profile(request):
     user_form = UserUpdateForm(request.POST or None, instance=request.user)
 
     if request.method == 'POST':
-        # Handle avatar/bio/public toggle
-        if 'bio' in request.POST or 'avatar' in request.FILES or 'is_public' in request.POST:
+        # Case 1: Bio update
+        if 'update_bio' in request.POST:
             if profile_form.is_valid():
-                # Delete old avatar if uploading a new one
-                if 'avatar' in request.FILES and profile.avatar:
-                    old_path = profile.avatar.path
-                    if os.path.isfile(old_path) and not profile.avatar.name.endswith("avatar-placeholder.png"):
-                        os.remove(old_path)
+                profile_obj = profile_form.save(commit=False)
+                profile_obj.is_public = profile.is_public  # preserve checkbox
+                profile_obj.save()
+            return redirect('profile')
 
-                profile_form.save()
+        # Case 2: Visibility toggle
+        elif 'toggle_visibility' in request.POST:
+            profile.is_public = request.POST.get("is_public") == "on"
+            profile.save(update_fields=["is_public"])
+            return redirect('profile')
 
-                # Resize uploaded avatar
-                if 'avatar' in request.FILES:
-                    avatar_path = profile.avatar.path
-                    try:
-                        img = Image.open(avatar_path)
-                        img = img.convert('RGB')
-                        img.thumbnail((300, 300))  # Resize to max 300x300
-                        img.save(avatar_path, format='JPEG', quality=85)
-                    except Exception as e:
-                        print("Image resize error:", e)
+        # Case 3: Avatar upload
+        elif 'avatar' in request.FILES:
+            if profile_form.is_valid():
+                profile_obj = profile_form.save()
+                # Resize avatar
+                avatar_path = profile_obj.avatar.path
+                try:
+                    img = Image.open(avatar_path)
+                    img = img.convert('RGB')
+                    img.thumbnail((300, 300))
+                    img.save(avatar_path, format='JPEG', quality=85)
+                except Exception as e:
+                    print("Image resize error:", e)
+            return redirect('profile')
 
-                return redirect('profile')
-
-        # Handle username/email updates
+        # Case 4: Username/email update
         elif 'update_user_form' in request.POST:
             if user_form.is_valid():
                 user_form.save()
-                return redirect('profile')
+            return redirect('profile')
 
-    # Book stats for display
+    # Book stats
     books = Book.objects.filter(user=request.user)
     read_count = books.filter(status='read').count()
     unread_count = books.filter(status='unread').count()
@@ -106,7 +112,7 @@ def my_collection(request):
     return render(request, 'my_collection.html', {'books': books})
 
 
-# Add a book to the collection
+# Add a book
 @login_required
 def add_book(request):
     if request.method == 'POST':
@@ -121,7 +127,7 @@ def add_book(request):
     return render(request, 'add_book.html', {'form': form})
 
 
-# Edit an existing book
+# Edit a book
 @login_required
 def edit_book(request, book_id):
     book = get_object_or_404(Book, id=book_id, user=request.user)
@@ -145,19 +151,16 @@ def delete_book(request, book_id):
     return render(request, 'delete_book.html', {'book': book})
 
 
-# AJAX view for form auto-fill — searches Google Books by title
+# AJAX search for Google Books
 def search_google_books(request):
     query = request.GET.get('q', '')
     start_index = int(request.GET.get('startIndex', 0))
-    max_results = int(request.GET.get('maxResults', 6))  # default 6 per batch
+    max_results = int(request.GET.get('maxResults', 6))
 
     if not query:
         return JsonResponse({'error': 'No query provided'}, status=400)
 
-    url = (
-        f'https://www.googleapis.com/books/v1/volumes'
-        f'?q={query}&startIndex={start_index}&maxResults={max_results}&projection=full'
-    )
+    url = f'https://www.googleapis.com/books/v1/volumes?q={query}&startIndex={start_index}&maxResults={max_results}&projection=full'
 
     try:
         response = requests.get(url)
@@ -171,26 +174,22 @@ def search_google_books(request):
                 'author': ', '.join(info.get('authors', [])) if 'authors' in info else '',
                 'description': info.get('description', ''),
                 'cover_url': info.get('imageLinks', {}).get('thumbnail', ''),
-                'id': item.get('id'),  # Google ID
+                'id': item.get('id'),
             })
 
         return JsonResponse({'books': books})
-
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
 
-# Build the Google Books API request URL for homepage browsing
+# Fetch homepage books
 def fetch_books(request):
     query = request.GET.get('q', 'fiction')
     order = request.GET.get('order', 'relevance')
     start_index = int(request.GET.get('startIndex', 0))
-    max_results = 24  # Load 24 books per batch
+    max_results = 24
 
-    url = (
-        f"https://www.googleapis.com/books/v1/volumes?"
-        f"q={query}&orderBy={order}&startIndex={start_index}&maxResults={max_results}"
-    )
+    url = f"https://www.googleapis.com/books/v1/volumes?q={query}&orderBy={order}&startIndex={start_index}&maxResults={max_results}"
 
     try:
         response = requests.get(url)
@@ -212,14 +211,12 @@ def fetch_books(request):
         return JsonResponse({'error': str(e)}, status=500)
 
 
-# Unified book detail view for BOTH DB + Google Books
+# Unified book detail view (DB + Google API)
 @login_required
 def book_detail(request, book_id):
     try:
-        # Case 1: DB book (numeric ID)
         int_id = int(book_id)
         book = get_object_or_404(Book, id=int_id, user=request.user)
-
         book_data = {
             "id": book.id,
             "title": book.title,
@@ -230,22 +227,14 @@ def book_detail(request, book_id):
             "status": book.status,
         }
         return render(request, "book_detail.html", {"book": book_data})
-
     except (ValueError, ValidationError):
-        pass  # not numeric → try API
+        pass
 
-    # Case 2: Google Books API result
     api_url = f"https://www.googleapis.com/books/v1/volumes/{book_id}"
     response = requests.get(api_url)
 
     if response.status_code != 200:
-        return render(request, "book_detail.html", {
-            "book": {
-                "title": "Book not found",
-                "description": "Unable to fetch data.",
-                "cover_url": "/static/img/book-placeholder.png",
-            }
-        })
+        return render(request, "book_detail.html", {"book": {"title": "Book not found", "description": "Unable to fetch data.", "cover_url": "/static/img/book-placeholder.png"}})
 
     data = response.json().get("volumeInfo", {})
     book_data = {
@@ -257,18 +246,12 @@ def book_detail(request, book_id):
         "publishedDate": data.get("publishedDate", "N/A"),
         "pageCount": data.get("pageCount", "N/A"),
     }
-
     return render(request, "book_detail.html", {"book": book_data})
 
 
-# Community features
+# Community list
 def community_list(request):
-    """
-    Public directory showing users who opted in (is_public=True).
-    Anonymous users can see the list only.
-    """
     profiles = Profile.objects.filter(is_public=True).select_related("user")
-
     public_users = []
     for p in profiles:
         qs = Book.objects.filter(user=p.user)
@@ -281,15 +264,11 @@ def community_list(request):
             "read_count": qs.filter(status="read").count(),
             "unread_count": qs.filter(status="unread").count(),
         })
-
     return render(request, "community_list.html", {"profiles": public_users})
 
 
 @login_required
 def community_profile(request, username):
-    """
-    Signed-in users can open another user's public profile and see their collection.
-    """
     profile = get_object_or_404(Profile, user__username=username, is_public=True)
     books = Book.objects.filter(user=profile.user).order_by("title")
     return render(request, "community_profile.html", {"profile": profile, "books": books})

@@ -37,6 +37,7 @@
               <!-- Inline bio edit -->
               <form method="POST" enctype="multipart/form-data" id="bio-form" class="d-none mt-2">
                 {% csrf_token %}
+                <input type="hidden" name="update_bio" value="1">
                 {{ form.bio }}
                 <button type="submit" class="btn btn-sm btn-primary mt-2">Save</button>
               </form>
@@ -45,16 +46,22 @@
                 class="btn btn-sm btn-outline-dark position-absolute bottom-0 end-0 m-2">Edit</button>
             </div>
 
-            <!-- Public toggle under Bio -->
-            <div class="form-check mt-3">
-              {{ form.is_public }}
-              <label class="form-check-label" for="{{ form.is_public.id_for_label }}">
-                Make my profile &amp; collection public
-              </label>
-              <div class="form-text">
+            <!-- Public toggle = separate form -->
+            <form method="POST" class="mt-3">
+              {% csrf_token %}
+              <input type="hidden" name="toggle_visibility" value="1">
+              <div class="form-check">
+                <input type="checkbox" name="is_public" class="form-check-input" id="id_is_public"
+                  {{ profile.is_public|yesno:"checked," }}>
+                <label class="form-check-label" for="id_is_public">
+                  Make my profile &amp; collection public
+                </label>
+              </div>
+              <div class="form-text mb-2">
                 Other signed-in users will be able to view your profile and books.
               </div>
-            </div>
+              <button type="submit" class="btn btn-sm btn-warning">Save Visibility</button>
+            </form>
           </div>
         </div>
 

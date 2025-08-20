@@ -1,3 +1,4 @@
+# books/forms.py
 from django import forms
 from .models import Book, Profile
 from django.contrib.auth.models import User
@@ -8,15 +9,15 @@ class BookForm(forms.ModelForm):
         model = Book
         fields = ['title', 'author', 'description', 'cover_url', 'status', 'notes']
         widgets = {
-            'description': forms.Textarea(attrs={'rows': 3}),
-            'notes': forms.Textarea(attrs={'rows': 3}),
+            'description': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
+            'notes': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
         }
 
 
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['bio', 'avatar', 'is_public']  # ← include public toggle
+        fields = ['bio', 'avatar', 'is_public']  # includes visibility toggle
         widgets = {
             'bio': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
         }
