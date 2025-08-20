@@ -1,8 +1,10 @@
 {% extends "base.html" %}
+
 {% block content %}
 <div class="container mt-4">
   <div class="d-flex align-items-center gap-3 mb-3">
-    <img src="{{ profile.avatar.url|default:'/static/img/avatar-placeholder.png' }}" alt="{{ profile.user.username }}"
+    <img src="{% if profile.avatar %}{{ profile.avatar.url }}{% else %}{% static 'img/avatar-placeholder.png' %}{% endif %}"
+         alt="{{ profile.user.username }}"
          class="rounded-circle" style="width:80px;height:80px;object-fit:cover;">
     <div>
       <h3 class="mb-0">{{ profile.user.username }}</h3>
@@ -15,7 +17,7 @@
 
   <div class="row g-3">
     {% for book in books %}
-      {% include "books/_book_card.html" with in_community=True %}
+      {% include "books/_book_card.html" %}
     {% empty %}
       <div class="col-12 text-muted">No books yet.</div>
     {% endfor %}

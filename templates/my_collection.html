@@ -11,7 +11,7 @@
   {% if books %}
     <div class="row g-3">
       {% for book in books %}
-        {% include "books/_book_card.html" with in_community=False %}
+        {% include "books/_book_card.html" %}
       {% endfor %}
     </div>
   {% else %}
