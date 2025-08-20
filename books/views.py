@@ -225,3 +225,37 @@ def book_detail(request, book_id):
         "added_when": getattr(book, "created_at", None) or getattr(book, "added_at", None) or None,  # optional
     }
     return render(request, 'book_detail.html', context)
+
+# Detail page for Google Books API results
+def book_api_detail(request, book_id):
+    """
+    Fetch a book by ID from Google Books API and display details
+    using the same book_detail.html template.
+    """
+    import requests
+    api_url = f"https://www.googleapis.com/books/v1/volumes/{book_id}"
+    response = requests.get(api_url)
+
+    if response.status_code != 200:
+        return render(request, "book_detail.html", {
+            "book": {
+                "title": "Book not found",
+                "description": "Unable to fetch data.",
+                "cover_url": "/static/img/book-placeholder.png",
+            }
+        })
+
+    data = response.json().get("volumeInfo", {})
+
+    # Normalize so template works the same for DB + API books
+    book = {
+        "title": data.get("title", "No title"),
+        "author": ", ".join(data.get("authors", [])),
+        "description": data.get("description", "No description available."),
+        "cover_url": data.get("imageLinks", {}).get("thumbnail", "/static/img/book-placeholder.png"),
+        "publisher": data.get("publisher", "Unknown"),
+        "publishedDate": data.get("publishedDate", "N/A"),
+        "pageCount": data.get("pageCount", "N/A"),
+    }
+
+    return render(request, "book_detail.html", {"book": book})
