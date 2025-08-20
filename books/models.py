@@ -10,7 +10,7 @@ class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=200)
     description = models.TextField(blank=True)
-    cover_url = models.URLField(max_length=500, blank=True) # Image from Google Books
+    cover_url = models.URLField(max_length=500, blank=True)  # Image from Google Books
     google_book_id = models.CharField(max_length=50, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='unread')
     notes = models.TextField(blank=True)
@@ -18,18 +18,16 @@ class Book(models.Model):
 
     def __str__(self):
         return f"{self.title} by {self.author}"
-    
-    from django.contrib.auth.models import User
-    from django.db import models
 
-    from django.db import models
-from django.contrib.auth.models import User
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    bio = models.TextField(blank=True, null=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+    bio = models.TextField(blank=True, null=True)   # bio stays optional
+    is_public = models.BooleanField(
+        default=False,
+        help_text="Allow other signed-in users to view your profile and book collection."
+    )
 
     def __str__(self):
         return f"{self.user.username}'s profile"
-
