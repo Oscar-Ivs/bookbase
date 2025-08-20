@@ -209,7 +209,17 @@ def fetch_books(request):
 def book_detail(request, book_id):
     try:
         int_id = int(book_id)
-        book = get_object_or_404(Book, id=int_id, user=request.user)
+
+        # First, check current user's own books
+        try:
+            book = Book.objects.get(id=int_id, user=request.user)
+        except Book.DoesNotExist:
+            # If not found, check if it belongs to another public profile
+            book = Book.objects.filter(id=int_id, user__profile__is_public=True).first()
+
+        if not book:
+            raise Book.DoesNotExist
+
         book_data = {
             "id": book.id,
             "title": book.title,
@@ -220,14 +230,22 @@ def book_detail(request, book_id):
             "status": book.status,
         }
         return render(request, "book_detail.html", {"book": book_data})
-    except (ValueError, ValidationError):
-        pass
 
+    except (ValueError, ValidationError, Book.DoesNotExist):
+        pass  # not numeric or not found → try API
+
+    # Otherwise, fallback: fetch from Google Books API
     api_url = f"https://www.googleapis.com/books/v1/volumes/{book_id}"
     response = requests.get(api_url)
 
     if response.status_code != 200:
-        return render(request, "book_detail.html", {"book": {"title": "Book not found", "description": "Unable to fetch data.", "cover_url": "/static/img/book-placeholder.png"}})
+        return render(request, "book_detail.html", {
+            "book": {
+                "title": "Book not found",
+                "description": "Unable to fetch data.",
+                "cover_url": "/static/img/book-placeholder.png",
+            }
+        })
 
     data = response.json().get("volumeInfo", {})
     book_data = {
@@ -239,6 +257,7 @@ def book_detail(request, book_id):
         "publishedDate": data.get("publishedDate", "N/A"),
         "pageCount": data.get("pageCount", "N/A"),
     }
+
     return render(request, "book_detail.html", {"book": book_data})
 
 
