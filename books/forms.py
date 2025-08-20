@@ -2,6 +2,7 @@ from django import forms
 from .models import Book, Profile
 from django.contrib.auth.models import User
 
+
 class BookForm(forms.ModelForm):
     class Meta:
         model = Book
@@ -11,13 +12,16 @@ class BookForm(forms.ModelForm):
             'notes': forms.Textarea(attrs={'rows': 3}),
         }
 
+
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['bio', 'avatar']  # Include avatar upload
+        fields = ['bio', 'avatar', 'is_public']  # ← include public toggle
         widgets = {
             'bio': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
         }
+
+
 # This form allows users to update their profile information.
 class UserUpdateForm(forms.ModelForm):
     class Meta:
@@ -27,5 +31,3 @@ class UserUpdateForm(forms.ModelForm):
             'username': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
         }
-
-

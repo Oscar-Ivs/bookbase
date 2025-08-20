@@ -1,5 +1,3 @@
-# books/views.py
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout
@@ -47,10 +45,10 @@ def profile(request):
     user_form = UserUpdateForm(request.POST or None, instance=request.user)
 
     if request.method == 'POST':
-        # Handle avatar or bio
-        if 'bio' in request.POST or 'avatar' in request.FILES:
+        # Handle avatar/bio/public toggle
+        if 'bio' in request.POST or 'avatar' in request.FILES or 'is_public' in request.POST:
             if profile_form.is_valid():
-                # Delete old avatar if uploading a new one (and it's not placeholder)
+                # Delete old avatar if uploading a new one
                 if 'avatar' in request.FILES and profile.avatar:
                     old_path = profile.avatar.path
                     if os.path.isfile(old_path) and not profile.avatar.name.endswith("avatar-placeholder.png"):
@@ -71,7 +69,7 @@ def profile(request):
 
                 return redirect('profile')
 
-        # Handle username/email
+        # Handle username/email updates
         elif 'update_user_form' in request.POST:
             if user_form.is_valid():
                 user_form.save()
@@ -156,7 +154,6 @@ def search_google_books(request):
     if not query:
         return JsonResponse({'error': 'No query provided'}, status=400)
 
-    # Correct API request with startIndex + maxResults + full description
     url = (
         f'https://www.googleapis.com/books/v1/volumes'
         f'?q={query}&startIndex={start_index}&maxResults={max_results}&projection=full'
@@ -172,9 +169,9 @@ def search_google_books(request):
             books.append({
                 'title': info.get('title', ''),
                 'author': ', '.join(info.get('authors', [])) if 'authors' in info else '',
-                'description': info.get('description', ''),  # full description
+                'description': info.get('description', ''),
                 'cover_url': info.get('imageLinks', {}).get('thumbnail', ''),
-                'id': item.get('id'),  # include Google ID so we can link
+                'id': item.get('id'),  # Google ID
             })
 
         return JsonResponse({'books': books})
@@ -207,7 +204,7 @@ def fetch_books(request):
                 'author': ', '.join(volume.get('authors', [])),
                 'description': volume.get('description', '')[:300],
                 'cover_url': volume.get('imageLinks', {}).get('thumbnail', ''),
-                'id': item.get('id'),  # include Google ID so we can link
+                'id': item.get('id'),
             })
 
         return JsonResponse({'books': books})
@@ -218,15 +215,9 @@ def fetch_books(request):
 # Unified book detail view for BOTH DB + Google Books
 @login_required
 def book_detail(request, book_id):
-    """
-    Show detail for either:
-    - a DB book (if book_id is numeric and belongs to the user)
-    - a Google Books API book (if book_id is a string)
-    """
-
-    # Case 1: try DB book (numeric id)
     try:
-        int_id = int(book_id)  # will fail if book_id is not an int
+        # Case 1: DB book (numeric ID)
+        int_id = int(book_id)
         book = get_object_or_404(Book, id=int_id, user=request.user)
 
         book_data = {
@@ -241,7 +232,7 @@ def book_detail(request, book_id):
         return render(request, "book_detail.html", {"book": book_data})
 
     except (ValueError, ValidationError):
-        pass  # not numeric → fall through to API
+        pass  # not numeric → try API
 
     # Case 2: Google Books API result
     api_url = f"https://www.googleapis.com/books/v1/volumes/{book_id}"
@@ -268,3 +259,37 @@ def book_detail(request, book_id):
     }
 
     return render(request, "book_detail.html", {"book": book_data})
+
+
+# Community features
+def community_list(request):
+    """
+    Public directory showing users who opted in (is_public=True).
+    Anonymous users can see the list only.
+    """
+    profiles = Profile.objects.filter(is_public=True).select_related("user")
+
+    public_users = []
+    for p in profiles:
+        qs = Book.objects.filter(user=p.user)
+        public_users.append({
+            "username": p.user.username,
+            "avatar_url": (p.avatar.url if p.avatar else "/static/img/avatar-placeholder.png"),
+            "bio": p.bio,
+            "member_since": p.user.date_joined,
+            "total_books": qs.count(),
+            "read_count": qs.filter(status="read").count(),
+            "unread_count": qs.filter(status="unread").count(),
+        })
+
+    return render(request, "community_list.html", {"profiles": public_users})
+
+
+@login_required
+def community_profile(request, username):
+    """
+    Signed-in users can open another user's public profile and see their collection.
+    """
+    profile = get_object_or_404(Profile, user__username=username, is_public=True)
+    books = Book.objects.filter(user=profile.user).order_by("title")
+    return render(request, "community_profile.html", {"profile": profile, "books": books})

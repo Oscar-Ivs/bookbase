@@ -48,6 +48,13 @@
             </div>
           </div>
         </div>
+<div class="form-check mt-2">
+  {{ form.is_public }}
+  <label class="form-check-label" for="{{ form.is_public.id_for_label }}">
+    Make my profile & collection public
+  </label>
+  <div class="form-text">Other signed-in users will be able to view your profile and books.</div>
+</div>
 
         <!-- Divider -->
         <hr class="my-4">
