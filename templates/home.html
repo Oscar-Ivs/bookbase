@@ -111,9 +111,10 @@
           }
 
           data.books.forEach((book, index) => {
-            const thumbnail = book.thumbnail || '/static/img/book-placeholder.png';
+            const thumbnail = book.cover_url || book.thumbnail || '/static/img/book-placeholder.png';
             const title = book.title || 'Untitled';
             const rawAuthor = book.author || 'Unknown Author';
+            const bookId = book.id; // id passed from backend (DB int or Google string)
 
             let author = rawAuthor;
             if (rawAuthor !== 'Unknown Author') {
@@ -137,12 +138,7 @@
                       <p class="card-text small text-muted">${author}</p>
                     </div>
                     <div class="mt-auto">
-                      <button class="btn btn-outline-primary btn-sm w-100" 
-                              data-bs-toggle="collapse" 
-                              data-bs-target="#desc${startIndex + index}">More</button>
-                      <div class="collapse mt-2" id="desc${startIndex + index}">
-                        <p class="small">${description}</p>
-                      </div>
+                      <a href="/books/${bookId}/" class="btn btn-primary btn-sm w-100">View Details</a>
                     </div>
                   </div>
                 </div>

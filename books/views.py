@@ -12,6 +12,7 @@ import requests
 import os
 from PIL import Image
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 
 # User registration view
@@ -171,8 +172,9 @@ def search_google_books(request):
             books.append({
                 'title': info.get('title', ''),
                 'author': ', '.join(info.get('authors', [])) if 'authors' in info else '',
-                'description': info.get('description', ''),  # ✅ full description
+                'description': info.get('description', ''),  # full description
                 'cover_url': info.get('imageLinks', {}).get('thumbnail', ''),
+                'id': item.get('id'),  # include Google ID so we can link
             })
 
         return JsonResponse({'books': books})
@@ -204,7 +206,8 @@ def fetch_books(request):
                 'title': volume.get('title', 'Untitled'),
                 'author': ', '.join(volume.get('authors', [])),
                 'description': volume.get('description', '')[:300],
-                'thumbnail': volume.get('imageLinks', {}).get('thumbnail', ''),
+                'cover_url': volume.get('imageLinks', {}).get('thumbnail', ''),
+                'id': item.get('id'),  # include Google ID so we can link
             })
 
         return JsonResponse({'books': books})
@@ -212,27 +215,35 @@ def fetch_books(request):
         return JsonResponse({'error': str(e)}, status=500)
 
 
+# Unified book detail view for BOTH DB + Google Books
 @login_required
 def book_detail(request, book_id):
     """
-    Show a single book with: cover + status (left), description (middle), notes (right).
-    Only the owner can view their book.
+    Show detail for either:
+    - a DB book (if book_id is numeric and belongs to the user)
+    - a Google Books API book (if book_id is a string)
     """
-    book = get_object_or_404(Book, id=book_id, user=request.user)
 
-    context = {
-        "book": book,
-        "added_when": getattr(book, "created_at", None) or getattr(book, "added_at", None) or None,  # optional
-    }
-    return render(request, 'book_detail.html', context)
+    # Case 1: try DB book (numeric id)
+    try:
+        int_id = int(book_id)  # will fail if book_id is not an int
+        book = get_object_or_404(Book, id=int_id, user=request.user)
 
-# Detail page for Google Books API results
-def book_api_detail(request, book_id):
-    """
-    Fetch a book by ID from Google Books API and display details
-    using the same book_detail.html template.
-    """
-    import requests
+        book_data = {
+            "id": book.id,
+            "title": book.title,
+            "author": book.author,
+            "description": book.description,
+            "notes": getattr(book, "notes", None),
+            "cover_url": book.cover_url or "/static/img/book-placeholder.png",
+            "status": book.status,
+        }
+        return render(request, "book_detail.html", {"book": book_data})
+
+    except (ValueError, ValidationError):
+        pass  # not numeric → fall through to API
+
+    # Case 2: Google Books API result
     api_url = f"https://www.googleapis.com/books/v1/volumes/{book_id}"
     response = requests.get(api_url)
 
@@ -246,9 +257,7 @@ def book_api_detail(request, book_id):
         })
 
     data = response.json().get("volumeInfo", {})
-
-    # Normalize so template works the same for DB + API books
-    book = {
+    book_data = {
         "title": data.get("title", "No title"),
         "author": ", ".join(data.get("authors", [])),
         "description": data.get("description", "No description available."),
@@ -258,4 +267,4 @@ def book_api_detail(request, book_id):
         "pageCount": data.get("pageCount", "N/A"),
     }
 
-    return render(request, "book_detail.html", {"book": book})
+    return render(request, "book_detail.html", {"book": book_data})

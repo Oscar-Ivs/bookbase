@@ -27,7 +27,7 @@ urlpatterns = [
     path('get_books/', views.fetch_books, name='fetch_books'),
 
     # New book detail view
-    path('books/<int:book_id>/', views.book_detail, name='book_detail'),
+    path("books/<book_id>/", views.book_detail, name="book_detail"),
 
     path('password_change/', auth_views.PasswordChangeView.as_view(
         template_name='registration/password_change_form.html'), name='password_change'),

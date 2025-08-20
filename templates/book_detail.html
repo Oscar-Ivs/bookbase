@@ -5,11 +5,13 @@
   <div class="row g-4">
 
     <div class="mb-3">
-  <a href="{% url 'my_collection' %}" class="btn btn-outline-secondary btn-sm">
-    ← Back
-  </a>
-</div>
-
+      <!-- Back button: if coming from My Collection, show that link, otherwise go Home -->
+      {% if book.id %}
+        <a href="{% url 'my_collection' %}" class="btn btn-outline-secondary btn-sm">← Back</a>
+      {% else %}
+        <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-sm">← Back</a>
+      {% endif %}
+    </div>
 
     <!-- Column 1: Cover + Meta -->
     <div class="col-12 col-md-6 col-lg-3 text-center">
@@ -22,18 +24,24 @@
       <h5 class="fw-bold">{{ book.title }}</h5>
       <p class="text-muted">{{ book.author }}</p>
 
-      <p>
-        {% if book.status == 'read' %}
-          <span class="badge bg-success">Read</span>
-        {% else %}
-          <span class="badge bg-danger">Unread</span>
-        {% endif %}
-      </p>
+      <!-- Status badge (DB books only) -->
+      {% if book.status %}
+        <p>
+          {% if book.status == 'read' %}
+            <span class="badge bg-success">Read</span>
+          {% else %}
+            <span class="badge bg-danger">Unread</span>
+          {% endif %}
+        </p>
+      {% endif %}
 
-      <div class="d-flex justify-content-center gap-2">
-        <a href="{% url 'edit_book' book.id %}" class="btn btn-outline-primary btn-sm">Edit</a>
-        <a href="{% url 'delete_book' book.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
-      </div>
+      <!-- Edit/Delete buttons (DB books only) -->
+      {% if book.id %}
+        <div class="d-flex justify-content-center gap-2">
+          <a href="{% url 'edit_book' book.id %}" class="btn btn-outline-primary btn-sm">Edit</a>
+          <a href="{% url 'delete_book' book.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
+        </div>
+      {% endif %}
     </div>
 
     <!-- Column 2 & 3 combined for tablet, split on desktop -->
@@ -43,15 +51,22 @@
         <div class="col-12 col-lg-8">
           <div class="p-3 border rounded" style="background-color: #acbdd8;">
             <h5>Description</h5>
-            <p>{{ book.description|default:"No description provided." }}</p>
+            <p>{{ book.description|default:"No description provided."|safe }}</p>
           </div>
         </div>
 
-        <!-- Notes -->
+        <!-- Notes for DB OR extra details for API -->
         <div class="col-12 col-lg-4">
           <div class="p-3 border rounded" style="background-color: #acbdd8;">
-            <h5>Notes</h5>
-            <p>{{ book.notes|default:"No notes added." }}</p>
+            {% if book.notes %}
+              <h5>Notes</h5>
+              <p>{{ book.notes }}</p>
+            {% else %}
+              <h5>Details</h5>
+              <p><strong>Publisher:</strong> {{ book.publisher|default:"N/A" }}</p>
+              <p><strong>Published:</strong> {{ book.publishedDate|default:"N/A" }}</p>
+              <p><strong>Pages:</strong> {{ book.pageCount|default:"N/A" }}</p>
+            {% endif %}
           </div>
         </div>
       </div>
