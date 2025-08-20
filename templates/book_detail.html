@@ -5,11 +5,13 @@
   <div class="row g-4">
 
     <div class="mb-3">
-      <!-- Back button: if coming from My Collection, show that link, otherwise go Home -->
-      {% if book.id %}
-        <a href="{% url 'my_collection' %}" class="btn btn-outline-secondary btn-sm">← Back</a>
+      <!-- Smart back button -->
+      {% if book.is_owner %}
+        <a href="{% url 'my_collection' %}" class="btn btn-outline-secondary btn-sm">← Back to My Collection</a>
+      {% elif book.id %}
+        <a href="{% url 'community_list' %}" class="btn btn-outline-secondary btn-sm">← Back to Community</a>
       {% else %}
-        <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-sm">← Back</a>
+        <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-sm">← Back Home</a>
       {% endif %}
     </div>
 
@@ -35,7 +37,7 @@
         </p>
       {% endif %}
 
-      <!-- Edit/Delete buttons (DB books only) -->
+      <!-- Owner-only buttons -->
       {% if book.is_owner %}
         <div class="d-flex justify-content-center gap-2">
           <a href="{% url 'edit_book' book.id %}" class="btn btn-outline-primary btn-sm">Edit</a>
