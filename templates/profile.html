@@ -50,85 +50,90 @@
             <form method="POST" class="mt-3">
               {% csrf_token %}
               <input type="hidden" name="toggle_visibility" value="1">
-              <div class="form-check">
-                <input type="checkbox" name="is_public" class="form-check-input" id="id_is_public"
-                  {{ profile.is_public|yesno:"checked," }}>
+
+              <div class="form-check d-flex align-items-center gap-2">
+                <input type="checkbox" name="is_public" class="form-check-input" id="id_is_public" {{
+                  profile.is_public|yesno:"checked," }}>
                 <label class="form-check-label" for="id_is_public">
                   Make my profile &amp; collection public
                 </label>
+
+                <span class="badge {{ profile.is_public|yesno:'bg-success,bg-secondary' }}">
+                  {{ profile.is_public|yesno:'Public,Private' }}
+                </span>
               </div>
-              <div class="form-text mb-2">
-                Other signed-in users will be able to view your profile and books.
-              </div>
-              <button type="submit" class="btn btn-sm btn-warning">Save Visibility</button>
+
+              <button type="submit"
+                class="btn btn-sm {{ profile.is_public|yesno:'btn-success,btn-outline-secondary' }} mt-2">
+                {{ profile.is_public|yesno:'Public ✓,Save Visibility' }}
+              </button>
             </form>
-          </div>
-        </div>
 
-        <!-- Divider -->
-        <hr class="my-4">
 
-        <!-- User Info -->
-        <div class="row">
-          <div class="col-md-6">
-            <p><strong>Username:</strong> {{ user.username }}</p>
-            <p><strong>Email:</strong> {{ user.email|default:"N/A" }}</p>
-            <p><strong>Member since:</strong> {{ user.date_joined|date:"F d, Y" }}</p>
-          </div>
-          <div class="col-md-6">
-            <p><strong>Books in collection:</strong> {{ total_books }}</p>
-            <p><strong>Unread:</strong> {{ unread_count }}</p>
-            <p><strong>Read:</strong> <span class="text-success fw-bold">{{ read_count }}</span></p>
-          </div>
-        </div>
+            <!-- Divider -->
+            <hr class="my-4">
 
-        <!-- Action Buttons -->
-        <div class="d-flex justify-content-between align-items-center mt-4">
-          <button type="button" class="btn btn-outline-dark btn-sm" onclick="enableUserEdit()">Edit Username /
-            Email</button>
-          <a href="{% url 'password_change' %}" class="btn btn-outline-dark btn-sm">Change Password</a>
-        </div>
-
-        <!-- Username/Email Edit Form (hidden by default) -->
-        <div id="user-edit-form" class="d-none mt-3">
-          <form method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="update_user_form" value="1"> <!-- Form marker -->
-            <div class="mb-2">
-              {{ user_form.username.label_tag }} {{ user_form.username }}
+            <!-- User Info -->
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Username:</strong> {{ user.username }}</p>
+                <p><strong>Email:</strong> {{ user.email|default:"N/A" }}</p>
+                <p><strong>Member since:</strong> {{ user.date_joined|date:"F d, Y" }}</p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Books in collection:</strong> {{ total_books }}</p>
+                <p><strong>Unread:</strong> {{ unread_count }}</p>
+                <p><strong>Read:</strong> <span class="text-success fw-bold">{{ read_count }}</span></p>
+              </div>
             </div>
-            <div class="mb-2">
-              {{ user_form.email.label_tag }} {{ user_form.email }}
-            </div>
-            <button type="submit" class="btn btn-sm btn-primary mt-2">Save</button>
-            <button type="button" class="btn btn-sm btn-secondary mt-2" onclick="cancelUserEdit()">Cancel</button>
-          </form>
-        </div>
 
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-between align-items-center mt-4">
+              <button type="button" class="btn btn-outline-dark btn-sm" onclick="enableUserEdit()">Edit Username /
+                Email</button>
+              <a href="{% url 'password_change' %}" class="btn btn-outline-dark btn-sm">Change Password</a>
+            </div>
+
+            <!-- Username/Email Edit Form (hidden by default) -->
+            <div id="user-edit-form" class="d-none mt-3">
+              <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="update_user_form" value="1"> <!-- Form marker -->
+                <div class="mb-2">
+                  {{ user_form.username.label_tag }} {{ user_form.username }}
+                </div>
+                <div class="mb-2">
+                  {{ user_form.email.label_tag }} {{ user_form.email }}
+                </div>
+                <button type="submit" class="btn btn-sm btn-primary mt-2">Save</button>
+                <button type="button" class="btn btn-sm btn-secondary mt-2" onclick="cancelUserEdit()">Cancel</button>
+              </form>
+            </div>
+
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- Bio Toggle Script -->
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const editBtn = document.getElementById("edit-bio-btn");
-    const bioText = document.getElementById("bio-text");
-    const bioForm = document.getElementById("bio-form");
+    <!-- Bio Toggle Script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const editBtn = document.getElementById("edit-bio-btn");
+        const bioText = document.getElementById("bio-text");
+        const bioForm = document.getElementById("bio-form");
 
-    editBtn.addEventListener("click", function () {
-      bioText.classList.toggle("d-none");
-      bioForm.classList.toggle("d-none");
-    });
-  });
+        editBtn.addEventListener("click", function () {
+          bioText.classList.toggle("d-none");
+          bioForm.classList.toggle("d-none");
+        });
+      });
 
-  // Username/Email Toggle
-  function enableUserEdit() {
-    document.getElementById('user-edit-form').classList.remove('d-none');
-  }
-  function cancelUserEdit() {
-    document.getElementById('user-edit-form').classList.add('d-none');
-  }
-</script>
-{% endblock %}
+      // Username/Email Toggle
+      function enableUserEdit() {
+        document.getElementById('user-edit-form').classList.remove('d-none');
+      }
+      function cancelUserEdit() {
+        document.getElementById('user-edit-form').classList.add('d-none');
+      }
+    </script>
+    {% endblock %}
