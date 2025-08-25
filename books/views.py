@@ -14,6 +14,7 @@ import os
 from PIL import Image
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+from django.db.models import Count, Q
 
 
 # User registration view
@@ -102,30 +103,33 @@ def logout_view(request):
 
 
 # My Collection view — shows books owned by the logged-in user
+from django.db.models import Count, Q
+
 @login_required
 def my_collection(request):
-    books = Book.objects.filter(user=request.user).order_by('title')
-
-    # Notifications: unread count per book + total
-    unread_qs = (
-        CommentNotification.objects
-        .filter(comment__book__user=request.user, is_read=False)
-        .values('comment__book_id')
-        .annotate(count=Count('id'))
+    # Fetch books owned by current user
+    books = (
+        Book.objects.filter(user=request.user)
+        .annotate(
+            unread_count=Count(
+                'comments__commentnotification',
+                filter=Q(comments__commentnotification__user=request.user,
+                         comments__commentnotification__is_read=False)
+            )
+        )
+        .order_by('title')
     )
-    unread_by_book = {row['comment__book_id']: row['count'] for row in unread_qs}
-    total_unread = sum(unread_by_book.values())
+
+    total_unread = sum(book.unread_count for book in books)
 
     return render(
         request,
         'my_collection.html',
         {
             'books': books,
-            'unread_by_book': unread_by_book,   # dict: {book_id: unread_count}
-            'total_unread': total_unread,       # int: overall unread notifications
+            'total_unread': total_unread,
         },
     )
-
 
 # Add a book
 @login_required
@@ -227,13 +231,14 @@ def fetch_books(request):
 
 
 # Unified book detail view (DB + Google API) + comments
+# books/views.py
+
 @login_required
 def book_detail(request, book_id):
     db_book = None
     try:
         int_id = int(book_id)
 
-        # first: current user's book; else: any public user's book with that id
         db_book = (
             Book.objects.filter(id=int_id, user=request.user).first()
             or Book.objects.filter(id=int_id, user__profile__is_public=True).first()
@@ -242,21 +247,19 @@ def book_detail(request, book_id):
         if not db_book:
             raise Book.DoesNotExist
 
-        # --- POST: create a comment on a DB book ---
+        # --- Mark notifications as read when owner opens the book ---
+        if db_book.user == request.user:
+            CommentNotification.objects.filter(
+                user=request.user, comment__book=db_book, is_read=False
+            ).update(is_read=True)
+
+        # --- POST: create a comment ---
         if request.method == 'POST':
             text = (request.POST.get('comment_text') or '').strip()
             if text:
-                new_comment = Comment.objects.create(
-                    book=db_book,
-                    user=request.user,
-                    text=text
-                )
-                # create notification for the owner (but not for self-comments)
+                comment = Comment.objects.create(book=db_book, user=request.user, text=text)
                 if db_book.user != request.user:
-                    CommentNotification.objects.create(
-                        user=db_book.user,   # owner of the book
-                        comment=new_comment  # link notification to the new comment
-                    )
+                    CommentNotification.objects.create(user=db_book.user, comment=comment, is_read=False)
                 messages.success(request, "Comment added.")
             return redirect('book_detail', book_id=db_book.id)
 
@@ -279,14 +282,11 @@ def book_detail(request, book_id):
             "status": db_book.status,
             "is_owner": is_owner,
         }
-        return render(
-            request,
-            "book_detail.html",
-            {"book": book_data, "comments": comments}
-        )
+        return render(request, "book_detail.html", {"book": book_data, "comments": comments})
 
     except (ValueError, ValidationError, Book.DoesNotExist):
-        pass  # not numeric or not found → try API
+        pass
+
 
     # Otherwise, fallback: fetch from Google Books API (no comments on API-only books)
     api_url = f"https://www.googleapis.com/books/v1/volumes/{book_id}"

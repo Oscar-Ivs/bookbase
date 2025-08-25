@@ -1,6 +1,6 @@
 <div class="col-6 col-md-4 col-lg-3 col-xl-2 d-flex">
   <a href="{% url 'book_detail' book.id %}"
-     class="card flex-fill shadow-sm text-decoration-none text-dark book-card"
+     class="card flex-fill shadow-sm text-decoration-none text-dark book-card position-relative"
      style="width:100%; max-width:300px;">
     
     <!-- Book cover -->
@@ -18,6 +18,13 @@
         {% if book.status == 'read' %}Read{% else %}Unread{% endif %}
       </span>
     </div>
+
+    <!-- 🔔 Notification badge (only if unread) -->
+    {% if book.unread_count and book.unread_count > 0 %}
+      <span class="badge bg-danger rounded-pill position-absolute top-0 end-0 m-1">
+        {{ book.unread_count }}
+      </span>
+    {% endif %}
 
     <!-- Book info -->
     <div class="card-body p-2">
