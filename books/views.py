@@ -246,10 +246,17 @@ def book_detail(request, book_id):
         if request.method == 'POST':
             text = (request.POST.get('comment_text') or '').strip()
             if text:
-                Comment.objects.create(book=db_book, user=request.user, text=text)
+                new_comment = Comment.objects.create(
+                    book=db_book,
+                    user=request.user,
+                    text=text
+                )
                 # create notification for the owner (but not for self-comments)
                 if db_book.user != request.user:
-                    CommentNotification.objects.create(book=db_book, recipient=db_book.user, is_read=False)
+                    CommentNotification.objects.create(
+                        user=db_book.user,   # owner of the book
+                        comment=new_comment  # link notification to the new comment
+                    )
                 messages.success(request, "Comment added.")
             return redirect('book_detail', book_id=db_book.id)
 
@@ -272,7 +279,11 @@ def book_detail(request, book_id):
             "status": db_book.status,
             "is_owner": is_owner,
         }
-        return render(request, "book_detail.html", {"book": book_data, "comments": comments})
+        return render(
+            request,
+            "book_detail.html",
+            {"book": book_data, "comments": comments}
+        )
 
     except (ValueError, ValidationError, Book.DoesNotExist):
         pass  # not numeric or not found → try API
@@ -304,8 +315,7 @@ def book_detail(request, book_id):
     # API books: render without comment features
     return render(request, "book_detail.html", {"book": book_data, "comments": []})
 
-
-# --- Comment management ---
+ # --- Comment management ---
 
 @login_required
 def delete_comment(request, comment_id):
