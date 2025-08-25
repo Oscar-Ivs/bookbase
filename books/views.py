@@ -103,33 +103,31 @@ def logout_view(request):
 
 
 # My Collection view — shows books owned by the logged-in user
-from django.db.models import Count, Q
-
 @login_required
 def my_collection(request):
-    # Fetch books owned by current user
-    books = (
-        Book.objects.filter(user=request.user)
-        .annotate(
-            unread_count=Count(
-                'comments__commentnotification',
-                filter=Q(comments__commentnotification__user=request.user,
-                         comments__commentnotification__is_read=False)
-            )
-        )
-        .order_by('title')
-    )
+    books = Book.objects.filter(user=request.user).order_by('title')
 
-    total_unread = sum(book.unread_count for book in books)
+    # --- Gather unread notifications count per book ---
+    unread_qs = (
+        CommentNotification.objects
+        .filter(user=request.user, is_read=False, comment__book__user=request.user)
+        .values('comment__book_id')
+        .annotate(count=Count('id'))
+    )
+    unread_by_book = {row['comment__book_id']: row['count'] for row in unread_qs}
+
+    # Attach unread_count attribute to each book
+    for book in books:
+        book.unread_count = unread_by_book.get(book.id, 0)
 
     return render(
         request,
         'my_collection.html',
         {
             'books': books,
-            'total_unread': total_unread,
         },
     )
+
 
 # Add a book
 @login_required
