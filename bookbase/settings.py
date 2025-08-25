@@ -43,7 +43,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                # 🔹 later we can add books.context_processors.notifications here
+                'books.context_processors.unread_comments_count',
+
             ],
         },
     },
