@@ -40,7 +40,14 @@
           <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About Us</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'community_list' %}">Community</a></li>
           {% if user.is_authenticated %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'my_collection' %}">My Collection</a></li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'my_collection' %}">
+              My Collection
+              {% if unread_comments_count %}
+              <span class="badge rounded-pill bg-danger align-text-top">{{ unread_comments_count }}</span>
+              {% endif %}
+            </a>
+          </li>
           <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">Profile</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
           {% else %}
@@ -51,8 +58,6 @@
       </div>
     </div>
   </nav>
-
-
 
   <!-- Main Content -->
   <main class="container my-5 pt-5 flex-grow-1">

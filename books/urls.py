@@ -38,6 +38,11 @@ urlpatterns = [
         template_name='registration/password_change_form.html'), name='password_change'),
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(
         template_name='registration/password_change_done.html'), name='password_change_done'),
+
+    # Comment and notification routes
+    path('comments/<int:comment_id>/delete/', views.delete_comment, name='delete_comment'),
+    path('notifications/mark-all-read/', views.mark_all_notifications_read, name='mark_all_notifications_read'),
+    
 ]
 
 # This file defines all URL patterns for the 'books' app,

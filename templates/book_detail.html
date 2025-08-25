@@ -76,4 +76,37 @@
 
   </div>
 </div>
+
+{% if book.id %}
+  <hr>
+  <h5>Comments</h5>
+
+  <form method="post" class="mb-3">
+    {% csrf_token %}
+    <div class="input-group">
+      <input type="text" name="comment_text" class="form-control" placeholder="Write a comment…">
+      <button class="btn btn-primary btn-sm">Post</button>
+    </div>
+  </form>
+
+  {% for c in comments %}
+    <div class="border rounded p-2 mb-2" style="background:#f8f9fa">
+      <div class="small text-muted">
+        <strong>{{ c.user.username }}</strong> · {{ c.created_at|date:"M j, Y H:i" }}
+      </div>
+      <div>{{ c.text }}</div>
+      {% if user.is_authenticated %}
+        {% if c.user_id == user.id or book.is_owner %}
+          <form method="post" action="{% url 'delete_comment' c.id %}" class="mt-1">
+            {% csrf_token %}
+            <button class="btn btn-outline-danger btn-sm">Delete</button>
+          </form>
+        {% endif %}
+      {% endif %}
+    </div>
+  {% empty %}
+    <p class="text-muted">No comments yet.</p>
+  {% endfor %}
+{% endif %}
+
 {% endblock %}

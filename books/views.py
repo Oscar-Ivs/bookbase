@@ -3,9 +3,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
 from django.conf import settings
-from .models import Book, Profile
+from django.contrib import messages
+from django.db.models import Count
+from .models import Book, Profile, Comment, CommentNotification
 from .forms import BookForm, ProfileForm, UserUpdateForm
 import requests
 import os
@@ -45,15 +47,15 @@ def profile(request):
     user_form = UserUpdateForm(request.POST or None, instance=request.user)
 
     if request.method == 'POST':
-        # Case 1: Bio or Avatar edit
+        # Case 1: Bio or Avatar edit (inline bio uses hidden "update_bio" flag)
         if 'update_bio' in request.POST or 'avatar' in request.FILES:
             if profile_form.is_valid():
                 profile_form.save()
 
                 # Resize uploaded avatar
-                if 'avatar' in request.FILES:
-                    avatar_path = profile.avatar.path
+                if 'avatar' in request.FILES and profile.avatar:
                     try:
+                        avatar_path = profile.avatar.path
                         img = Image.open(avatar_path)
                         img = img.convert('RGB')
                         img.thumbnail((300, 300))
@@ -103,7 +105,26 @@ def logout_view(request):
 @login_required
 def my_collection(request):
     books = Book.objects.filter(user=request.user).order_by('title')
-    return render(request, 'my_collection.html', {'books': books})
+
+    # Notifications: unread count per book + total
+    unread_qs = (
+        CommentNotification.objects
+        .filter(comment__book__user=request.user, is_read=False)
+        .values('comment__book_id')
+        .annotate(count=Count('id'))
+    )
+    unread_by_book = {row['comment__book_id']: row['count'] for row in unread_qs}
+    total_unread = sum(unread_by_book.values())
+
+    return render(
+        request,
+        'my_collection.html',
+        {
+            'books': books,
+            'unread_by_book': unread_by_book,   # dict: {book_id: unread_count}
+            'total_unread': total_unread,       # int: overall unread notifications
+        },
+    )
 
 
 # Add a book
@@ -205,41 +226,58 @@ def fetch_books(request):
         return JsonResponse({'error': str(e)}, status=500)
 
 
-# Unified book detail view (DB + Google API)
+# Unified book detail view (DB + Google API) + comments
 @login_required
 def book_detail(request, book_id):
+    db_book = None
     try:
         int_id = int(book_id)
 
-        # First, check current user's own books
-        try:
-            book = Book.objects.get(id=int_id, user=request.user)
-        except Book.DoesNotExist:
-            # If not found, check if it belongs to another public profile
-            book = Book.objects.filter(id=int_id, user__profile__is_public=True).first()
+        # first: current user's book; else: any public user's book with that id
+        db_book = (
+            Book.objects.filter(id=int_id, user=request.user).first()
+            or Book.objects.filter(id=int_id, user__profile__is_public=True).first()
+        )
 
-        if not book:
+        if not db_book:
             raise Book.DoesNotExist
 
-        # Flag: does this book belong to the logged-in user?
-        is_owner = (book.user == request.user)
+        # --- POST: create a comment on a DB book ---
+        if request.method == 'POST':
+            text = (request.POST.get('comment_text') or '').strip()
+            if text:
+                Comment.objects.create(book=db_book, user=request.user, text=text)
+                # create notification for the owner (but not for self-comments)
+                if db_book.user != request.user:
+                    CommentNotification.objects.create(book=db_book, recipient=db_book.user, is_read=False)
+                messages.success(request, "Comment added.")
+            return redirect('book_detail', book_id=db_book.id)
 
+        # --- GET: render page with comments ---
+        comments = (
+            Comment.objects
+            .filter(book=db_book)
+            .select_related('user')
+            .order_by('-created_at')
+        )
+
+        is_owner = (db_book.user == request.user)
         book_data = {
-            "id": book.id,
-            "title": book.title,
-            "author": book.author,
-            "description": book.description,
-            "notes": getattr(book, "notes", None),
-            "cover_url": book.cover_url or "/static/img/book-placeholder.png",
-            "status": book.status,
-            "is_owner": is_owner,   # ✅ pass ownership flag
+            "id": db_book.id,
+            "title": db_book.title,
+            "author": db_book.author,
+            "description": db_book.description,
+            "notes": getattr(db_book, "notes", None),
+            "cover_url": db_book.cover_url or "/static/img/book-placeholder.png",
+            "status": db_book.status,
+            "is_owner": is_owner,
         }
-        return render(request, "book_detail.html", {"book": book_data})
+        return render(request, "book_detail.html", {"book": book_data, "comments": comments})
 
     except (ValueError, ValidationError, Book.DoesNotExist):
         pass  # not numeric or not found → try API
 
-    # Otherwise, fallback: fetch from Google Books API
+    # Otherwise, fallback: fetch from Google Books API (no comments on API-only books)
     api_url = f"https://www.googleapis.com/books/v1/volumes/{book_id}"
     response = requests.get(api_url)
 
@@ -263,7 +301,44 @@ def book_detail(request, book_id):
         "pageCount": data.get("pageCount", "N/A"),
     }
 
-    return render(request, "book_detail.html", {"book": book_data})
+    # API books: render without comment features
+    return render(request, "book_detail.html", {"book": book_data, "comments": []})
+
+
+# --- Comment management ---
+
+@login_required
+def delete_comment(request, comment_id):
+    """
+    Allow the comment author OR the book owner to delete a comment.
+    """
+    comment = get_object_or_404(Comment, id=comment_id)
+    is_owner = (comment.book.user == request.user)
+    is_author = (comment.user == request.user)
+
+    if not (is_owner or is_author):
+        return HttpResponseForbidden("You don't have permission to delete this comment.")
+
+    if request.method == 'POST':
+        # Clean up related notifications for this comment
+        CommentNotification.objects.filter(comment=comment).delete()
+        comment.delete()
+        messages.success(request, "Comment deleted.")
+        return redirect('book_detail', book_id=comment.book.id)
+
+    return redirect('book_detail', book_id=comment.book.id)
+
+
+@login_required
+def mark_all_notifications_read(request):
+    """
+    Mark all unread comment notifications for the current user as read.
+    Useful to clear the red badge on 'My Collection'.
+    """
+    if request.method == 'POST':
+        CommentNotification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)
+        messages.success(request, "All notifications marked as read.")
+    return redirect('my_collection')
 
 
 # Community list
