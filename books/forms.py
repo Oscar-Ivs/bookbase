@@ -1,5 +1,5 @@
 from django import forms
-from .models import Book, Profile, Comment
+from .models import Book, Profile
 from django.contrib.auth.models import User
 
 class BookForm(forms.ModelForm):
@@ -14,7 +14,8 @@ class BookForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['bio', 'avatar', 'is_public']
+        # IMPORTANT: do NOT include is_public here
+        fields = ['bio', 'avatar']
         widgets = {
             'bio': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
         }
@@ -27,8 +28,3 @@ class UserUpdateForm(forms.ModelForm):
             'username': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
         }
-
-class CommentForm(forms.ModelForm):   # added properly
-    class Meta:
-        model = Comment
-        fields = ['text']  # assuming Comment has a "text" field
