@@ -15,6 +15,9 @@ from PIL import Image
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.db.models import Count, Q
+from django.urls import reverse
+from django.contrib import messages
+
 
 
 # User registration view
@@ -229,7 +232,6 @@ def fetch_books(request):
 
 
 # Unified book detail view (DB + Google API) + comments
-# books/views.py
 
 @login_required
 def book_detail(request, book_id):
@@ -257,7 +259,12 @@ def book_detail(request, book_id):
             if text:
                 comment = Comment.objects.create(book=db_book, user=request.user, text=text)
                 if db_book.user != request.user:
-                    CommentNotification.objects.create(user=db_book.user, comment=comment, is_read=False)
+                    CommentNotification.objects.create(
+                     user=db_book.user, 
+                     comment=Comment.objects.filter(book=db_book, user=request.user).latest("created_at"),  # attach the new comment
+                     is_read=False
+    )
+
                 messages.success(request, "Comment added.")
             return redirect('book_detail', book_id=db_book.id)
 
