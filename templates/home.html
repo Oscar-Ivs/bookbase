@@ -1,10 +1,15 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-
-<!-- Top discovery row: center Discover Books + Search bar-->
 <div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-2 mb-3">
-  <h2 class="mb-0"><img src="static/img/logo-small_b.png" alt="Logo" height="60">ooks To Discover</h2>
+  <h2 class="mb-0">
+    <span style="display:inline-flex; align-items:center;">
+      <img src="{% static 'img/logo-small_b.png' %}" alt="Logo" height="60" style="margin-right: 1px; transform: translateY(-10px);">
+      ooks To Discover
+    </span>
+  </h2>
+
   <div class="input-group input-group-sm" style="width: 220px;">
     <input type="text" id="searchInput" class="form-control" placeholder="Search..." aria-label="Search books">
     <!-- styled search button -->
@@ -140,7 +145,7 @@
                   </div>
                 </div>
               </div>`;
-            
+
             container.innerHTML += card; // append card
           });
 
@@ -181,7 +186,7 @@
   /* Book card background */
   .book-card {
     background-color: #acbdd8 !important;
-    border: 1px solid rgba(0,0,0,.125);
+    border: 1px solid rgba(0, 0, 0, .125);
   }
 </style>
 {% endblock %}
