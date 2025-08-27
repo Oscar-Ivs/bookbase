@@ -120,3 +120,34 @@ body {
 .bb-comment {
   background-color: #acbdd8;
 }
+
+/* Pagination styling for Comments */
+.pagination {
+  display: inline-flex;          /* only as wide as its children */
+  border: 1px solid #c7ccd6;     /* subtle grey border */
+  border-radius: 6px;            /* rounded corners */
+  padding: 0.25rem 0.5rem;
+  background-color: transparent;
+  margin: 0 auto;                /* center it horizontally */
+}
+
+
+/* Pagination links */
+.pagination .page-link {
+  background-color: transparent; /* no white */
+  color: #264a8c;                 /* dark blue text */
+  border: none;                   /* remove Bootstrap’s extra borders */
+}
+
+/* Active page */
+.pagination .page-item.active .page-link {
+  background-color: #5b82ca;  /* soft blue for active */
+  color: #fff;
+  border-radius: 4px;         /* make the active page a pill */
+}
+
+/* Disabled prev/next */
+.pagination .page-item.disabled .page-link {
+  color: #9aa0ac;
+  pointer-events: none;
+}
