@@ -162,3 +162,47 @@ body {
   text-align: center;
 }
 
+/* --- My Collection: controls --- */
+.btn-add-book {
+  padding: 0.25rem 0.8rem;     /* compact */
+  font-size: 0.9rem;
+  border-radius: 6px;
+  line-height: 1.3;
+  min-width: 110px;
+  text-align: center;
+}
+
+/* LIST VIEW “card rows” */
+.bb-list-item{
+  background-color:#acbdd8;   /* full blue background */
+  border-color:#c7ccd6;       /* subtle grey border */
+  transition:background-color .15s, box-shadow .15s;
+}
+.bb-list-item:hover{
+  background-color:#a2b2cf;   /* slight hover lift */
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+
+/* cover size in list view */
+.bb-cover-list{
+  height:64px;
+  width:auto;
+  border-radius:4px;
+  box-shadow:0 1px 2px rgba(0,0,0,.08);
+}
+
+/* title color */
+.bb-title-link{
+  color:#203c71;
+  text-decoration:underline;
+}
+.bb-title-link:hover{
+  color:#152845;
+  text-decoration:none;
+}
+
+/* tighten spacing on very small screens */
+@media (max-width:576px){
+  .bb-list-item{padding: .75rem;}
+}
+

@@ -32,50 +32,59 @@
 
   {% if books %}
     {% if view_mode == 'list' %}
-      <div class="table-responsive">
-        <table class="table align-middle">
-          <thead>
-            <tr>
-              <th style="width:70px;"></th>
-              <th>Title</th>
-              <th>Author</th>
-              <th>Status</th>
-              <th class="text-end">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for book in books %}
-            <tr style="background-color:#acbdd8;">
-              <td>
-                <img src="{{ book.cover_url|default:'/static/img/book-placeholder.png' }}"
-                     alt="Cover" style="height:60px; width:auto;"
-                     onerror="this.onerror=null; this.src='/static/img/book-placeholder.png';">
-              </td>
-              <td class="fw-semibold">
-                <a href="{% url 'book_detail' book.id %}">{{ book.title }}</a>
-                {% if book.unread_count %}
-                <span class="badge bg-danger ms-1">{{ book.unread_count }}</span>
-                {% endif %}
-              </td>
-              <td class="text-muted">{{ book.author }}</td>
-              <td>
+      <!-- Card-styled list (blue background, rounded, border, p-3, mt-3) -->
+      <ul class="list-unstyled mb-0">
+        {% for book in books %}
+          <li class="bb-list-item rounded p-3 border mt-3">
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+              <!-- cover -->
+              <img src="{{ book.cover_url|default:'/static/img/book-placeholder.png' }}"
+                   alt="Cover" class="bb-cover-list"
+                   onerror="this.onerror=null; this.src='/static/img/book-placeholder.png';">
+
+              <!-- main content -->
+              <div class="flex-grow-1">
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                  <a href="{% url 'book_detail' book.id %}" class="bb-title-link fw-semibold">
+                    {{ book.title }}
+                  </a>
+                  {% if book.unread_count %}
+                    <span class="badge bg-danger">{{ book.unread_count }}</span>
+                  {% endif %}
+                </div>
+                <div class="text-muted small">{{ book.author }}</div>
+
+                <!-- status shown on mobile (hidden on md+) -->
+                <div class="d-md-none mt-2">
+                  {% if book.status == 'read' %}
+                    <span class="badge bg-success">Read</span>
+                  {% else %}
+                    <span class="badge bg-secondary">Unread</span>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- status on desktop (hidden on small) -->
+              <div class="d-none d-md-block">
                 {% if book.status == 'read' %}
                   <span class="badge bg-success">Read</span>
                 {% else %}
                   <span class="badge bg-secondary">Unread</span>
                 {% endif %}
-              </td>
-              <td class="text-end">
+              </div>
+
+              <!-- actions -->
+              <div class="ms-md-auto d-flex gap-2">
                 <a href="{% url 'edit_book' book.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
                 <a href="{% url 'delete_book' book.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+              </div>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
 
     {% else %}
+      <!-- Grid -->
       <div class="row g-3">
         {% for book in books %}
           {% include "books/_book_card.html" %}
@@ -87,11 +96,12 @@
   {% endif %}
 </div>
 
+<!-- Persist Grid/List choice -->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     // Save preference on toggle click
     document.querySelectorAll(".btn-group a").forEach(btn => {
-      btn.addEventListener("click", function (e) {
+      btn.addEventListener("click", function () {
         const url = new URL(this.href, window.location.origin);
         const view = url.searchParams.get("view") || "grid";
         localStorage.setItem("collectionView", view);
@@ -109,5 +119,4 @@
     }
   });
 </script>
-
 {% endblock %}
