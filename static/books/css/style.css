@@ -151,3 +151,14 @@ body {
   color: #9aa0ac;
   pointer-events: none;
 }
+
+/* Add Book button wider + compact */
+.btn-add-book {
+  padding: 0.25rem 0.8rem;   /* slightly wider */
+  font-size: 0.9rem;
+  border-radius: 6px;
+  line-height: 1.3;          /* better vertical balance */
+  min-width: 110px;          /* ensures button is wide enough for + and text */
+  text-align: center;
+}
+
