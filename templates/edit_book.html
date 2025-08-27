@@ -3,6 +3,9 @@
 <div class="container mt-4">
   <h2>Edit Book: {{ book.title }}</h2>
 
+<!-- Back button -->
+    <a href="{% url 'my_collection' %}" class="btn btn-outline-secondary btn-sm">← Back</a>
+    
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
