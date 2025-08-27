@@ -3,17 +3,85 @@
 {% block content %}
 <div class="container mt-4">
 
-  <div class="d-flex align-items-center justify-content-between mb-3">
+  <div class="d-flex flex-wrap gap-2 align-items-center justify-content-between mb-3">
     <h1 class="mb-0">My Book Collection</h1>
-    <a href="{% url 'add_book' %}" class="btn btn-success">+ Add Book</a>
+
+    <form method="get" class="d-flex gap-2 align-items-center">
+      <input type="hidden" name="view" value="{{ view_mode }}">
+      <label for="sort" class="mb-0">Sort:</label>
+      <select id="sort" name="sort" class="form-select form-select-sm" onchange="this.form.submit()">
+        <option value="title_asc" {% if sort == 'title_asc' %}selected{% endif %}>Title A-Z</option>
+        <option value="title_desc" {% if sort == 'title_desc' %}selected{% endif %}>Title Z-A</option>
+        <option value="author_asc" {% if sort == 'author_asc' %}selected{% endif %}>Author A-Z</option>
+        <option value="author_desc" {% if sort == 'author_desc' %}selected{% endif %}>Author Z-A</option>
+        <option value="recent" {% if sort == 'recent' %}selected{% endif %}>Recently added</option>
+        <option value="status_read_first" {% if sort == 'status_read_first' %}selected{% endif %}>Read first</option>
+        <option value="status_unread_first" {% if sort == 'status_unread_first' %}selected{% endif %}>Unread first</option>
+      </select>
+
+      <div class="btn-group">
+        <a class="btn btn-sm {% if view_mode != 'list' %}btn-primary{% else %}btn-outline-secondary{% endif %}"
+           href="?view=grid&sort={{ sort }}">Grid</a>
+        <a class="btn btn-sm {% if view_mode == 'list' %}btn-primary{% else %}btn-outline-secondary{% endif %}"
+           href="?view=list&sort={{ sort }}">List</a>
+      </div>
+
+      <a href="{% url 'add_book' %}" class="btn btn-success btn-sm">+ Add Book</a>
+    </form>
   </div>
 
   {% if books %}
-    <div class="row g-3">
-      {% for book in books %}
-        {% include "books/_book_card.html" %}
-      {% endfor %}
-    </div>
+    {% if view_mode == 'list' %}
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th style="width:70px;"></th>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Status</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for book in books %}
+            <tr style="background-color:#acbdd8;">
+              <td>
+                <img src="{{ book.cover_url|default:'/static/img/book-placeholder.png' }}"
+                     alt="Cover" style="height:60px; width:auto;"
+                     onerror="this.onerror=null; this.src='/static/img/book-placeholder.png';">
+              </td>
+              <td class="fw-semibold">
+                <a href="{% url 'book_detail' book.id %}">{{ book.title }}</a>
+                {% if book.unread_count %}
+                <span class="badge bg-danger ms-1">{{ book.unread_count }}</span>
+                {% endif %}
+              </td>
+              <td class="text-muted">{{ book.author }}</td>
+              <td>
+                {% if book.status == 'read' %}
+                  <span class="badge bg-success">Read</span>
+                {% else %}
+                  <span class="badge bg-secondary">Unread</span>
+                {% endif %}
+              </td>
+              <td class="text-end">
+                <a href="{% url 'edit_book' book.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                <a href="{% url 'delete_book' book.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    {% else %}
+      <div class="row g-3">
+        {% for book in books %}
+          {% include "books/_book_card.html" %}
+        {% endfor %}
+      </div>
+    {% endif %}
   {% else %}
     <p class="text-center text-muted">Your collection is empty. Add some books!</p>
   {% endif %}
