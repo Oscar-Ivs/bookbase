@@ -134,12 +134,15 @@ def profile(request):
     return render(request, 'profile.html', context)
 
 
+# views.py
+
 @login_required
 def my_collection(request):
     """
     Show the current user's books with:
     - Sort controls via ?sort=
-    - Grid/List toggle via ?view= (persisted in cookie to avoid client-side flicker)
+    - Grid/List toggle via ?view=
+    - Persist view per-account using session (keyed by username) to avoid cross-user bleed
     - Unread comment badges per book
     """
     # ---- Sorting
@@ -155,12 +158,16 @@ def my_collection(request):
     }
     order_by = order_map.get(sort, ['title', 'author'])
 
-    # ---- View mode (prefer query param; fall back to cookie; default grid)
+    # ---- Per-user view preference via session
+    sess_key = f"collectionView:{request.user.username}"
     view_from_query = request.GET.get('view')
-    view_mode = view_from_query or request.COOKIES.get('collectionView', 'grid')
-    if view_mode not in ('grid', 'list'):
-        view_mode = 'grid'
+    if view_from_query in ('grid', 'list'):
+        request.session[sess_key] = view_from_query  # save per user
+        view_mode = view_from_query
+    else:
+        view_mode = request.session.get(sess_key, 'grid')
 
+    # ---- Query books
     books = Book.objects.filter(user=request.user).order_by(*order_by)
 
     # Unread notifications per book
@@ -174,18 +181,15 @@ def my_collection(request):
     for b in books:
         b.unread_count = unread_by_book.get(b.id, 0)
 
-    # Render response
-    response = render(
+    return render(
         request,
         'my_collection.html',
-        {'books': books, 'sort': sort, 'view_mode': view_mode},
+        {
+            'books': books,
+            'sort': sort,
+            'view_mode': view_mode,
+        },
     )
-
-    # If user explicitly chose a view, persist it in a cookie (1 year)
-    if view_from_query in ('grid', 'list'):
-        response.set_cookie('collectionView', view_from_query, max_age=60 * 60 * 24 * 365, samesite='Lax')
-    return response
-
 
 
 # ============================================================================
