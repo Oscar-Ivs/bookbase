@@ -86,4 +86,28 @@
     <p class="text-center text-muted">Your collection is empty. Add some books!</p>
   {% endif %}
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Save preference on toggle click
+    document.querySelectorAll(".btn-group a").forEach(btn => {
+      btn.addEventListener("click", function (e) {
+        const url = new URL(this.href, window.location.origin);
+        const view = url.searchParams.get("view") || "grid";
+        localStorage.setItem("collectionView", view);
+      });
+    });
+
+    // Restore preference if query param is missing
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has("view")) {
+      const savedView = localStorage.getItem("collectionView");
+      if (savedView) {
+        params.set("view", savedView);
+        window.location.search = params.toString();
+      }
+    }
+  });
+</script>
+
 {% endblock %}
