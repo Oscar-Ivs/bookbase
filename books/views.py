@@ -139,7 +139,7 @@ def my_collection(request):
     """
     Show the current user's books with:
     - Sort controls via ?sort=
-    - Grid/List toggle via ?view=
+    - Grid/List toggle via ?view= (persisted in cookie to avoid client-side flicker)
     - Unread comment badges per book
     """
     # ---- Sorting
@@ -149,14 +149,17 @@ def my_collection(request):
         'title_desc': ['-title', 'author'],
         'author_asc': ['author', 'title'],
         'author_desc': ['-author', 'title'],
-        'recent': ['-id'],  # proxy for "recently added" without migrations
-        'status_read_first': ['status', 'title'],    # 'read' < 'unread'
+        'recent': ['-id'],
+        'status_read_first': ['status', 'title'],     # 'read' < 'unread'
         'status_unread_first': ['-status', 'title'],
     }
     order_by = order_map.get(sort, ['title', 'author'])
 
-    # ---- View mode
-    view_mode = request.GET.get('view', 'grid')  # 'grid' or 'list'
+    # ---- View mode (prefer query param; fall back to cookie; default grid)
+    view_from_query = request.GET.get('view')
+    view_mode = view_from_query or request.COOKIES.get('collectionView', 'grid')
+    if view_mode not in ('grid', 'list'):
+        view_mode = 'grid'
 
     books = Book.objects.filter(user=request.user).order_by(*order_by)
 
@@ -171,15 +174,18 @@ def my_collection(request):
     for b in books:
         b.unread_count = unread_by_book.get(b.id, 0)
 
-    return render(
+    # Render response
+    response = render(
         request,
         'my_collection.html',
-        {
-            'books': books,
-            'sort': sort,
-            'view_mode': view_mode,
-        },
+        {'books': books, 'sort': sort, 'view_mode': view_mode},
     )
+
+    # If user explicitly chose a view, persist it in a cookie (1 year)
+    if view_from_query in ('grid', 'list'):
+        response.set_cookie('collectionView', view_from_query, max_age=60 * 60 * 24 * 365, samesite='Lax')
+    return response
+
 
 
 # ============================================================================
