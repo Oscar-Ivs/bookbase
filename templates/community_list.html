@@ -1,40 +1,111 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-3">Community</h2>
+    <div class="d-flex flex-wrap gap-2 align-items-center justify-content-between mb-2">
+        <h2 class="mb-0">Community</h2>
+
+        <form method="get" class="d-flex gap-2 align-items-center ms-auto">
+            <input type="hidden" name="view" value="{{ view_mode }}">
+            <label for="sort" class="mb-0">Sort:</label>
+            <select id="sort" name="sort" class="form-select form-select-sm" onchange="this.form.submit()">
+                <option value="username_asc" {% if sort == 'username_asc' %}selected{% endif %}>Username A-Z</option>
+                <option value="username_desc" {% if sort == 'username_desc' %}selected{% endif %}>Username Z-A</option>
+                <option value="joined_recent" {% if sort == 'joined_recent' %}selected{% endif %}>Recently joined</option>
+                <option value="books_most" {% if sort == 'books_most' %}selected{% endif %}>Most books</option>
+                <option value="books_least" {% if sort == 'books_least' %}selected{% endif %}>Fewest books</option>
+                <option value="read_most" {% if sort == 'read_most' %}selected{% endif %}>Most read</option>
+                <option value="unread_most" {% if sort == 'unread_most' %}selected{% endif %}>Most unread</option>
+            </select>
+
+            <div class="btn-group">
+                <a class="btn btn-sm {% if view_mode != 'list' %}btn-primary{% else %}btn-outline-secondary{% endif %}"
+                    href="?view=grid&sort={{ sort }}">Grid</a>
+                <a class="btn btn-sm {% if view_mode == 'list' %}btn-primary{% else %}btn-outline-secondary{% endif %}"
+                    href="?view=list&sort={{ sort }}">List</a>
+            </div>
+        </form>
+    </div>
+
     <p class="text-muted">Users who chose to share their profile and collection.</p>
 
     {% if not user.is_authenticated %}
     <div class="d-flex justify-content-center">
         <div class="alert alert-info d-inline-block py-2 px-3 text-center">
-            Sign in to view User collections and book details.
+            Sign in to view user collections and book details.
         </div>
     </div>
     {% endif %}
 
-    <div class="row g-3 mt-2">
+    {% if profiles %}
+    {% if view_mode == 'list' %}
+    <!-- List view: blue card rows (rounded p-3 border mt-3) -->
+    <ul class="list-unstyled mb-0">
         {% for p in profiles %}
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex">
-            <div class="card shadow-sm w-100 border-0" style="background-color:#acbdd8;">
-                <div class="card-body text-center">
-                    <img src="{{ p.avatar_url }}" alt="{{ p.username }}" class="rounded-circle mb-2"
-                        style="width:80px;height:80px;object-fit:cover;">
-                    <h6 class="mb-1">{{ p.username }}</h6>
-                    <p class="small text-muted mb-2">{{ p.total_books }} books ({{ p.read_count }} read)</p>
+        <li class="bb-list-item rounded p-3 border mt-3">
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <img src="{% if p.avatar %}{{ p.avatar.url }}{% else %}{% static 'img/avatar-placeholder.png' %}{% endif %}"
+                    alt="{{ p.user.username }} avatar" class="rounded" style="height:48px;width:48px;object-fit:cover;">
 
+
+                <div class="flex-grow-1">
+                    <div class="fw-semibold">{{ p.user.username }}</div>
+                    <div class="text-muted small">
+                        Member since {{ p.user.date_joined|date:"M Y" }} &nbsp;•&nbsp;
+                        {{ p.total_books }} books ({{ p.read_count }} read, {{ p.unread_count }} unread)
+                    </div>
+                </div>
+
+                <div class="ms-md-auto">
                     {% if user.is_authenticated %}
-                    <a href="{% url 'community_profile' p.username %}" class="btn btn-primary btn-sm w-100">View
+                    <a href="{% url 'community_profile' p.user.username %}" class="btn btn-sm btn-outline-primary">View
                         Profile</a>
+                    {% else %}
+                    <a href="{% url 'login' %}?next={% url 'community_profile' p.user.username %}"
+                        class="btn btn-sm btn-outline-primary">Sign in to view</a>
                     {% endif %}
                 </div>
             </div>
-        </div>
+        </li>
+        {% endfor %}
+    </ul>
 
-        {% empty %}
-        <div class="col-12">
-            <div class="text-muted">No public profiles yet.</div>
+    {% else %}
+    <!-- Grid view -->
+    <div class="row g-3 mt-2">
+        {% for p in profiles %}
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 d-flex">
+            <div class="card shadow-sm book-card w-100">
+                <div class="card-body d-flex flex-column p-2">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <img src="{% if p.avatar %}{{ p.avatar.url }}{% else %}{% static 'img/avatar-placeholder.png' %}{% endif %}"
+                            alt="{{ p.user.username }} avatar" class="rounded"
+                            style="height:36px;width:36px;object-fit:cover;">
+
+                        <span class="fw-semibold">{{ p.user.username }}</span>
+                    </div>
+                    <div class="small text-muted">
+                        {{ p.total_books }} books<br>
+                        {{ p.read_count }} read / {{ p.unread_count }} unread
+                    </div>
+                    <div class="mt-auto">
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'community_profile' p.user.username %}"
+                            class="btn btn-primary btn-sm w-100">View Profile</a>
+                        {% else %}
+                        <a href="{% url 'login' %}?next={% url 'community_profile' p.user.username %}"
+                            class="btn btn-primary btn-sm w-100">Sign in to view</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
         {% endfor %}
     </div>
+    {% endif %}
+    {% else %}
+    <p class="text-muted">No public profiles yet.</p>
+    {% endif %}
 </div>
 {% endblock %}

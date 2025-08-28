@@ -23,10 +23,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect, get_object_or_404
 
 import requests
 from PIL import Image  # used to resize avatars
@@ -133,8 +135,6 @@ def profile(request):
     }
     return render(request, 'profile.html', context)
 
-
-# views.py
 
 @login_required
 def my_collection(request):
@@ -444,24 +444,93 @@ def mark_all_notifications_read(request):
 # ============================================================================
 
 def community_list(request):
-    profiles = Profile.objects.filter(is_public=True).select_related('user')
-    public_users = []
-    for p in profiles:
-        qs = Book.objects.filter(user=p.user)
-        public_users.append({
-            'username': p.user.username,
-            'avatar_url': (p.avatar.url if p.avatar else '/static/img/avatar-placeholder.png'),
-            'bio': p.bio,
-            'member_since': p.user.date_joined,
-            'total_books': qs.count(),
-            'read_count': qs.filter(status='read').count(),
-            'unread_count': qs.filter(status='unread').count(),
-        })
-    return render(request, 'community_list.html', {'profiles': public_users})
+    """
+    Public directory of users who chose to share their profile.
+    - Sort options (username, most books, read/unread, recently joined)
+    - Grid/List toggle, persisted per-account via session (guest isolated as 'guest')
+    """
+    # ---- sort
+    sort = request.GET.get("sort", "username_asc")
 
+    public_profiles = (
+        Profile.objects.filter(is_public=True)
+        .select_related("user")
+        .annotate(
+            total_books=Count("user__book", distinct=True),
+            read_count=Count("user__book", filter=Q(user__book__status="read"), distinct=True),
+            unread_count=Count("user__book", filter=Q(user__book__status="unread"), distinct=True),
+        )
+    )
+
+    sort_map = {
+        "username_asc": ["user__username"],
+        "username_desc": ["-user__username"],
+        "joined_recent": ["-user__date_joined"],
+        "books_most": ["-total_books", "user__username"],
+        "books_least": ["total_books", "user__username"],
+        "read_most": ["-read_count", "user__username"],
+        "unread_most": ["-unread_count", "user__username"],
+    }
+    public_profiles = public_profiles.order_by(*sort_map.get(sort, ["user__username"]))
+
+    # ---- view mode persisted per account (or guest)
+    who = request.user.username if request.user.is_authenticated else "guest"
+    sess_key = f"communityView:{who}"
+    view_from_query = request.GET.get("view")
+    if view_from_query in ("grid", "list"):
+        request.session[sess_key] = view_from_query
+        view_mode = view_from_query
+    else:
+        view_mode = request.session.get(sess_key, "grid")
+
+    context = {
+        "profiles": public_profiles,
+        "sort": sort,
+        "view_mode": view_mode,
+    }
+    return render(request, "community_list.html", context)
+
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 
 @login_required
 def community_profile(request, username):
-    profile = get_object_or_404(Profile, user__username=username, is_public=True)
-    books = Book.objects.filter(user=profile.user).order_by('title')
-    return render(request, 'community_profile.html', {'profile': profile, 'books': books})
+    """
+    Show a user's public profile + their books.
+    - Requires login (guests can see community list but not profiles)
+    - If the profile is private and it's not your own, redirect back with a message
+    """
+    target_user = get_object_or_404(User, username=username)
+    profile = get_object_or_404(Profile, user=target_user)
+
+    # Enforce visibility
+    if not profile.is_public and target_user != request.user:
+        messages.info(request, "This profile is private.")
+        return redirect("community_list")
+
+    # Books to display (all books owned by that user)
+    sort = request.GET.get("sort", "title_asc")
+    order_map = {
+        "title_asc": ["title", "author"],
+        "title_desc": ["-title", "author"],
+        "author_asc": ["author", "title"],
+        "author_desc": ["-author", "title"],
+        "recent": ["-id"],
+        "status_read_first": ["status", "title"],
+        "status_unread_first": ["-status", "title"],
+    }
+    order_by = order_map.get(sort, ["title", "author"])
+
+    books = Book.objects.filter(user=target_user).order_by(*order_by)
+
+    return render(
+        request,
+        "community_profile.html",
+        {
+            "profile": profile,
+            "books": books,
+            "sort": sort,
+        },
+    )
+
