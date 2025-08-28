@@ -70,7 +70,7 @@
     const loadMoreBtn = document.getElementById('loadMoreBtn');
 
     let startIndex = 0;
-    const batchSize = 24;
+    const batchSize = 12; // keep in sync with views.fetch_books default/maxResults
     let currentQuery = '';
     let currentSort = '';
 
@@ -91,7 +91,7 @@
       spinner.classList.remove('d-none');
       loadMoreBtn.classList.add('d-none');
 
-      fetch(`/get_books/?q=${encodeURIComponent(query)}&order=${sort}&startIndex=${startIndex}`)
+      fetch(`/get_books/?q=${encodeURIComponent(query)}&order=${sort}&startIndex=${startIndex}&maxResults=${batchSize}`)
         .then(response => response.json())
         .then(data => {
           spinner.classList.add('d-none');
@@ -100,7 +100,7 @@
             if (reset) {
               container.innerHTML = `
                 <div class="text-center text-muted py-5">
-                  <i class="bi bi-book-x fs-1 d-block mb-3"></i>
+                  <i class="fa-solid fa-book-open fs-1 d-block mb-3"></i>
                   <h5>No books found</h5>
                   <p class="small">Try a different search or check your spelling.</p>
                 </div>`;
@@ -108,15 +108,16 @@
             return;
           }
 
+          // Show "Load more" only if we got a full page
           if (data.books.length === batchSize) {
             loadMoreBtn.classList.remove('d-none');
           }
 
-          data.books.forEach((book, index) => {
+          data.books.forEach((book) => {
             const thumbnail = book.cover_url || book.thumbnail || '/static/img/book-placeholder.png';
             const title = book.title || 'Untitled';
             const rawAuthor = book.author || 'Unknown Author';
-            const bookId = book.id; // id passed from backend (DB int or Google string)
+            const bookId = book.id; // DB int or Google string
 
             let author = rawAuthor;
             if (rawAuthor !== 'Unknown Author') {
@@ -126,13 +127,15 @@
                 : authorList.join(', ');
             }
 
-            const description = book.description || 'No description available.';
             const card = `
               <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 d-flex">
                 <div class="card shadow-sm book-card" style="width: 100%; max-width: 100%;">
-                  <img src="${thumbnail}" 
-                       class="card-img-top object-fit-contain" 
+                  <img src="${thumbnail}"
+                       class="card-img-top object-fit-contain"
                        alt="Book Cover"
+                       loading="lazy"
+                       decoding="async"
+                       width="128" height="192"
                        onerror="this.onerror=null; this.src='/static/img/book-placeholder.png';">
                   <div class="card-body d-flex flex-column p-2">
                     <div>
@@ -146,7 +149,7 @@
                 </div>
               </div>`;
 
-            container.innerHTML += card; // append card
+            container.insertAdjacentHTML('beforeend', card);
           });
 
           startIndex += data.books.length; // advance pagination

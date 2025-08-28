@@ -21,14 +21,13 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Count, Q
 from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.contrib.auth.models import User
-from django.shortcuts import render, redirect, get_object_or_404
 
 import requests
 from PIL import Image  # used to resize avatars
@@ -36,10 +35,12 @@ from PIL import Image  # used to resize avatars
 from .forms import BookForm, ProfileForm, UserUpdateForm
 from .models import Book, Comment, CommentNotification, Profile
 
+
 # --- helpers ---------------------------------------------------------------
 def _https_thumb(url: str) -> str:
     """Force Google Books thumbnails to https to avoid mixed-content."""
     return url.replace("http://", "https://") if isinstance(url, str) else ""
+
 
 # ============================================================================
 # Authentication
@@ -241,6 +242,9 @@ def delete_book(request, book_id):
 # ============================================================================
 
 def search_google_books(request):
+    """
+    Used by the Add Book screen's inline search/autofill.
+    """
     query = request.GET.get('q', '')
     start_index = int(request.GET.get('startIndex', 0))
     max_results = int(request.GET.get('maxResults', 6))
@@ -254,18 +258,25 @@ def search_google_books(request):
     )
 
     try:
-        response = requests.get(url)
+        response = requests.get(url, timeout=8)
         data = response.json()
         books = []
 
         for item in data.get('items', []):
-            info = item.get('volumeInfo', {})
+            info = item.get('volumeInfo', {}) or {}
+            image_links = info.get('imageLinks', {}) or {}
+            thumb = _https_thumb(image_links.get('thumbnail', ''))
+
+            authors = info.get('authors') or []
+            author_str = ', '.join(authors) if authors else 'Unknown Author'
+
             books.append({
-                'title': info.get('title', ''),
-                'author': ', '.join(info.get('authors', [])) if 'authors' in info else '',
-                'description': info.get('description', ''),
-                'cover_url': info.get('imageLinks', {}).get('thumbnail', ''),
                 'id': item.get('id'),
+                'title': info.get('title', 'Untitled'),
+                'author': author_str,
+                'description': info.get('description', ''),
+                'cover_url': thumb,
+                'thumbnail': thumb,
             })
 
         return JsonResponse({'books': books})
@@ -274,10 +285,14 @@ def search_google_books(request):
 
 
 def fetch_books(request):
+    """
+    Homepage discovery grid endpoint (/get_books/).
+    Accepts: q, order (relevance|newest), startIndex, maxResults.
+    """
     query = request.GET.get('q', 'fiction')
     order = request.GET.get('order', 'relevance')
     start_index = int(request.GET.get('startIndex', 0))
-    max_results = 12
+    max_results = int(request.GET.get('maxResults', 12))  # default 12 for better LCP
 
     url = (
         'https://www.googleapis.com/books/v1/volumes'
@@ -285,18 +300,25 @@ def fetch_books(request):
     )
 
     try:
-        response = requests.get(url)
+        response = requests.get(url, timeout=8)
         data = response.json()
         books = []
 
         for item in data.get('items', []):
-            volume = item.get('volumeInfo', {})
+            volume = item.get('volumeInfo', {}) or {}
+            image_links = volume.get('imageLinks', {}) or {}
+            thumb = _https_thumb(image_links.get('thumbnail', ''))
+
+            authors = volume.get('authors') or []
+            author_str = ', '.join(authors) if authors else 'Unknown Author'
+
             books.append({
-                'title': volume.get('title', 'Untitled'),
-                'author': ', '.join(volume.get('authors', [])),
-                'description': (volume.get('description', '')[:300]),
-                'cover_url': volume.get('imageLinks', {}).get('thumbnail', ''),
                 'id': item.get('id'),
+                'title': volume.get('title', 'Untitled'),
+                'author': author_str,
+                'description': (volume.get('description', '')[:300]),
+                'cover_url': thumb,
+                'thumbnail': thumb,
             })
 
         return JsonResponse({'books': books})
@@ -343,7 +365,7 @@ def book_detail(request, book_id):
                 if db_book.user != request.user:
                     CommentNotification.objects.create(
                         user=db_book.user,
-                        comment=Comment.objects.filter(book=db_book, user=request.user).latest("created_at"),
+                        comment=comment,   # use the same comment we just created
                         is_read=False,
                     )
                 messages.success(request, "Comment added.")
@@ -387,7 +409,7 @@ def book_detail(request, book_id):
 
     # Fallback: Google Books (API)
     api_url = f"https://www.googleapis.com/books/v1/volumes/{book_id}"
-    response = requests.get(api_url)
+    response = requests.get(api_url, timeout=8)
     if response.status_code != 200:
         return render(
             request, 'book_detail.html',
@@ -395,12 +417,15 @@ def book_detail(request, book_id):
                       'cover_url': '/static/img/book-placeholder.png'}}
         )
 
-    data = response.json().get('volumeInfo', {})
+    data = response.json().get('volumeInfo', {}) or {}
+    img_links = data.get('imageLinks', {}) or {}
+    thumb = _https_thumb(img_links.get('thumbnail', '')) or '/static/img/book-placeholder.png'
+
     book_data = {
         'title': data.get('title', 'No title'),
-        'author': ', '.join(data.get('authors', [])),
+        'author': ', '.join(data.get('authors', [])) or 'Unknown Author',
         'description': data.get('description', 'No description available.'),
-        'cover_url': data.get('imageLinks', {}).get('thumbnail', '/static/img/book-placeholder.png'),
+        'cover_url': thumb,
         'publisher': data.get('publisher', 'Unknown'),
         'publishedDate': data.get('publishedDate', 'N/A'),
         'pageCount': data.get('pageCount', 'N/A'),
@@ -432,13 +457,9 @@ def delete_comment(request, comment_id):
 
 @login_required
 def mark_all_notifications_read(request):
-    """
-    Mark all unread notifications for current user.
-    NOTE: If your model field is `user`, update the filter accordingly.
-    """
+    """Mark all unread notifications for current user."""
     if request.method == 'POST':
-        # Keep as-is if you're intentionally using 'recipient' elsewhere.
-        CommentNotification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)  # noqa: E501
+        CommentNotification.objects.filter(user=request.user, is_read=False).update(is_read=True)
         messages.success(request, "All notifications marked as read.")
     return redirect('my_collection')
 
@@ -494,9 +515,6 @@ def community_list(request):
     }
     return render(request, "community_list.html", context)
 
-from django.contrib.auth.models import User
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def community_profile(request, username):
@@ -537,4 +555,3 @@ def community_profile(request, username):
             "sort": sort,
         },
     )
-
