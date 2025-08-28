@@ -41,14 +41,14 @@ body { background-color: var(--bb-page-bg); }
 
 /* Subtle hover treatment for nav links without making the bar heavy */
 .navbar .nav-link:hover {
-  background-color: var(--bb-card-bg);
+  background-color:rgb(230, 230, 230);
   border-radius: .5rem;
   color: var(--bb-blue-dark);
 }
 
 /* Active page highlight (add .active in template) */
 .navbar .nav-link.active {
-  background-color: var(--bb-card-bg);
+  background-color:rgb(230, 230, 230);
   border-radius: .5rem;
   color: var(--bb-blue-dark) !important;
 }
