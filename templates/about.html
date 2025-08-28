@@ -1,41 +1,95 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block content %}
 <div class="container my-5">
-  <div class="text-center mb-4">
-    <h1>About <img src="/static/img/logo.png" alt="Logo" height="60" style="transform: translateY(-16px);"></h1>
+
+  <!-- Page heading: About + BookBase wordmark -->
+  <div class="text-center mb-4 page-header">
+    <h1 class="mb-0">
+      <span style="display:inline-flex; align-items:center;">
+        About&nbsp;
+        <img src="{% static 'img/logo-b.png' %}" alt="B" height="60" class="logo-b">
+        ookBase
+      </span>
+    </h1>
+    <p class="text-muted mt-2 mb-0">Your personal, shareable library — discover, collect, and talk about books you love.</p>
   </div>
 
   <div class="row justify-content-center">
     <div class="col-lg-10">
-      <div class="card shadow-sm p-4" style="background-color: #acbdd8;">
-        <h4 class="mb-3">📘 <i>What is BookBase?</i></h4>
-        <p>
-          <strong>BookBase</strong> is a modern, personal book tracker that lets users search for titles,
-          log books to their collection, track reading progress, and jot down personal notes. Whether you’re
-          a casual reader or a devoted bibliophile, BookBase helps you keep your reading life organized and meaningful.
+      <div class="card shadow-sm p-4 soft-blue">
+
+        <!-- What is BookBase -->
+        <h4 class="mb-3">📘 What is BookBase?</h4>
+        <p class="mb-3">
+          <strong>BookBase</strong> helps you keep your reading life organized and meaningful.
+          Search the web for new titles, save favorites to your collection, track what you’ve read,
+          and jot down personal notes — all in a clean, distraction-free interface.
         </p>
 
-        <h4 class="mt-4 mb-3">🛠️ <i>Why we built it</i></h4>
-        <p>
-          This project was created as part of a web development course to demonstrate the integration of front-end and back-end skills.
-          From working with external APIs like Google Books, to implementing search functionality, authentication, and database handling — 
-          BookBase brings together everything in one smooth experience.
-        </p>
-
-        <h4 class="mt-4 mb-3">👤 <i>Features</i></h4>
-        <ul>
-          <li>Search and add books from the Google Books API</li>
-          <li>Manually log your own books</li>
-          <li>Track your reading status (Read / Not Read)</li>
-          <li>Save personal notes for each book</li>
-          <li>Clean, responsive interface built with Bootstrap 5</li>
+        <!-- What you can do -->
+        <h4 class="mt-4 mb-3">✨ What you can do</h4>
+        <ul class="mb-3">
+          <li><strong>Discover:</strong> Browse the homepage grid powered by Google Books and open details instantly.</li>
+          <li><strong>Collect:</strong> Add books to your own library (manually or via autofill), with cover image &amp; description.</li>
+          <li><strong>Organize:</strong> Mark as <em>Read/Unread</em>, keep private notes, and switch between <em>Grid</em>/<em>List</em> views with sorting.</li>
+          <li><strong>Connect:</strong> Explore the <em>Community</em> directory of members who share their collections.</li>
+          <li><strong>Discuss:</strong> Comment on public books; owners get gentle unread notifications.</li>
+          <li><strong>Privacy-first:</strong> Decide whether your profile &amp; collection are visible to others with a simple toggle.</li>
         </ul>
 
-        <h4 class="mt-4 mb-3">🚀 <i>What's next?</i></h4>
-        <p>
-          Upcoming improvements include profile customization, reading analytics, page filters, and interactive visual elements.
-          Stay tuned for feature toggles, user preferences, and more!
+        <!-- Guests vs Members -->
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="p-3 border rounded h-100 bg-white bg-opacity-25">
+              <h5 class="mb-2">For visitors</h5>
+              <ul class="mb-0">
+                <li>Browse the discovery grid</li>
+                <li>Open book details</li>
+                <li>See Community directory</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 border rounded h-100 bg-white bg-opacity-25">
+              <h5 class="mb-2">For members</h5>
+              <ul class="mb-0">
+                <li>Build &amp; organize your collection</li>
+                <li>Share your profile (optional)</li>
+                <li>Comment &amp; receive notifications</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- How it works -->
+        <h4 class="mt-4 mb-3">🧭 How it works</h4>
+        <ol class="mb-3">
+          <li><strong>Search</strong> the homepage grid or use autofill in Add Book.</li>
+          <li><strong>Save</strong> books to your collection and set Read/Unread.</li>
+          <li><strong>Share</strong> (optional) your profile to join the Community conversation.</li>
+        </ol>
+
+        <!-- What's next -->
+        <h4 class="mt-4 mb-3">🚀 What's next</h4>
+        <p class="mb-0">
+          We’re exploring <em>Book Likes</em> (lightweight reactions on shared books) and
+          <em>Private Messages</em> (respecting profile visibility and user preferences).
         </p>
+
+        <!-- CTAs -->
+        <div class="d-flex flex-wrap gap-2 mt-4">
+          <a href="{% url 'home' %}" class="btn btn-primary">Discover Books</a>
+          <a href="{% url 'community_list' %}" class="btn btn-outline-primary">Explore Community</a>
+
+          {% if user.is_authenticated %}
+            <a href="{% url 'my_collection' %}" class="btn btn-custom">Go to My Collection</a>
+          {% else %}
+            <a href="{% url 'login' %}" class="btn btn-custom">Sign In</a>
+            <a href="{% url 'register' %}" class="btn btn-outline-secondary">Create Account</a>
+          {% endif %}
+        </div>
 
         <div class="text-end mt-4">
           <em>Made with 💙 by Oscar I.</em>
