@@ -1,23 +1,35 @@
-body {
-  background-color: #b8c0d0;
+/* ==========================================================================
+   BookBase Theme (global)
+   ========================================================================== */
+
+:root {
+  --bb-page-bg: #b8c0d0;
+  --bb-card-bg: #acbdd8;
+  --bb-border: rgba(0,0,0,.125);
+  --bb-border-soft: #c7ccd6;
+  --bb-blue: #5b82ca;
+  --bb-blue-dark: #264a8c;
+  --bb-blue-mid: #627aa3;
+  --bb-hover: #a2b2cf;
 }
 
-/* Load More button default style */
-#loadMoreBtn {
-  background-color: rgb(157, 163, 175);
-  color: #264a8c; /* fallback color if border fails */
-  border: 1px solid #264a8c;
-  transition: background-color 0.2s ease, color 0.2s ease;
+body { background-color: var(--bb-page-bg); }
+
+/* ==========================================================================
+   Accessibility helpers
+   ========================================================================== */
+
+/* Show a clear outline only when keyboard users tab to elements */
+:focus-visible {
+  outline: 3px solid var(--bb-blue);
+  outline-offset: 2px;
 }
 
-/* Hover style */
-#loadMoreBtn:hover {
-  background-color: #5c77ab !important;
-  color: white !important;
-  border-color: #5b82ca !important;
-}
+/* ==========================================================================
+   Header / Navbar
+   ========================================================================== */
 
-/* Navbar tagline centered */
+/* Centered tagline (desktop) */
 .navbar-tagline {
   font-size: 1.05rem;
   font-weight: 500;
@@ -27,87 +39,88 @@ body {
   white-space: nowrap;
 }
 
-/* Mobile fix: Keep max 2 cards per row */
-@media (max-width: 575.98px) {
-  #book-card-grid .col-12 {
-    flex: 0 0 50% !important;
-    max-width: 50% !important;
-  }
+/* Subtle hover treatment for nav links without making the bar heavy */
+.navbar .nav-link:hover {
+  background-color: var(--bb-card-bg);
+  border-radius: .5rem;
+  color: var(--bb-blue-dark);
 }
 
-/* Match profile page card tone */
-.soft-blue {
-  background-color: #acbdd8; /* same as profile card */
-  border: 1px solid rgba(0,0,0,0.08);
+/* Active page highlight (add .active in template) */
+.navbar .nav-link.active {
+  background-color: var(--bb-card-bg);
+  border-radius: .5rem;
+  color: var(--bb-blue-dark) !important;
 }
 
-/* Keep grid nice on hover but subtle */
-.collection-card:hover {
-  transform: translateY(-2px);
-  transition: transform 120ms ease;
-}
+/* Lift the small B logo by a few px */
+.brand-logo { transform: translateY(-2px); }
 
-/* Make sure ratio helper exists for 2:3 covers */
-.ratio-2x3 {
-  --bs-aspect-ratio: calc(3 / 2 * 100%); /* height/width * 100% */
-}
+/* Top spacing helper for page headings and a lifted B icon in H1s */
+.page-header { margin-top: 2rem; }
+.logo-b { margin-right: 1px; transform: translateY(-10px); }
 
-/* Enforce contained images inside ratio */
-.object-fit-contain {
-  object-fit: contain;
-  width: 100%;
-  height: 100%;
-}
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
 
-/* Reusable card style for profile + book detail */
-.custom-card {
-  background-color: #acbdd8; /* blueish shade */
-  border: 1px solid rgba(0, 0, 0, 0.125);
-  border-radius: 0.5rem;
-  padding: 1rem;
-}
-
-/* Custom primary action button */
+/* Primary action used on Home search etc. */
 .btn-custom {
-  background-color: #627aa3;
-  color: white;
+  background-color: var(--bb-blue-mid);
+  color: #fff;
   border: none;
 }
-
 .btn-custom:hover {
-  background-color: #264a8c;   /* darker hover */
+  background-color: var(--bb-blue-dark);
   color: #fff;
 }
 
-/* Unified Book Card Style (used everywhere)     */
+/* Add Book button – single, de-duplicated definition */
+.btn-add-book {
+  padding: 0.25rem 0.8rem;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  line-height: 1.3;
+  min-width: 110px;
+  text-align: center;
+}
+
+/* Load More button */
+#loadMoreBtn {
+  background-color: rgb(157, 163, 175);
+  color: var(--bb-blue-dark);             /* fallback if border fails */
+  border: 1px solid var(--bb-blue-dark);
+  transition: background-color .2s ease, color .2s ease;
+}
+#loadMoreBtn:hover {
+  background-color: #5c77ab !important;
+  color: #fff !important;
+  border-color: var(--bb-blue) !important;
+}
+
+/* ==========================================================================
+   Cards (grid) – shared across Home, My Collection, Community grid
+   ========================================================================== */
 
 .book-card {
-  background-color: #acbdd8 !important;   /* unified blueish bg */
-  border: 1px solid rgba(0,0,0,.125);
+  background-color: var(--bb-card-bg) !important;
+  border: 1px solid var(--bb-border);
   border-radius: .5rem;
-  transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: transform .15s ease-in-out, box-shadow .15s ease-in-out;
   display: flex;
   flex-direction: column;
   height: 100%; /* equal height grid */
 }
-
-/* Hover lift effect */
 .book-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
 }
 
-/* Card body flex layout keeps buttons pinned at bottom */
-.book-card .card-body {
-  display: flex;
-  flex-direction: column;
-}
+/* Keep buttons pinned at bottom inside cards */
+.book-card .card-body { display: flex; flex-direction: column; }
+.book-card .card-body > div:first-child { flex-grow: 1; }
 
-.book-card .card-body > div:first-child {
-  flex-grow: 1; /* pushes buttons down */
-}
-
-/* Covers (applies everywhere) */
+/* Covers */
 .card-img-top {
   width: 100%;
   height: auto;
@@ -116,93 +129,86 @@ body {
   background-color: #f8f9fa;
 }
 
-/* Blueish container for each comment */
-.bb-comment {
-  background-color: #acbdd8;
+/* Optional helper for 2:3 ratios and object-fit containment */
+.ratio-2x3 { --bs-aspect-ratio: calc(3 / 2 * 100%); }
+.object-fit-contain { object-fit: contain; width: 100%; height: 100%; }
+
+/* Soft blue surface for standalone cards (profile/detail) */
+.soft-blue, .custom-card {
+  background-color: var(--bb-card-bg);
+  border: 1px solid var(--bb-border);
+  border-radius: .5rem;
+  padding: 1rem;
 }
 
-/* Pagination styling for Comments */
+/* Slight lift on hover in collections */
+.collection-card:hover { transform: translateY(-2px); transition: transform 120ms ease; }
+
+/* ==========================================================================
+   List view rows (My Collection & Community list)
+   ========================================================================== */
+
+.bb-list-item {
+  background-color: var(--bb-card-bg);
+  border-color: var(--bb-border-soft);
+  transition: background-color .15s, box-shadow .15s;
+}
+.bb-list-item:hover {
+  background-color: var(--bb-hover);
+  box-shadow: 0 2px 6px rgba(0,0,0,.08);
+}
+
+/* Compact cover in list rows */
+.bb-cover-list {
+  height: 64px;
+  width: auto;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.08);
+}
+
+/* Title link color in list rows */
+.bb-title-link { color: #203c71; text-decoration: underline; }
+.bb-title-link:hover { color: #152845; text-decoration: none; }
+
+/* ==========================================================================
+   Comments
+   ========================================================================== */
+
+.bb-comment { background-color: var(--bb-card-bg); }
+
+/* Pagination – compact, centered, and on-brand */
 .pagination {
-  display: inline-flex;          /* only as wide as its children */
-  border: 1px solid #c7ccd6;     /* subtle grey border */
-  border-radius: 6px;            /* rounded corners */
-  padding: 0.25rem 0.5rem;
+  display: inline-flex;
+  border: 1px solid var(--bb-border-soft);
+  border-radius: 6px;
+  padding: .25rem .5rem;
   background-color: transparent;
-  margin: 0 auto;                /* center it horizontally */
+  margin: 0 auto;
 }
-
-
-/* Pagination links */
 .pagination .page-link {
-  background-color: transparent; /* no white */
-  color: #264a8c;                 /* dark blue text */
-  border: none;                   /* remove Bootstrap’s extra borders */
+  background-color: transparent;
+  color: var(--bb-blue-dark);
+  border: none;
 }
-
-/* Active page */
 .pagination .page-item.active .page-link {
-  background-color: #5b82ca;  /* soft blue for active */
+  background-color: var(--bb-blue);
   color: #fff;
-  border-radius: 4px;         /* make the active page a pill */
+  border-radius: 4px;
 }
-
-/* Disabled prev/next */
 .pagination .page-item.disabled .page-link {
   color: #9aa0ac;
   pointer-events: none;
 }
 
-/* Add Book button wider + compact */
-.btn-add-book {
-  padding: 0.25rem 0.8rem;   /* slightly wider */
-  font-size: 0.9rem;
-  border-radius: 6px;
-  line-height: 1.3;          /* better vertical balance */
-  min-width: 110px;          /* ensures button is wide enough for + and text */
-  text-align: center;
-}
+/* ==========================================================================
+   Responsive tweaks
+   ========================================================================== */
 
-/* --- My Collection: controls --- */
-.btn-add-book {
-  padding: 0.25rem 0.8rem;     /* compact */
-  font-size: 0.9rem;
-  border-radius: 6px;
-  line-height: 1.3;
-  min-width: 110px;
-  text-align: center;
+/* Keep max 2 cards per row on very small phones */
+@media (max-width: 575.98px) {
+  #book-card-grid .col-12 {
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+  }
+  .bb-list-item { padding: .75rem; }  /* tighten row padding on xs */
 }
-
-/* LIST VIEW “card rows” */
-.bb-list-item{
-  background-color:#acbdd8;   /* full blue background */
-  border-color:#c7ccd6;       /* subtle grey border */
-  transition:background-color .15s, box-shadow .15s;
-}
-.bb-list-item:hover{
-  background-color:#a2b2cf;   /* slight hover lift */
-  box-shadow:0 2px 6px rgba(0,0,0,.08);
-}
-
-/* cover size in list view */
-.bb-cover-list{
-  height:64px;
-  width:auto;
-  border-radius:4px;
-  box-shadow:0 1px 2px rgba(0,0,0,.08);
-}
-
-/* title color */
-.bb-title-link{
-  color:#203c71;
-  text-decoration:underline;
-}
-.bb-title-link:hover{
-  color:#152845;
-  text-decoration:none;
-}
-
-/* tighten spacing on very small screens */
-@media (max-width:576px){
-  .bb-list-item{padding: .75rem;}
-}
-
