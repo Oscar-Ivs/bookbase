@@ -212,3 +212,12 @@ body { background-color: var(--bb-page-bg); }
   }
   .bb-list-item { padding: .75rem; }  /* tighten row padding on xs */
 }
+
+/* ==========================================================================
+   Style the hamburger toggler
+   ========================================================================== */
+  
+.navbar-toggler {
+  border: none; /* remove the default grey border */
+  padding: 0.5rem 0.75rem;
+}

@@ -12,9 +12,7 @@
     .brand-logo {
       transform: translateY(-2px);
     }
-  </style>
-  <link href="https://fonts.googleapis.com/css2?family=Limelight&family=Lobster&display=swap" rel="stylesheet">
-  <style>
+    
     h2 {
       font-family: 'Great Vibes', cursive;
       font-weight: 300;
@@ -42,52 +40,61 @@
         <img src="{% static 'img/logo.png' %}" alt="Logo" height="45" class="d-inline-block align-text-top brand-logo">
       </a>
 
-      <!-- Center: Tagline -->
+      <!-- Center: Tagline (hidden on < lg) -->
       <div class="d-none d-lg-block flex-grow-1 text-center">
         <span class="navbar-text fw-medium text-muted">
-          <h2>Your personal book collection tracker</h2>
+          <h2 class="mb-0">Your personal book collection tracker</h2>
         </span>
       </div>
 
-      <!-- Right: Nav links -->
-      {% with request.resolver_match.url_name as urlname %}
-<ul class="navbar-nav mb-2 mb-lg-0">
-  <li class="nav-item">
-    <a class="nav-link {% if urlname == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link {% if urlname == 'about' %}active{% endif %}" href="{% url 'about' %}">About Us</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link {% if urlname == 'community_list' or urlname == 'community_profile' %}active{% endif %}"
-       href="{% url 'community_list' %}">Community</a>
-  </li>
+      <!-- Mobile toggler (hamburger) -->
+      <button class="navbar-toggler ms-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+        aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-  {% if user.is_authenticated %}
-    <li class="nav-item">
-      <a class="nav-link {% if urlname == 'my_collection' %}active{% endif %}" href="{% url 'my_collection' %}">
-        My Collection
-        {% if unread_comments_count %}
-          <span class="badge rounded-pill bg-danger align-text-top">{{ unread_comments_count }}</span>
-        {% endif %}
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link {% if urlname == 'profile' %}active{% endif %}" href="{% url 'profile' %}">Profile</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-    </li>
-  {% else %}
-    <li class="nav-item">
-      <a class="nav-link {% if urlname == 'login' %}active{% endif %}" href="{% url 'login' %}">Login</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link {% if urlname == 'register' %}active{% endif %}" href="{% url 'register' %}">Register</a>
-    </li>
-  {% endif %}
-</ul>
-{% endwith %}
+      <!-- Collapsible nav (wrap your links inside this) -->
+      <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+        {% with request.resolver_match.url_name as urlname %}
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link {% if urlname == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if urlname == 'about' %}active{% endif %}" href="{% url 'about' %}">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if urlname == 'community_list' or urlname == 'community_profile' %}active{% endif %}"
+              href="{% url 'community_list' %}">Community</a>
+          </li>
+
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link {% if urlname == 'my_collection' %}active{% endif %}" href="{% url 'my_collection' %}">
+              My Collection
+              {% if unread_comments_count %}
+              <span class="badge rounded-pill bg-danger align-text-top">{{ unread_comments_count }}</span>
+              {% endif %}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if urlname == 'profile' %}active{% endif %}" href="{% url 'profile' %}">Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link {% if urlname == 'login' %}active{% endif %}" href="{% url 'login' %}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if urlname == 'register' %}active{% endif %}" href="{% url 'register' %}">Register</a>
+          </li>
+          {% endif %}
+        </ul>
+        {% endwith %}
+      </div>
+
 
 
     </div>
