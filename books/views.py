@@ -36,6 +36,10 @@ from PIL import Image  # used to resize avatars
 from .forms import BookForm, ProfileForm, UserUpdateForm
 from .models import Book, Comment, CommentNotification, Profile
 
+# --- helpers ---------------------------------------------------------------
+def _https_thumb(url: str) -> str:
+    """Force Google Books thumbnails to https to avoid mixed-content."""
+    return url.replace("http://", "https://") if isinstance(url, str) else ""
 
 # ============================================================================
 # Authentication
@@ -273,7 +277,7 @@ def fetch_books(request):
     query = request.GET.get('q', 'fiction')
     order = request.GET.get('order', 'relevance')
     start_index = int(request.GET.get('startIndex', 0))
-    max_results = 24
+    max_results = 12
 
     url = (
         'https://www.googleapis.com/books/v1/volumes'
