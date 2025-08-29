@@ -30,6 +30,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
 import requests
+from requests import exceptions as req_exc
 from PIL import Image  # used to resize avatars
 
 from .forms import BookForm, ProfileForm, UserUpdateForm
@@ -40,6 +41,16 @@ from .models import Book, Comment, CommentNotification, Profile
 def _https_thumb(url: str) -> str:
     """Force Google Books thumbnails to https to avoid mixed-content."""
     return url.replace("http://", "https://") if isinstance(url, str) else ""
+
+
+def _author_str(authors) -> str:
+    """Join authors safely; return a friendly fallback."""
+    if not authors:
+        return "Unknown Author"
+    try:
+        return ", ".join([a.strip() for a in authors if a and isinstance(a, str)])
+    except Exception:
+        return "Unknown Author"
 
 
 # ============================================================================
@@ -147,7 +158,7 @@ def my_collection(request):
     Show the current user's books with:
     - Sort controls via ?sort=
     - Grid/List toggle via ?view=
-    - Persist view per-account using session (keyed by username) to avoid cross-user bleed
+    - Persist view per-account using session (keyed by username)
     - Unread comment badges per book
     """
     # ---- Sorting
@@ -268,7 +279,7 @@ def search_google_books(request):
             thumb = _https_thumb(image_links.get('thumbnail', ''))
 
             authors = info.get('authors') or []
-            author_str = ', '.join(authors) if authors else 'Unknown Author'
+            author_str = _author_str(authors)
 
             books.append({
                 'id': item.get('id'),
@@ -280,7 +291,7 @@ def search_google_books(request):
             })
 
         return JsonResponse({'books': books})
-    except Exception as exc:
+    except (req_exc.RequestException, ValueError) as exc:
         return JsonResponse({'error': str(exc)}, status=500)
 
 
@@ -310,7 +321,7 @@ def fetch_books(request):
             thumb = _https_thumb(image_links.get('thumbnail', ''))
 
             authors = volume.get('authors') or []
-            author_str = ', '.join(authors) if authors else 'Unknown Author'
+            author_str = _author_str(authors)
 
             books.append({
                 'id': item.get('id'),
@@ -322,7 +333,7 @@ def fetch_books(request):
             })
 
         return JsonResponse({'books': books})
-    except Exception as exc:
+    except (req_exc.RequestException, ValueError) as exc:
         return JsonResponse({'error': str(exc)}, status=500)
 
 
@@ -409,26 +420,32 @@ def book_detail(request, book_id):
 
     # Fallback: Google Books (API)
     api_url = f"https://www.googleapis.com/books/v1/volumes/{book_id}"
-    response = requests.get(api_url, timeout=8)
-    if response.status_code != 200:
+    try:
+        response = requests.get(api_url, timeout=8)
+        if response.status_code != 200:
+            raise req_exc.RequestException(f"Bad status {response.status_code}")
+        info = response.json().get('volumeInfo', {}) or {}
+    except (req_exc.RequestException, ValueError):
         return render(
             request, 'book_detail.html',
-            {'book': {'title': 'Book not found', 'description': 'Unable to fetch data.',
-                      'cover_url': '/static/img/book-placeholder.png'}}
+            {'book': {
+                'title': 'Book not found',
+                'description': 'Unable to fetch data.',
+                'cover_url': '/static/img/book-placeholder.png'
+            }}
         )
 
-    data = response.json().get('volumeInfo', {}) or {}
-    img_links = data.get('imageLinks', {}) or {}
+    img_links = info.get('imageLinks', {}) or {}
     thumb = _https_thumb(img_links.get('thumbnail', '')) or '/static/img/book-placeholder.png'
 
     book_data = {
-        'title': data.get('title', 'No title'),
-        'author': ', '.join(data.get('authors', [])) or 'Unknown Author',
-        'description': data.get('description', 'No description available.'),
+        'title': info.get('title', 'No title'),
+        'author': _author_str(info.get('authors')),
+        'description': info.get('description', 'No description available.'),
         'cover_url': thumb,
-        'publisher': data.get('publisher', 'Unknown'),
-        'publishedDate': data.get('publishedDate', 'N/A'),
-        'pageCount': data.get('pageCount', 'N/A'),
+        'publisher': info.get('publisher', 'Unknown'),
+        'publishedDate': info.get('publishedDate', 'N/A'),
+        'pageCount': info.get('pageCount', 'N/A'),
     }
     return render(request, 'book_detail.html', {'book': book_data, 'page_obj': None})
 
