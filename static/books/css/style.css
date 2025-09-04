@@ -39,6 +39,14 @@ body { background-color: var(--bb-page-bg); }
   white-space: nowrap;
 }
 
+ .navbar-text {
+      font-family: 'Great Vibes', cursive;
+      font-weight: 300;
+      letter-spacing: 0px;
+      font-size: 1.3rem;
+      position: relative;
+    }
+
 /* Subtle hover treatment for nav links without making the bar heavy */
 .navbar .nav-link:hover {
   background-color:rgb(230, 230, 230);
