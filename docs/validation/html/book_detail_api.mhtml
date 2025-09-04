@@ -1,0 +1,908 @@
+From: <Saved by Blink>
+Snapshot-Content-Location: https://validator.w3.org/nu/#textarea
+Subject: Showing results for contents of text-input area - Nu Html Checker
+Date: Thu, 4 Sep 2025 12:24:09 +0100
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----MultipartBoundary--A9alWVo6p8jDhCiUbGNs0Lx9TUIAOueJG08r4g9x65----"
+
+
+------MultipartBoundary--A9alWVo6p8jDhCiUbGNs0Lx9TUIAOueJG08r4g9x65----
+Content-Type: text/html
+Content-ID: <frame-ED968F47EE2B692831953F9684D78F40@mhtml.blink>
+Content-Transfer-Encoding: quoted-printable
+Content-Location: https://validator.w3.org/nu/#textarea
+
+<!DOCTYPE html><html lang=3D"en"><head><meta http-equiv=3D"Content-Type" co=
+ntent=3D"text/html; charset=3DUTF-8"><link rel=3D"stylesheet" type=3D"text/=
+css" href=3D"cid:css-b1a10dbe-208b-43ec-a0b2-a1e33ddffb3c@mhtml.blink" /><l=
+ink href=3D"https://validator.w3.org/nu/icon.png" rel=3D"icon"><link href=
+=3D"https://validator.w3.org/nu/style.css" rel=3D"stylesheet"><title>Showin=
+g results for contents of text-input area - Nu Html Checker</title><meta na=
+me=3D"viewport" content=3D"width=3Ddevice-width, initial-scale=3D1"></head>=
+<body><div id=3D"banner"><h1 id=3D"title"><a href=3D"https://validator.w3.o=
+rg/nu/"><span>Nu Html Checker</span></a></h1></div><p class=3D"disclaimer">=
+This tool is an ongoing experiment in better HTML checking, and its behavio=
+r remains subject to change</p><h2 id=3D"top">Showing results for contents =
+of text-input area</h2><form method=3D"post" enctype=3D"multipart/form-data=
+"><fieldset><legend>Checker Input</legend><p class=3D"checkboxes">Show <spa=
+n class=3D"checkboxgroup"><label title=3D"Display the markup source of the =
+input document." for=3D"showsource"><input type=3D"checkbox" name=3D"showso=
+urce" id=3D"showsource" value=3D"yes" checked=3D"checked">source</label><la=
+bel title=3D"Display an outline of the input document." for=3D"showoutline"=
+><input type=3D"checkbox" name=3D"showoutline" id=3D"showoutline" value=3D"=
+yes">outline</label><label title=3D"Display a report about the textual alte=
+rnatives for images." for=3D"showimagereport"><input type=3D"checkbox" name=
+=3D"showimagereport" id=3D"showimagereport" value=3D"yes">image report</lab=
+el></span><input id=3D"show_options" type=3D"button" value=3D"Options=E2=80=
+=A6"><span class=3D"extraoptions hidden"><span class=3D"checkboxgroup"><lab=
+el title=3D"Check the content of all responses, including (non-200) error r=
+esponses"><input type=3D"checkbox" name=3D"checkerrorpages" id=3D"checkerro=
+rpages" value=3D"yes">check error pages</label></span><label id=3D"user-age=
+nt-label" title=3D"Specify the user-agent string to send in the document re=
+quest">User-Agent <input name=3D"useragent" list=3D"useragents" value=3D"Va=
+lidator.nu/LV https://validator.w3.org/services" disabled=3D""></label><lab=
+el id=3D"accept-language-label" title=3D"Specify the accept-language header=
+ to send in the document request">Accept-Language <input id=3D"acceptlangua=
+ge" name=3D"acceptlanguage" disabled=3D""></label><datalist id=3D"useragent=
+s"><option value=3D"Mozilla/5.0 (Linux; Android 4.4.2; en-us; SC-04E Build/=
+KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Version/1.5 Chrome/28.0.1500=
+.94 Mobile Safari/537.36" label=3D"Android"></option><option value=3D"Mozil=
+la/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.=
+2228.0 Safari/537.36" label=3D"Chrome"></option><option value=3D"Mozilla/5.=
+0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0" label=3D"Firefox">=
+</option><option value=3D"Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0=
+) like Gecko" label=3D"Internet Explorer"></option><option value=3D"Mozilla=
+/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, l=
+ike Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25" label=3D"iPhone/iOS =
+Safari"></option><option value=3D"Mozilla/5.0 (Windows NT 6.3) AppleWebKit/=
+537.36 (KHTML, like Gecko) Chrome/41.0.2272.89 Safari/537.36 OPR/28.0.1750.=
+48" label=3D"Opera"></option><option value=3D"Mozilla/5.0 (Macintosh; Intel=
+ Mac OS X 10_10_2) AppleWebKit/600.4.10 (KHTML, like Gecko) Version/8.0.4 S=
+afari/600.4.10" label=3D"Safari"></option><option value=3D"Validator.nu/LV"=
+ label=3D"default"></option></datalist></span></p><div id=3D"inputregion"><=
+label id=3D"inputlabel">Check by<select id=3D"docselect"><option value=3D""=
+>address</option><option value=3D"file">file upload</option><option value=
+=3D"textarea">text input</option></select></label><label id=3D"csslabel" ti=
+tle=3D"Treat the input as CSS." for=3D"css"><input type=3D"checkbox" name=
+=3D"css" id=3D"css" value=3D"yes">CSS</label><textarea cols=3D"72" rows=3D"=
+15" id=3D"doc" aria-labelledby=3D"docselect"></textarea></div><p><input val=
+ue=3D"Check" type=3D"submit" id=3D"submit"></p></fieldset></form><section i=
+d=3D"filters" class=3D"unexpanded"><div class=3D"message_filtering">Use the=
+ Message Filtering button below to hide/show particular messages, and to se=
+e total counts of errors and warnings.</div><h2><button class=3D"message_fi=
+ltering" tabindex=3D"0">Message Filtering</button></h2><fieldset class=3D"h=
+idden"><legend>Errors (1) =C2=B7 <a href=3D"https://validator.w3.org/nu/" c=
+lass=3D"hide">Hide all errors</a> =C2=B7 <a href=3D"https://validator.w3.or=
+g/nu/" class=3D"show">Show all errors</a></legend><ol><li><label><input typ=
+e=3D"checkbox"><span>No <code>p</code> element in scope but a <code>p</code=
+> end tag seen.</span></label></li></ol></fieldset></section><div id=3D"res=
+ults"><ol class=3D""><li class=3D"error" id=3D"vnuId0"><p><strong>Error</st=
+rong>: <span>No <code>p</code> element in scope but a <code>p</code> end ta=
+g seen.</span></p><p class=3D"location"><a href=3D"https://validator.w3.org=
+/nu/#l133c2255">From line <span class=3D"first-line">133</span>, column <sp=
+an class=3D"first-col">2252</span>; to line <span class=3D"last-line">133</=
+span>, column <span class=3D"last-col">2255</span></a></p><p class=3D"extra=
+ct"><code>nders.&lt;/p&gt;<b>&lt;/p&gt;</b><span class=3D"lf" title=3D"Line=
+ break">=E2=86=A9</span>     </code></p></li></ol><p class=3D"failure">Docu=
+ment checking completed.</p><h2 id=3D"source">Source</h2><ol class=3D"sourc=
+e"><li id=3D"l1"><code></code><code class=3D"lf" title=3D"Line break">=E2=
+=86=A9</code></li><li id=3D"l2"><code></code><code class=3D"lf" title=3D"Li=
+ne break">=E2=86=A9</code></li><li id=3D"l3"><code>&lt;!DOCTYPE html&gt;</c=
+ode><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"=
+l4"><code>&lt;html lang=3D"en"&gt;</code><code class=3D"lf" title=3D"Line b=
+reak">=E2=86=A9</code></li><li id=3D"l5"><code></code><code class=3D"lf" ti=
+tle=3D"Line break">=E2=86=A9</code></li><li id=3D"l6"><code>&lt;head&gt;</c=
+ode><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"=
+l7"><code>  &lt;meta charset=3D"UTF-8"&gt;</code><code class=3D"lf" title=
+=3D"Line break">=E2=86=A9</code></li><li id=3D"l8"><code>  &lt;title&gt;Boo=
+kBase&lt;/title&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9=
+</code></li><li id=3D"l9"><code>  &lt;meta name=3D"viewport" content=3D"wid=
+th=3Ddevice-width, initial-scale=3D1"&gt;</code><code class=3D"lf" title=3D=
+"Line break">=E2=86=A9</code></li><li id=3D"l10"><code></code><code class=
+=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l11"><code>  &l=
+t;!-- Favicons / CSS --&gt;</code><code class=3D"lf" title=3D"Line break">=
+=E2=86=A9</code></li><li id=3D"l12"><code>  &lt;link rel=3D"icon" href=3D"/=
+static/img/favicon_bookbase.ico" type=3D"image/x-icon"&gt;</code><code clas=
+s=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l13"><code>  &=
+lt;link rel=3D"preconnect" href=3D"https://fonts.googleapis.com"&gt;</code>=
+<code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l14"=
+><code>  &lt;link rel=3D"preconnect" href=3D"https://fonts.gstatic.com" cro=
+ssorigin&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code>=
+</li><li id=3D"l15"><code>  &lt;link href=3D"https://cdn.jsdelivr.net/npm/b=
+ootstrap@5.3.0/dist/css/bootstrap.min.css" rel=3D"stylesheet"&gt;</code><co=
+de class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l16"><c=
+ode>  &lt;link rel=3D"stylesheet" href=3D"/static/books/css/style.css"&gt;<=
+/code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=
+=3D"l17"><code>  &lt;style&gt;</code><code class=3D"lf" title=3D"Line break=
+">=E2=86=A9</code></li><li id=3D"l18"><code>    .brand-logo {</code><code c=
+lass=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l19"><code>=
+      transform: translateY(-2px);</code><code class=3D"lf" title=3D"Line b=
+reak">=E2=86=A9</code></li><li id=3D"l20"><code>    }</code><code class=3D"=
+lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l21"><code></code><=
+code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l22">=
+<code>    h1 {</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</cod=
+e></li><li id=3D"l23"><code>      font-family: 'Great Vibes', cursive;</cod=
+e><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l2=
+4"><code>      font-weight: 500;</code><code class=3D"lf" title=3D"Line bre=
+ak">=E2=86=A9</code></li><li id=3D"l25"><code>      letter-spacing: 0px;</c=
+ode><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"=
+l26"><code>      font-size: 2.5rem;</code><code class=3D"lf" title=3D"Line =
+break">=E2=86=A9</code></li><li id=3D"l27"><code>    }</code><code class=3D=
+"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l28"><code>  &lt;/=
+style&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></l=
+i><li id=3D"l29"><code>&lt;/head&gt;</code><code class=3D"lf" title=3D"Line=
+ break">=E2=86=A9</code></li><li id=3D"l30"><code></code><code class=3D"lf"=
+ title=3D"Line break">=E2=86=A9</code></li><li id=3D"l31"><code>&lt;body cl=
+ass=3D"d-flex flex-column min-vh-100"&gt;</code><code class=3D"lf" title=3D=
+"Line break">=E2=86=A9</code></li><li id=3D"l32"><code></code><code class=
+=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l33"><code>  &l=
+t;!-- Fixed Top Navbar --&gt;</code><code class=3D"lf" title=3D"Line break"=
+>=E2=86=A9</code></li><li id=3D"l34"><code>  &lt;nav class=3D"navbar navbar=
+-expand-lg navbar-light bg-light border-bottom shadow-sm fixed-top"&gt;</co=
+de><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l=
+35"><code>    &lt;div class=3D"container-fluid d-flex align-items-center ju=
+stify-content-between"&gt;</code><code class=3D"lf" title=3D"Line break">=
+=E2=86=A9</code></li><li id=3D"l36"><code></code><code class=3D"lf" title=
+=3D"Line break">=E2=86=A9</code></li><li id=3D"l37"><code>      &lt;!-- Lef=
+t: Logo --&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</cod=
+e></li><li id=3D"l38"><code>      &lt;a class=3D"navbar-brand me-3" href=3D=
+"/"&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li>=
+<li id=3D"l39"><code>        &lt;img src=3D"/static/img/logo.png" alt=3D"Lo=
+go" height=3D"45" class=3D"d-inline-block align-text-top brand-logo"&gt;</c=
+ode><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"=
+l40"><code>      &lt;/a&gt;</code><code class=3D"lf" title=3D"Line break">=
+=E2=86=A9</code></li><li id=3D"l41"><code></code><code class=3D"lf" title=
+=3D"Line break">=E2=86=A9</code></li><li id=3D"l42"><code>      &lt;!-- Cen=
+ter: Tagline (hidden on &lt; lg) --&gt;</code><code class=3D"lf" title=3D"L=
+ine break">=E2=86=A9</code></li><li id=3D"l43"><code>      &lt;div class=3D=
+"d-none d-lg-block flex-grow-1 text-center"&gt;</code><code class=3D"lf" ti=
+tle=3D"Line break">=E2=86=A9</code></li><li id=3D"l44"><code>        &lt;p =
+class=3D"navbar-text navbar-tagline text-muted mb-0"&gt;</code><code class=
+=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l45"><code>    =
+      Your personal book collection tracker</code><code class=3D"lf" title=
+=3D"Line break">=E2=86=A9</code></li><li id=3D"l46"><code>        &lt;/p&gt=
+;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=
+=3D"l47"><code>      &lt;/div&gt;</code><code class=3D"lf" title=3D"Line br=
+eak">=E2=86=A9</code></li><li id=3D"l48"><code></code><code class=3D"lf" ti=
+tle=3D"Line break">=E2=86=A9</code></li><li id=3D"l49"><code></code><code c=
+lass=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l50"><code>=
+      &lt;!-- Mobile toggler (hamburger) --&gt;</code><code class=3D"lf" ti=
+tle=3D"Line break">=E2=86=A9</code></li><li id=3D"l51"><code>      &lt;butt=
+on class=3D"navbar-toggler ms-3" type=3D"button" data-bs-toggle=3D"collapse=
+" data-bs-target=3D"#navbarContent"</code><code class=3D"lf" title=3D"Line =
+break">=E2=86=A9</code></li><li id=3D"l52"><code>        aria-controls=3D"n=
+avbarContent" aria-expanded=3D"false" aria-label=3D"Toggle navigation"&gt;<=
+/code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=
+=3D"l53"><code>        &lt;span class=3D"navbar-toggler-icon"&gt;&lt;/span&=
+gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li =
+id=3D"l54"><code>      &lt;/button&gt;</code><code class=3D"lf" title=3D"Li=
+ne break">=E2=86=A9</code></li><li id=3D"l55"><code></code><code class=3D"l=
+f" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l56"><code>      &lt=
+;!-- Collapsible nav (wrap your links inside this) --&gt;</code><code class=
+=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l57"><code>    =
+  &lt;div class=3D"collapse navbar-collapse justify-content-end" id=3D"navb=
+arContent"&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</cod=
+e></li><li id=3D"l58"><code>        </code><code class=3D"lf" title=3D"Line=
+ break">=E2=86=A9</code></li><li id=3D"l59"><code>        &lt;ul class=3D"n=
+avbar-nav mb-2 mb-lg-0"&gt;</code><code class=3D"lf" title=3D"Line break">=
+=E2=86=A9</code></li><li id=3D"l60"><code>          &lt;li class=3D"nav-ite=
+m"&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><=
+li id=3D"l61"><code>            &lt;a class=3D"nav-link " href=3D"/"&gt;Hom=
+e&lt;/a&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code><=
+/li><li id=3D"l62"><code>          &lt;/li&gt;</code><code class=3D"lf" tit=
+le=3D"Line break">=E2=86=A9</code></li><li id=3D"l63"><code>          &lt;l=
+i class=3D"nav-item"&gt;</code><code class=3D"lf" title=3D"Line break">=E2=
+=86=A9</code></li><li id=3D"l64"><code>            &lt;a class=3D"nav-link =
+" href=3D"/about/"&gt;About Us&lt;/a&gt;</code><code class=3D"lf" title=3D"=
+Line break">=E2=86=A9</code></li><li id=3D"l65"><code>          &lt;/li&gt;=
+</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=
+=3D"l66"><code>          &lt;li class=3D"nav-item"&gt;</code><code class=3D=
+"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l67"><code>       =
+     &lt;a class=3D"nav-link "</code><code class=3D"lf" title=3D"Line break=
+">=E2=86=A9</code></li><li id=3D"l68"><code>              href=3D"/communit=
+y/"&gt;Community&lt;/a&gt;</code><code class=3D"lf" title=3D"Line break">=
+=E2=86=A9</code></li><li id=3D"l69"><code>          &lt;/li&gt;</code><code=
+ class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l70"><cod=
+e></code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li i=
+d=3D"l71"><code>          </code><code class=3D"lf" title=3D"Line break">=
+=E2=86=A9</code></li><li id=3D"l72"><code>          &lt;li class=3D"nav-ite=
+m"&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><=
+li id=3D"l73"><code>            &lt;a class=3D"nav-link " href=3D"/collecti=
+on/"&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li=
+><li id=3D"l74"><code>              My Collection</code><code class=3D"lf" =
+title=3D"Line break">=E2=86=A9</code></li><li id=3D"l75"><code>            =
+  </code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li i=
+d=3D"l76"><code>              &lt;span class=3D"badge rounded-pill bg-dange=
+r align-text-top"&gt;1&lt;/span&gt;</code><code class=3D"lf" title=3D"Line =
+break">=E2=86=A9</code></li><li id=3D"l77"><code>              </code><code=
+ class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l78"><cod=
+e>            &lt;/a&gt;</code><code class=3D"lf" title=3D"Line break">=E2=
+=86=A9</code></li><li id=3D"l79"><code>          &lt;/li&gt;</code><code cl=
+ass=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l80"><code> =
+         &lt;li class=3D"nav-item"&gt;</code><code class=3D"lf" title=3D"Li=
+ne break">=E2=86=A9</code></li><li id=3D"l81"><code>            &lt;a class=
+=3D"nav-link " href=3D"/profile/"&gt;Profile&lt;/a&gt;</code><code class=3D=
+"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l82"><code>       =
+   &lt;/li&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</cod=
+e></li><li id=3D"l83"><code>          &lt;li class=3D"nav-item"&gt;</code><=
+code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l84">=
+<code>            &lt;a class=3D"nav-link" href=3D"/logout/"&gt;Logout&lt;/=
+a&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><l=
+i id=3D"l85"><code>          &lt;/li&gt;</code><code class=3D"lf" title=3D"=
+Line break">=E2=86=A9</code></li><li id=3D"l86"><code>          </code><cod=
+e class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l87"><co=
+de>        &lt;/ul&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=
+=A9</code></li><li id=3D"l88"><code>        </code><code class=3D"lf" title=
+=3D"Line break">=E2=86=A9</code></li><li id=3D"l89"><code>      &lt;/div&gt=
+;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=
+=3D"l90"><code></code><code class=3D"lf" title=3D"Line break">=E2=86=A9</co=
+de></li><li id=3D"l91"><code></code><code class=3D"lf" title=3D"Line break"=
+>=E2=86=A9</code></li><li id=3D"l92"><code></code><code class=3D"lf" title=
+=3D"Line break">=E2=86=A9</code></li><li id=3D"l93"><code>    &lt;/div&gt;<=
+/code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=
+=3D"l94"><code>  &lt;/nav&gt;</code><code class=3D"lf" title=3D"Line break"=
+>=E2=86=A9</code></li><li id=3D"l95"><code></code><code class=3D"lf" title=
+=3D"Line break">=E2=86=A9</code></li><li id=3D"l96"><code>  &lt;!-- Main Co=
+ntent --&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code>=
+</li><li id=3D"l97"><code>  &lt;main class=3D"container my-5 pt-5 flex-grow=
+-1"&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li>=
+<li id=3D"l98"><code>    </code><code class=3D"lf" title=3D"Line break">=E2=
+=86=A9</code></li><li id=3D"l99"><code>&lt;div class=3D"container mt-4"&gt;=
+</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=
+=3D"l100"><code>  &lt;div class=3D"row g-4"&gt;</code><code class=3D"lf" ti=
+tle=3D"Line break">=E2=86=A9</code></li><li id=3D"l101"><code></code><code =
+class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l102"><cod=
+e>    &lt;div class=3D"mb-3"&gt;</code><code class=3D"lf" title=3D"Line bre=
+ak">=E2=86=A9</code></li><li id=3D"l103"><code>      &lt;!-- Smart back but=
+ton --&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></=
+li><li id=3D"l104"><code>      </code><code class=3D"lf" title=3D"Line brea=
+k">=E2=86=A9</code></li><li id=3D"l105"><code>        &lt;a href=3D"/" clas=
+s=3D"btn btn-outline-secondary btn-sm"&gt;=E2=86=90 Back Home&lt;/a&gt;</co=
+de><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l=
+106"><code>      </code><code class=3D"lf" title=3D"Line break">=E2=86=A9</=
+code></li><li id=3D"l107"><code>    &lt;/div&gt;</code><code class=3D"lf" t=
+itle=3D"Line break">=E2=86=A9</code></li><li id=3D"l108"><code></code><code=
+ class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l109"><co=
+de>    &lt;!-- Column 1: Cover + Meta --&gt;</code><code class=3D"lf" title=
+=3D"Line break">=E2=86=A9</code></li><li id=3D"l110"><code>    &lt;div clas=
+s=3D"col-12 col-md-6 col-lg-3 text-center"&gt;</code><code class=3D"lf" tit=
+le=3D"Line break">=E2=86=A9</code></li><li id=3D"l111"><code>      &lt;img =
+src=3D"https://books.google.com/books/publisher/content?id=3DkzjxCwAAQBAJ&a=
+mp;amp;printsec=3Dfrontcover&amp;amp;img=3D1&amp;amp;zoom=3D1&amp;amp;edge=
+=3Dcurl&amp;amp;imgtk=3DAFLRE72hWrEl9GKZnooxZrq1gHilOfqfuUPbfzZJR7XXLoxFF15=
+MqY8plqSKp3DO9GqtFvbEQUvTFEOn_x4_E5BVl68_3aFtU0IuosVx29C6vFuuZebZFE5zDa6wTl=
+sZ6fjyEghD212e&amp;amp;source=3Dgbs_api" alt=3D"Book Cover"</code><code cla=
+ss=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l112"><code> =
+          class=3D"img-fluid rounded shadow-sm mb-3"</code><code class=3D"l=
+f" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l113"><code>        =
+   style=3D"max-height: 400px; object-fit: contain; background-color: trans=
+parent;"</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li=
+><li id=3D"l114"><code>           onerror=3D"this.onerror=3Dnull; this.src=
+=3D'/static/img/book-placeholder.png';"&gt;</code><code class=3D"lf" title=
+=3D"Line break">=E2=86=A9</code></li><li id=3D"l115"><code></code><code cla=
+ss=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l116"><code> =
+     &lt;h5 class=3D"fw-bold"&gt;Kings and Sorcerers Bundle (Books 4 and 5)=
+&lt;/h5&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code><=
+/li><li id=3D"l117"><code>      &lt;p class=3D"text-muted"&gt;Morgan Rice&l=
+t;/p&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li=
+><li id=3D"l118"><code></code><code class=3D"lf" title=3D"Line break">=E2=
+=86=A9</code></li><li id=3D"l119"><code>      &lt;!-- Status badge (DB book=
+s only) --&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</cod=
+e></li><li id=3D"l120"><code>      </code><code class=3D"lf" title=3D"Line =
+break">=E2=86=A9</code></li><li id=3D"l121"><code></code><code class=3D"lf"=
+ title=3D"Line break">=E2=86=A9</code></li><li id=3D"l122"><code>      &lt;=
+!-- Owner-only buttons --&gt;</code><code class=3D"lf" title=3D"Line break"=
+>=E2=86=A9</code></li><li id=3D"l123"><code>      </code><code class=3D"lf"=
+ title=3D"Line break">=E2=86=A9</code></li><li id=3D"l124"><code>    &lt;/d=
+iv&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><=
+li id=3D"l125"><code></code><code class=3D"lf" title=3D"Line break">=E2=86=
+=A9</code></li><li id=3D"l126"><code>    &lt;!-- Column 2 &amp; 3 combined =
+for tablet, split on desktop --&gt;</code><code class=3D"lf" title=3D"Line =
+break">=E2=86=A9</code></li><li id=3D"l127"><code>    &lt;div class=3D"col-=
+12 col-md-6 col-lg-9"&gt;</code><code class=3D"lf" title=3D"Line break">=E2=
+=86=A9</code></li><li id=3D"l128"><code>      &lt;div class=3D"row g-4"&gt;=
+</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=
+=3D"l129"><code>        &lt;!-- Description --&gt;</code><code class=3D"lf"=
+ title=3D"Line break">=E2=86=A9</code></li><li id=3D"l130"><code>        &l=
+t;div class=3D"col-12 col-lg-8"&gt;</code><code class=3D"lf" title=3D"Line =
+break">=E2=86=A9</code></li><li id=3D"l131"><code>          &lt;div class=
+=3D"p-3 border rounded" style=3D"background-color: #acbdd8;"&gt;</code><cod=
+e class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l132"><c=
+ode>            &lt;h5&gt;Description&lt;/h5&gt;</code><code class=3D"lf" t=
+itle=3D"Line break">=E2=86=A9</code></li><li id=3D"l133"><code>            =
+&lt;p&gt;&lt;p&gt;=E2=80=9CAn action packed fantasy sure to please fans of =
+Morgan Rice=E2=80=99s previous novels, along with fans of works such as The=
+ Inheritance Cycle by Christopher Paolini=E2=80=A6. Fans of Young Adult Fic=
+tion will devour this latest work by Rice and beg for more.=E2=80=9D&lt;/p&=
+gt; &lt;p&gt;--The Wanderer, A Literary Journal (regarding Rise of the Drag=
+ons)&lt;/p&gt; &lt;p&gt;A bundle of  books #4 (A FORGE OF VALOR) and #5 (A =
+REALM OF SHADOWS) in Morgan Rice=E2=80=99s #1 Bestselling fantasy series KI=
+NGS AND SORCERERS, comprising 6 books. The series begins with RISE OF THE D=
+RAGONS (Book #1), a free download on Amazon with over 500 five star reviews=
+!&lt;/p&gt; &lt;p&gt;In A FORGE OF VALOR, Kyra slowly returns from the verg=
+e of death, healed by Kyle=E2=80=99s love and mysterious power. As he sacri=
+fices for her, she regains her strength=E2=80=94yet not without a price. Sh=
+e presses Alva for the secret of her lineage, and he finally reveals all ab=
+out her mother. Aidan, Motley at his side, strives to rescue his father, tr=
+apped in the perilous capital, while in the far corner of the kingdom, Merk=
+, amazed by what he discovers in the Tower of Ur, braces himself against a =
+massive troll invasion. Dierdre finds herself facing a full-fledged Pandesi=
+an invasion in her embattled city of Ur.&lt;/p&gt; &lt;p&gt;In A REALM OF S=
+HADOWS, Kyra finds herself in the midst of a burning capital, attacked by a=
+ host of dragons, clinging for life. With her beloved homeland destroyed, T=
+he Flames down and the trolls pouring in, Kyra must urgently quest to Marda=
+ to retrieve the magic weapon before it is too late=E2=80=94even if it take=
+s her into the very heart of darkness. Duncan finds himself trapped, with t=
+he others, in the burning capital, and he uses all his wits to find his men=
+, attempt escape, and rally his forces to regroup and attack Pandesia. Acro=
+ss the kingdom, Merk sails with King Tarnis=E2=80=99 daughter through the B=
+ay of Death as they abandon the Tower of Kos and sail for the warrior isle =
+of Knossos.&lt;/p&gt; &lt;p&gt;With its strong atmosphere and complex chara=
+cters, KINGS AND SORCERERS is a sweeping saga of knights and warriors, of k=
+ings and lords, of honor and valor, of magic, destiny, monsters and dragons=
+. It is fantasy at its finest, inviting us into a world that will live with=
+ us forever, one that appeals to all ages and genders.&lt;/p&gt;<b id=3D"l1=
+33c2255" class=3D"l133c2255">&lt;/p&gt;</b></code><code class=3D"lf" title=
+=3D"Line break">=E2=86=A9</code></li><li id=3D"l134"><code>          &lt;/d=
+iv&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><=
+li id=3D"l135"><code>        &lt;/div&gt;</code><code class=3D"lf" title=3D=
+"Line break">=E2=86=A9</code></li><li id=3D"l136"><code></code><code class=
+=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l137"><code>   =
+     &lt;!-- Notes for DB OR extra details for API --&gt;</code><code class=
+=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l138"><code>   =
+     &lt;div class=3D"col-12 col-lg-4"&gt;</code><code class=3D"lf" title=
+=3D"Line break">=E2=86=A9</code></li><li id=3D"l139"><code>          &lt;di=
+v class=3D"p-3 border rounded" style=3D"background-color: #acbdd8;"&gt;</co=
+de><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l=
+140"><code>            </code><code class=3D"lf" title=3D"Line break">=E2=
+=86=A9</code></li><li id=3D"l141"><code>              &lt;h5&gt;Details&lt;=
+/h5&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li>=
+<li id=3D"l142"><code>              &lt;p&gt;&lt;strong&gt;Publisher:&lt;/s=
+trong&gt; Morgan Rice&lt;/p&gt;</code><code class=3D"lf" title=3D"Line brea=
+k">=E2=86=A9</code></li><li id=3D"l143"><code>              &lt;p&gt;&lt;st=
+rong&gt;Published:&lt;/strong&gt; 2016-04-11&lt;/p&gt;</code><code class=3D=
+"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l144"><code>      =
+        &lt;p&gt;&lt;strong&gt;Pages:&lt;/strong&gt; 500&lt;/p&gt;</code><c=
+ode class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l145">=
+<code>            </code><code class=3D"lf" title=3D"Line break">=E2=86=A9<=
+/code></li><li id=3D"l146"><code>          &lt;/div&gt;</code><code class=
+=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l147"><code>   =
+     &lt;/div&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</=
+code></li><li id=3D"l148"><code>      &lt;/div&gt;</code><code class=3D"lf"=
+ title=3D"Line break">=E2=86=A9</code></li><li id=3D"l149"><code>    &lt;/d=
+iv&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><=
+li id=3D"l150"><code></code><code class=3D"lf" title=3D"Line break">=E2=86=
+=A9</code></li><li id=3D"l151"><code>  &lt;/div&gt;</code><code class=3D"lf=
+" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l152"><code>&lt;/div&=
+gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li =
+id=3D"l153"><code></code><code class=3D"lf" title=3D"Line break">=E2=86=A9<=
+/code></li><li id=3D"l154"><code></code><code class=3D"lf" title=3D"Line br=
+eak">=E2=86=A9</code></li><li id=3D"l155"><code></code><code class=3D"lf" t=
+itle=3D"Line break">=E2=86=A9</code></li><li id=3D"l156"><code>&lt;script&g=
+t;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li i=
+d=3D"l157"><code>  // Expand/collapse long comments</code><code class=3D"lf=
+" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l158"><code>  functio=
+n toggleComment(btn) {</code><code class=3D"lf" title=3D"Line break">=E2=86=
+=A9</code></li><li id=3D"l159"><code>    const id =3D btn.getAttribute('dat=
+a-target');</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code><=
+/li><li id=3D"l160"><code>    const shortEl =3D document.getElementById('sh=
+ort-' + id);</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code>=
+</li><li id=3D"l161"><code>    const fullEl =3D document.getElementById('fu=
+ll-' + id);</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code><=
+/li><li id=3D"l162"><code>    const isCollapsed =3D fullEl.classList.contai=
+ns('d-none');</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code=
+></li><li id=3D"l163"><code>    if (isCollapsed) {</code><code class=3D"lf"=
+ title=3D"Line break">=E2=86=A9</code></li><li id=3D"l164"><code>      full=
+El.classList.remove('d-none');</code><code class=3D"lf" title=3D"Line break=
+">=E2=86=A9</code></li><li id=3D"l165"><code>      shortEl.classList.add('d=
+-none');</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li=
+><li id=3D"l166"><code>      btn.textContent =3D 'Show less';</code><code c=
+lass=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l167"><code=
+>    } else {</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code=
+></li><li id=3D"l168"><code>      fullEl.classList.add('d-none');</code><co=
+de class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l169"><=
+code>      shortEl.classList.remove('d-none');</code><code class=3D"lf" tit=
+le=3D"Line break">=E2=86=A9</code></li><li id=3D"l170"><code>      btn.text=
+Content =3D 'Read more';</code><code class=3D"lf" title=3D"Line break">=E2=
+=86=A9</code></li><li id=3D"l171"><code>    }</code><code class=3D"lf" titl=
+e=3D"Line break">=E2=86=A9</code></li><li id=3D"l172"><code>  }</code><code=
+ class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l173"><co=
+de>&lt;/script&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9<=
+/code></li><li id=3D"l174"><code></code><code class=3D"lf" title=3D"Line br=
+eak">=E2=86=A9</code></li><li id=3D"l175"><code>  &lt;/main&gt;</code><code=
+ class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l176"><co=
+de></code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li =
+id=3D"l177"><code>  &lt;!-- Sticky Footer --&gt;</code><code class=3D"lf" t=
+itle=3D"Line break">=E2=86=A9</code></li><li id=3D"l178"><code>  &lt;footer=
+ class=3D"container-fluid mt-5 mb-3"&gt;</code><code class=3D"lf" title=3D"=
+Line break">=E2=86=A9</code></li><li id=3D"l179"><code>    &lt;div class=3D=
+"d-flex justify-content-between align-items-center px-4"&gt;</code><code cl=
+ass=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l180"><code>=
+      &lt;div&gt;&lt;/div&gt;</code><code class=3D"lf" title=3D"Line break"=
+>=E2=86=A9</code></li><li id=3D"l181"><code>      &lt;div&gt;</code><code c=
+lass=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l182"><code=
+>        &lt;a href=3D"https://www.x.com" target=3D"_blank" class=3D"mx-2"&=
+gt;&lt;i class=3D"fa-brands fa-x-twitter fa-lg"&gt;&lt;/i&gt;&lt;/a&gt;</co=
+de><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l=
+183"><code>        &lt;a href=3D"https://www.facebook.com" target=3D"_blank=
+" class=3D"mx-2"&gt;&lt;i</code><code class=3D"lf" title=3D"Line break">=E2=
+=86=A9</code></li><li id=3D"l184"><code>            class=3D"fa-brands fa-s=
+quare-facebook fa-lg"&gt;&lt;/i&gt;&lt;/a&gt;</code><code class=3D"lf" titl=
+e=3D"Line break">=E2=86=A9</code></li><li id=3D"l185"><code>      &lt;/div&=
+gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li =
+id=3D"l186"><code>      &lt;div class=3D"text-muted text-end"&gt;</code><co=
+de class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l187"><=
+code>        &amp;copy; 2025 BookBase</code><code class=3D"lf" title=3D"Lin=
+e break">=E2=86=A9</code></li><li id=3D"l188"><code>      &lt;/div&gt;</cod=
+e><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l1=
+89"><code>    &lt;/div&gt;</code><code class=3D"lf" title=3D"Line break">=
+=E2=86=A9</code></li><li id=3D"l190"><code>  &lt;/footer&gt;</code><code cl=
+ass=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l191"><code>=
+</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=
+=3D"l192"><code>  &lt;!-- Bootstrap JS &amp; Font Awesome --&gt;</code><cod=
+e class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l193"><c=
+ode>  &lt;script src=3D"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/j=
+s/bootstrap.bundle.min.js"&gt;&lt;/script&gt;</code><code class=3D"lf" titl=
+e=3D"Line break">=E2=86=A9</code></li><li id=3D"l194"><code>  &lt;script sr=
+c=3D"https://kit.fontawesome.com/147220bc71.js" crossorigin=3D"anonymous"&g=
+t;&lt;/script&gt;</code><code class=3D"lf" title=3D"Line break">=E2=86=A9</=
+code></li><li id=3D"l195"><code>  </code><code class=3D"lf" title=3D"Line b=
+reak">=E2=86=A9</code></li><li id=3D"l196"><code>&lt;/body&gt;</code><code =
+class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li id=3D"l197"><cod=
+e></code><code class=3D"lf" title=3D"Line break">=E2=86=A9</code></li><li i=
+d=3D"l198"><code>&lt;/html&gt;</code></li></ol><div class=3D"details"><p cl=
+ass=3D"msgschema">Used the schema for HTML + SVG 1.1 + MathML 3.0 + RDFa 1.=
+1.</p><p class=3D"msgmediatype">Used the HTML parser.</p></div><p class=3D"=
+stats">Total execution time 8 milliseconds.</p></div><hr><div id=3D"about">=
+<p><a href=3D"https://validator.w3.org/nu/about.html">About this checker</a=
+> =E2=80=A2 <a href=3D"https://validator.w3.org/nu/about.html#issues">Repor=
+t an issue</a> =E2=80=A2 <span class=3D"version">Version: 25.8.30</span></p=
+></div></body></html>
+------MultipartBoundary--A9alWVo6p8jDhCiUbGNs0Lx9TUIAOueJG08r4g9x65----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: https://validator.w3.org/nu/style.css
+
+@charset "utf-8";
+
+html, body, h1, #banner, #banner a { margin: 0px; padding: 0px; border: 0px=
+; font-weight: 400; font-style: normal; font-size: 100%; font-family: sans-=
+serif; vertical-align: baseline; background-color: rgb(255, 255, 255); colo=
+r: rgb(31, 33, 38); line-height: 1; text-align: left; }
+
+a img { border: 0px; }
+
+abbr[title], acronym[title], span[title], strong[title] { border-bottom: th=
+in dotted; cursor: help; }
+
+acronym:hover, abbr:hover { cursor: help; }
+
+body { padding-bottom: 6em; }
+
+h3 { font-family: sans-serif; color: rgb(102, 153, 0); background-color: rg=
+b(255, 255, 255); font-size: 1.1em; border-bottom: 1px dotted rgb(170, 170,=
+ 119); text-decoration: none; margin-top: 1em; margin-bottom: 1em; }
+
+textarea { width: 95.5%; }
+
+label { font-size: 0.9em; padding-left: 0.2em; padding-right: 0.2em; }
+
+#csslabel { font-size: 11px; margin-left: 4px; }
+
+#title { font-family: "Myriad Web", "Myriad Pro", "Gill Sans", Helvetica, A=
+rial, sans-serif; background-color: rgb(54, 93, 149); color: rgb(253, 253, =
+253); font-size: 1.6em; padding: 0.43em; border-radius: 6px; }
+
+#title a, #title a img { background-color: rgb(54, 93, 149); }
+
+#title a:link, #title a:hover, #title a:visited, #title a:active { text-dec=
+oration: none; color: rgb(253, 253, 253) !important; }
+
+#title img { vertical-align: middle; margin-right: 0.7em; }
+
+#banner { margin: 1.5em 2em; }
+
+fieldset { background-color: rgb(234, 235, 238); }
+
+legend { font-size: 1.1em; padding: 1em 0px 0.23em; }
+
+legend a:link, legend a:visited, legend a:hover, legend a:active { text-dec=
+oration: none; }
+
+div, p, li, h2 { font-family: sans-serif; }
+
+h2 { font-size: 16px; }
+
+#top { margin-left: 3%; }
+
+th, td { padding-top: 1px; padding-bottom: 1px; margin: 0px; }
+
+hr { margin-left: 3%; margin-right: 3%; }
+
+#banner { margin-left: 3%; margin-right: 3%; margin-bottom: 18px; }
+
+#results, #about { font-size: 14px; margin-top: 50px; padding-left: 3%; mar=
+gin-right: 3%; }
+
+#about { margin-bottom: 12px; }
+
+p.disclaimer { font: caption; margin-left: 3%; margin-right: 3%; color: rgb=
+(116, 116, 116); }
+
+.alert { color: rgb(0, 0, 0); background-color: rgb(255, 255, 0); }
+
+body { font-family: sans-serif; font-size: inherit; margin: 0px; }
+
+form { font: caption; background-color: rgb(255, 255, 255); margin-bottom: =
+0.5em; padding: 0px 3%; vertical-align: inherit; }
+
+legend { font: inherit; vertical-align: inherit; padding: 0px; }
+
+fieldset { font: caption; padding: 0.5% 1.5%; border: 1px solid rgb(204, 20=
+4, 204); border-radius: 4px; margin: 0px; background-color: rgb(255, 255, 2=
+55); vertical-align: inherit; }
+
+label { font: caption; vertical-align: baseline; padding: 0px; }
+
+select { vertical-align: baseline; }
+
+textarea { font-style: ; font-variant: normal; font-weight: ; font-stretch:=
+ ; line-height: ; font-family: ; font-optical-sizing: ; font-size-adjust: ;=
+ font-kerning: ; font-feature-settings: ; font-variation-settings: ; font-s=
+ize: 0.85em; border: 1px solid; margin: 2px; padding: 2px; }
+
+#inputregion { margin-top: 12px; }
+
+#inputlabel { margin-left: 2px; }
+
+#doc { width: 95.5%; margin-left: 2px; margin-top: 2px; padding: 3px 5px 2p=
+x; border-radius: 6px; border: 1px solid rgb(204, 204, 204); }
+
+#doc[type=3D"file"] { margin-top: -3px; width: initial; border: 0px; }
+
+#docselect { margin-left: 3px; }
+
+#submit { margin-left: 2px; }
+
+table { width: 100%; table-layout: fixed; }
+
+fieldset td, fieldset th { padding-top: 0.4em; padding-bottom: 0.4em; }
+
+tr:first-child td, tr:first-child th { vertical-align: top; }
+
+fieldset th { padding-left: 0px; padding-right: 0.4em; text-align: right; w=
+idth: 8em; font-weight: inherit; }
+
+fieldset td { padding-left: 0px; padding-right: 0px; }
+
+textarea, #doc[type=3D"url"] { font-family: Monaco, Consolas, "Andale Mono"=
+, monospace; }
+
+.stats, .details { font-size: 0.85em; }
+
+.details .msgschema { display: none; }
+
+.details p { margin: 0px; }
+
+.success, .failure, .fatalfailure { border-radius: 4px; padding: 0.5em; fon=
+t-weight: 700; font-family: Arial, sans-serif; }
+
+.success { color: rgb(0, 0, 0); background-color: rgb(204, 255, 204); borde=
+r: 1px solid rgb(204, 204, 204); }
+
+.failure { color: rgb(255, 255, 255); background-color: rgb(54, 93, 149); }
+
+.fatalfailure { color: rgb(255, 255, 255); background-color: rgb(255, 0, 0)=
+; }
+
+ol { margin: 1.5em 0px; padding: 0px 2.5em; }
+
+li { margin: 0px; padding: 0.5em; }
+
+li ol { padding-right: 0px; margin-top: 0.5em; margin-bottom: 0px; }
+
+li li { padding-right: 0px; padding-bottom: 0.2em; padding-top: 0.2em; }
+
+#results > ol:first-child { padding-top: 35px; padding-bottom: 25px; backgr=
+ound-color: rgb(239, 239, 239); border-radius: 4px; }
+
+#results > ol:first-child > li { border: 1px solid rgb(204, 204, 204); marg=
+in-bottom: 8px; padding-left: 12px; border-radius: 4px; background-color: r=
+gb(255, 255, 255); }
+
+#results > ol:first-child > li > p:first-child, #results > ol:first-child >=
+ li > p:first-child code { font-size: 16px; font-weight: 700; }
+
+#results > ol:first-child > li > p:first-child code { font-weight: 400; }
+
+#results > ol:first-child > li > p:first-child { color: transparent; }
+
+#results > ol:first-child > li > p:first-child > strong, #results > ol:firs=
+t-child > li > p:first-child > span { color: rgb(0, 0, 0); }
+
+#results > ol:first-child > li > p:first-child > strong:first-child { paddi=
+ng: 1px 6px; border-radius: 6px; border: 1px solid rgb(204, 204, 204); font=
+-style: ; font-variant: normal; font-stretch: ; font-size: ; line-height: ;=
+ font-family: ; font-optical-sizing: ; font-size-adjust: ; font-kerning: ; =
+font-feature-settings: ; font-variation-settings: ; font-weight: 700; }
+
+.info, .warning, .error, .io, .fatal, .schema, .internal { color: rgb(0, 0,=
+ 0); }
+
+.info > p:first-child > strong:first-child { background-color: rgb(204, 255=
+, 204); }
+
+.warning > p:first-child > strong:first-child { background-color: rgb(255, =
+255, 204); }
+
+.error > p:first-child > strong:first-child, .io > p:first-child > strong:f=
+irst-child, .fatal > p:first-child > strong:first-child, .schema > p:first-=
+child > strong:first-child, .internal > p:first-child > strong:first-child =
+{ background-color: rgb(255, 204, 204); }
+
+hr { border-top: 1px dotted rgb(102, 102, 102); border-bottom: none; border=
+-left: none; border-right: none; height: 0px; }
+
+p { margin: 0.5em 0px; }
+
+li p { margin: 0px; }
+
+.stats, .details { margin-top: 0.75em; }
+
+.lf { color: rgb(34, 34, 34); }
+
+.extract { overflow: hidden; max-height: 5.5em; }
+
+.extract b, .source b { color: rgb(0, 0, 0); background-color: rgb(255, 255=
+, 128); }
+
+.extract b { font-weight: 400; }
+
+ol.source li { padding-top: 0px; padding-bottom: 0px; }
+
+ol.source b, ol.source .b { color: rgb(0, 0, 0); background-color: rgb(255,=
+ 255, 128); font-weight: 700; }
+
+code { white-space: pre-wrap; overflow-wrap: break-word; }
+
+.error p, .info p, .warning p, .error dd, .info dd, .warning dd { line-heig=
+ht: 1.8; }
+
+.error p code { border: 1px dashed rgb(153, 153, 153); padding: 2px 4px; }
+
+.warning code { border: 1px dashed rgb(153, 153, 153); padding: 2px 4px; }
+
+.extract code { background-color: inherit; border: none; padding: 0px; }
+
+dl { margin-top: 0.5em; margin-bottom: 0px; }
+
+dd { margin-left: 1.5em; padding-left: 0px; margin-top: 2px; }
+
+table.imagereview { width: 100%; table-layout: auto; border-collapse: colla=
+pse; border-spacing: 0px; }
+
+col.img { width: 180px; }
+
+col.alt { color: rgb(0, 0, 0); background-color: rgb(255, 255, 204); }
+
+td.alt span { color: rgb(0, 0, 0); background-color: rgb(255, 255, 170); }
+
+.imagereview th { font-weight: 700; text-align: left; vertical-align: botto=
+m; }
+
+.imagereview td { vertical-align: middle; }
+
+td.img { padding: 0px 0.5em 0.5em 0px; text-align: right; }
+
+img { max-height: 180px; max-width: 180px; }
+
+th.img { padding: 0px 0.5em 0.5em 0px; vertical-align: bottom; text-align: =
+right; }
+
+td.alt, td.location { text-align: left; padding: 0px 0.5em 0.5em; }
+
+th.alt, th.location { padding: 0px 0.5em 0.5em; vertical-align: bottom; }
+
+[irrelevent], .irrelevant { display: none; }
+
+dd code ~ span { color: rgb(102, 102, 102); }
+
+dl.inputattrs { display: table; }
+
+dl.inputattrs dt { display: table-caption; }
+
+dl.inputattrs dd { display: table-row; }
+
+dl.inputattrs .inputattrname, dl.inputattrs .inputattrtypes, dl.inputattrs =
+> dd > a { display: table-cell; padding-top: 2px; padding-left: 1.5em; padd=
+ing-right: 1.5em; }
+
+dl.inputattrs .inputattrtypes { padding-left: 4px; padding-right: 4px; }
+
+.inputattrtypes > a { color: rgb(102, 102, 102); }
+
+dl.inputattrs .highlight { background-color: rgb(255, 255, 204); padding-bo=
+ttom: 2px; font-weight: 400; color: rgb(102, 102, 102); }
+
+@media (max-width: 24em) {
+  body { padding: 3px; }
+  table, thead, tfoot, tbody, tr, th, td { display: block; width: 100%; }
+  th { text-align: left; padding-bottom: 0px; }
+}
+
+.checkboxes label { margin-right: 20px; }
+
+#xnote { color: rgb(116, 116, 116); margin-left: 2px; margin-top: 6px; }
+
+#outline h2 { margin-top: 24px; margin-bottom: 0px; }
+
+#outline .heading { color: rgb(191, 79, 0); font-weight: 700; }
+
+#outline ol { margin-top: 0px; padding-top: 1px; }
+
+#outline > h2 + ol { margin-top: 0px; }
+
+#outline li { padding: 0px 0px 9px; margin: 0px; list-style-type: none; pos=
+ition: relative; }
+
+#outline li:first-child { padding-top: 7px; }
+
+#outline li li { list-style-type: none; }
+
+#outline li:first-child::before { position: absolute; top: 1px; height: 13p=
+x; left: -0.75em; width: 0.5em; border-color: rgb(187, 187, 187); border-st=
+yle: none none solid solid; content: ""; border-width: 0.1em; }
+
+#outline li:not(:last-child)::after { position: absolute; top: 1px; bottom:=
+ -0.6em; left: -0.75em; width: 0.5em; border-color: rgb(187, 187, 187); bor=
+der-style: none none solid solid; content: ""; border-width: 0.1em; }
+
+#results .hidden { display: none; }
+
+#filters { margin-left: 3%; margin-right: 3%; margin-bottom: 1em; padding: =
+4px 4px 0.5em; }
+
+#filters > div { font: caption; color: rgb(116, 116, 116); background-color=
+: rgb(255, 255, 204); padding: 4px; }
+
+#filters button { min-height: 18px; border-radius: 6px; border: 1px solid r=
+gb(204, 204, 204); background-color: rgb(255, 255, 204); }
+
+.message_filtering { transition: 1.5s ease-out; background-color: rgb(255, =
+255, 255) !important; }
+
+#filters .filtercount { font-variant: normal; font-weight: ; font-stretch: =
+; font-size: ; line-height: ; font-family: ; font-optical-sizing: ; font-si=
+ze-adjust: ; font-kerning: ; font-feature-settings: ; font-variation-settin=
+gs: ; font-style: italic; padding-left: 4px; padding-top: 6px; }
+
+#filters.expanded { background-color: rgb(255, 255, 204); transition: 0.8s =
+ease-out; opacity: 1; visibility: visible; }
+
+#filters.unexpanded { transition: 0.8s ease-out; }
+
+#filters h2 { margin-top: 4px; margin-bottom: 0px; }
+
+#filters fieldset { margin: 1em; font: caption; }
+
+#filters fieldset.hidden, .checkboxes input.hidden, .checkboxes .extraoptio=
+ns.hidden { transition: 0.8s ease-out; opacity: 0; visibility: hidden; heig=
+ht: 0px; margin: -45px; }
+
+#filters fieldset.unhidden, .checkboxes input.unhidden, .checkboxes .extrao=
+ptions.unhidden { transition: 0.8s ease-out; opacity: 1; visibility: visibl=
+e; }
+
+.checkboxes .extraoptions label { margin-right: 0px; }
+
+#filters fieldset.unhidden, .checkboxes input.unhidden { background-color: =
+rgb(255, 255, 204); }
+
+#filters fieldset legend { font-weight: 700; font-family: sans-serif; }
+
+#filters fieldset legend a { font-weight: 400; }
+
+#filters input { position: absolute; top: 2px; left: 0px; }
+
+#filters ol { counter-reset: item 0; margin: 0px; padding: 0px 0px 0px 40px=
+; }
+
+#filters ol ol { margin-top: 6px; }
+
+#filters li { list-style-type: none; padding: 0px 0px 0px 25px; margin: 6px=
+ 0px 0px; position: relative; line-height: 1.8; }
+
+#filters li li { margin: 0px; }
+
+#filters li::before { content: counters(item, ".") " "; counter-increment: =
+item 1; width: 40px; position: absolute; top: 0px; left: -50px; text-align:=
+ right; color: rgb(119, 119, 119); }
+
+#filters fieldset label { font-family: sans-serif; }
+
+#filters code { white-space: pre-wrap; overflow-wrap: break-word; border: 1=
+px dashed rgb(153, 153, 153); background-color: rgb(255, 255, 221); padding=
+: 2px 4px; }
+
+#filters .hide, #filters .show { color: rgb(0, 0, 255); }
+
+.checkboxes { margin-left: 2px; }
+
+.checkboxes label { margin-right: 16px; }
+
+.checkboxgroup { padding: 3px 6px 2px 2px; border-radius: 6px; border: 1px =
+solid rgb(204, 204, 204); font-size: 11px; margin-right: 10px; }
+
+.checkboxgroup label { font-size: 11px; }
+
+label[for=3D"showimagereport"] { margin-right: 0px; }
+
+input[list=3D"useragents"], input#acceptlanguage { padding: 2px 4px 3px; bo=
+rder-radius: 6px; border: 1px solid rgb(204, 204, 204); }
+
+input[list=3D"useragents"] { width: 30.5%; margin-right: 10px; }
+
+input#acceptlanguage { width: 55px; }
+
+@media (max-width: 1234px) {
+  #accept-language-label { display: block; margin-top: 8px; }
+}
+
+@media (min-width: 954px) {
+  .checkboxes .extraoptions { padding-left: 8px; }
+}
+
+@media (max-width: 953px) {
+  .extraoptions { display: block; margin-top: 8px; padding-left: 0px; }
+  .checkboxes { margin-bottom: -43px; }
+  #inputregion { margin-top: 76px; }
+  .extraoptions.unhidden { margin-bottom: -68px; }
+  input[list=3D"useragents"] { width: 350px; }
+  #accept-language-label { display: inline; }
+}
+
+@media (max-width: 836px) {
+  #accept-language-label { display: block; margin-top: 8px; }
+}
+
+@media (max-width: 640px) {
+  #show_options { display: block; margin-top: 8px; padding-left: 0px; }
+  #inputregion { margin-top: 100px; }
+  .extraoptions.unhidden { margin-bottom: -90px; }
+  #user-agent-label { display: block; margin-top: 8px; }
+  input[list=3D"useragents"] { width: 96.9%; }
+  #about { font-size: 11px; }
+  .checkboxes { font-size: 12px; }
+}
+
+#headingoutline p { margin: 10px; font-weight: 700; color: rgb(191, 79, 0);=
+ }
+
+.h2 { padding-left: 24px; }
+
+.h3 { padding-left: 48px; }
+
+.h4 { padding-left: 72px; }
+
+.h5 { padding-left: 96px; }
+
+.h6 { padding-left: 120px; }
+
+.headinglevel, .missingheadinglevel { border-radius: 4px; padding: 1px 3px =
+1px 4px; font-size: 80%; font-weight: 400; color: rgb(255, 255, 255); }
+
+.headinglevel { background-color: rgb(0, 128, 0); }
+
+.missingheadinglevel { background-color: rgb(128, 0, 0); }
+
+.missingheading { color: rgb(116, 116, 116); }
+------MultipartBoundary--A9alWVo6p8jDhCiUbGNs0Lx9TUIAOueJG08r4g9x65----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: cid:css-b1a10dbe-208b-43ec-a0b2-a1e33ddffb3c@mhtml.blink
+
+@charset "utf-8";
+=0A
+------MultipartBoundary--A9alWVo6p8jDhCiUbGNs0Lx9TUIAOueJG08r4g9x65------
