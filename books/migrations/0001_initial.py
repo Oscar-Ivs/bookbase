@@ -15,17 +15,38 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Book',
+            name="Book",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=200)),
-                ('author', models.CharField(max_length=200)),
-                ('description', models.TextField(blank=True)),
-                ('cover_url', models.URLField(blank=True)),
-                ('google_book_id', models.CharField(blank=True, max_length=50)),
-                ('status', models.CharField(choices=[('read', 'Read'), ('unread', 'Not Read')], default='unread', max_length=10)),
-                ('notes', models.TextField(blank=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=200)),
+                ("author", models.CharField(max_length=200)),
+                ("description", models.TextField(blank=True)),
+                ("cover_url", models.URLField(blank=True)),
+                ("google_book_id", models.CharField(blank=True, max_length=50)),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[("read", "Read"), ("unread", "Not Read")],
+                        default="unread",
+                        max_length=10,
+                    ),
+                ),
+                ("notes", models.TextField(blank=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

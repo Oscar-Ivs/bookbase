@@ -22,8 +22,8 @@ class Book(models.Model):
     """A single book in a user's personal collection."""
 
     STATUS_CHOICES = [
-        ('read', 'Read'),
-        ('unread', 'Not Read'),
+        ("read", "Read"),
+        ("unread", "Not Read"),
     ]
 
     title = models.CharField(
@@ -51,7 +51,7 @@ class Book(models.Model):
     status = models.CharField(
         max_length=10,
         choices=STATUS_CHOICES,
-        default='unread',
+        default="unread",
         help_text="Track whether you've read this book.",
     )
     notes = models.TextField(
@@ -65,7 +65,7 @@ class Book(models.Model):
     )
 
     class Meta:
-        ordering = ['title', 'author']  # Consistent, user-friendly listing
+        ordering = ["title", "author"]  # Consistent, user-friendly listing
         verbose_name = "Book"
         verbose_name_plural = "Books"
 
@@ -82,7 +82,7 @@ class Profile(models.Model):
         help_text="The Django auth user this profile belongs to.",
     )
     avatar = models.ImageField(
-        upload_to='avatars/',
+        upload_to="avatars/",
         blank=True,
         null=True,
         help_text="Optional profile image. Resized on upload for performance.",
@@ -138,7 +138,7 @@ class Comment(models.Model):
     )
 
     class Meta:
-        ordering = ['-created_at']  # Latest comments first
+        ordering = ["-created_at"]  # Latest comments first
         verbose_name = "Comment"
         verbose_name_plural = "Comments"
 
@@ -174,7 +174,7 @@ class CommentNotification(models.Model):
     )
 
     class Meta:
-        ordering = ['-created_at']  # Show newest notifications first
+        ordering = ["-created_at"]  # Show newest notifications first
         verbose_name = "Comment notification"
         verbose_name_plural = "Comment notifications"
 

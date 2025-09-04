@@ -23,11 +23,13 @@ from .models import Book, Profile, Comment, CommentNotification
 # Inlines
 # ---------------------------------------------------------------------------
 
+
 class CommentInline(admin.TabularInline):
     """
     Show comments on the Book admin detail page.
     Compact view (TabularInline) and read-only created_at for clarity.
     """
+
     model = Comment
     extra = 0
     fields = ("user", "text", "created_at", "is_read")
@@ -39,6 +41,7 @@ class CommentInline(admin.TabularInline):
 # Book
 # ---------------------------------------------------------------------------
 
+
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
     """
@@ -47,6 +50,7 @@ class BookAdmin(admin.ModelAdmin):
     - filter by status
     - comments inline to quickly review activity
     """
+
     list_display = ("title", "author", "user", "status")
     list_filter = ("status", "user")
     search_fields = ("title", "author", "user__username")
@@ -59,12 +63,14 @@ class BookAdmin(admin.ModelAdmin):
 # Profile
 # ---------------------------------------------------------------------------
 
+
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     """
     Admin for extended user profile.
     Shows a tiny avatar preview (if present) + visibility flag.
     """
+
     list_display = ("user", "is_public", "avatar_preview", "short_bio")
     list_filter = ("is_public",)
     search_fields = ("user__username", "user__email", "bio")
@@ -78,6 +84,7 @@ class ProfileAdmin(admin.ModelAdmin):
                 obj.avatar.url,
             )
         return "—"
+
     avatar_preview.short_description = "Avatar"
 
     def short_bio(self, obj):
@@ -85,6 +92,7 @@ class ProfileAdmin(admin.ModelAdmin):
         if not obj.bio:
             return "—"
         return (obj.bio[:60] + "…") if len(obj.bio) > 60 else obj.bio
+
     short_bio.short_description = "Bio"
 
 
@@ -92,11 +100,13 @@ class ProfileAdmin(admin.ModelAdmin):
 # Comment
 # ---------------------------------------------------------------------------
 
+
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     """
     Admin for comments on books.
     """
+
     list_display = ("book", "user", "short_text", "created_at", "is_read")
     list_filter = ("is_read", "created_at", "user")
     search_fields = ("book__title", "user__username", "text")
@@ -107,6 +117,7 @@ class CommentAdmin(admin.ModelAdmin):
     def short_text(self, obj):
         """Shorten comment text for clearer list display."""
         return (obj.text[:60] + "…") if len(obj.text) > 60 else obj.text
+
     short_text.short_description = "Comment"
 
 
@@ -114,9 +125,11 @@ class CommentAdmin(admin.ModelAdmin):
 # Comment Notifications
 # ---------------------------------------------------------------------------
 
+
 @admin.action(description="Mark selected notifications as READ")
 def mark_notifications_read(modeladmin, request, queryset):
     queryset.update(is_read=True)
+
 
 @admin.action(description="Mark selected notifications as UNREAD")
 def mark_notifications_unread(modeladmin, request, queryset):
@@ -130,6 +143,7 @@ class CommentNotificationAdmin(admin.ModelAdmin):
     - Quick actions to flip read/unread state
     - Search by recipient username or comment text
     """
+
     list_display = ("user", "comment_snippet", "is_read", "created_at")
     list_filter = ("is_read", "created_at", "user")
     search_fields = ("user__username", "comment__text")
@@ -142,4 +156,5 @@ class CommentNotificationAdmin(admin.ModelAdmin):
         """Readable, shortened representation of the comment that triggered this notification."""
         text = obj.comment.text
         return (text[:60] + "…") if len(text) > 60 else text
+
     comment_snippet.short_description = "Comment"

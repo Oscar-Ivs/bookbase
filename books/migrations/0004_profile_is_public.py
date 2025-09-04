@@ -6,13 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('books', '0003_profile'),
+        ("books", "0003_profile"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='profile',
-            name='is_public',
-            field=models.BooleanField(default=False, help_text='Allow other signed-in users to view your profile and book collection.'),
+            model_name="profile",
+            name="is_public",
+            field=models.BooleanField(
+                default=False,
+                help_text="Allow other signed-in users to view your profile and book collection.",
+            ),
         ),
     ]

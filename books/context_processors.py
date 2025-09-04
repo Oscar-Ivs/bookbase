@@ -1,5 +1,6 @@
 from .models import CommentNotification
 
+
 def unread_comments_count(request):
     """
     Makes the number of unread comment notifications available globally (e.g. in navbar).
