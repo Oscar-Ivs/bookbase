@@ -229,3 +229,18 @@ body { background-color: var(--bb-page-bg); }
   border: none; /* remove the default grey border */
   padding: 0.5rem 0.75rem;
 }
+
+/* ==========================================================================
+   Footer social media icons
+   ========================================================================== */
+
+footer .social-link i {
+  font-size: 1.8rem;          /* bigger size */
+  color: #264a8c;             /* bold blue */
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+footer .social-link i:hover {
+  color: #5b82ca;             /* lighter hover blue */
+  transform: scale(1.2);      /* pop effect on hover */
+}
