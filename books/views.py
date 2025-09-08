@@ -117,20 +117,16 @@ def profile(request):
                 obj.save()
 
                 # Optional: resize uploaded avatar
-    if 'avatar' in request.FILES and obj.avatar:
-        try:
-        avatar_path = obj.avatar.path  # requires FileSystemStorage (default) on Heroku
-        from PIL import Image  # local import to avoid breaking app if Pillow missing at boot
-        img = Image.open(avatar_path)
-        # Convert only if needed (RGBA/LA to RGB); keep original if already JPEG-friendly
-        if img.mode not in ("RGB", "L"):
-            img = img.convert("RGB")
-        img.thumbnail((300, 300))
-        img.save(avatar_path, format="JPEG", quality=85, optimize=True)
-    except Exception as exc:
-        # Don’t break the request on avatar errors — log and continue
-        import logging
-        logging.getLogger(__name__).exception("Avatar processing failed: %s", exc)
+                if "avatar" in request.FILES and obj.avatar:
+                    try:
+                        avatar_path = obj.avatar.path
+                        img = Image.open(avatar_path).convert("RGB")
+                        img.thumbnail((300, 300))
+                        img.save(avatar_path, format="JPEG", quality=85)
+                    except Exception as exc:
+                        print("Image resize error:", exc)
+
+                return redirect("profile")
 
         # (2) Visibility toggle
         elif "toggle_visibility" in request.POST:
