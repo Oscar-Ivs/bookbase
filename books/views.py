@@ -32,6 +32,7 @@ from django.urls import reverse
 import requests
 from requests import exceptions as req_exc
 from PIL import Image  # used to resize avatars
+import logging
 
 from .forms import BookForm, ProfileForm, UserUpdateForm
 from .models import Book, Comment, CommentNotification, Profile
@@ -53,10 +54,9 @@ def _author_str(authors) -> str:
         return "Unknown Author"
 
 
-# ============================================================================
-# Authentication
-# ============================================================================
-
+# ============================================================================  
+# Authentication  
+# ============================================================================  
 
 def register(request):
     """Register a new user and redirect home."""
@@ -77,10 +77,9 @@ def logout_view(request):
     return redirect("home")
 
 
-# ============================================================================
-# Core Pages
-# ============================================================================
-
+# ============================================================================  
+# Core Pages  
+# ============================================================================  
 
 def home(request):
     return render(request, "home.html")
@@ -116,16 +115,19 @@ def profile(request):
                 obj.is_public = profile.is_public  # preserve visibility
                 obj.save()
 
-                # Optional: resize uploaded avatar
+                # Optional: resize uploaded avatar (only if local FileSystemStorage)
                 if "avatar" in request.FILES and obj.avatar:
                     try:
                         avatar_path = obj.avatar.path
-                        img = Image.open(avatar_path).convert("RGB")
+                        img = Image.open(avatar_path)
+                        if img.mode not in ("RGB", "L"):
+                            img = img.convert("RGB")
                         img.thumbnail((300, 300))
-                        img.save(avatar_path, format="JPEG", quality=85)
+                        img.save(avatar_path, format="JPEG", quality=85, optimize=True)
                     except Exception as exc:
-                        print("Image resize error:", exc)
-
+                        logging.getLogger(__name__).exception(
+                            "Avatar processing failed: %s", exc
+                        )
                 return redirect("profile")
 
         # (2) Visibility toggle
@@ -152,7 +154,6 @@ def profile(request):
         "bio_background": "#acbdd8",
     }
     return render(request, "profile.html", context)
-
 
 @login_required
 def my_collection(request):
