@@ -117,8 +117,8 @@ def profile(request):
                 obj.save()
 
                 # Optional: resize uploaded avatar
-                if 'avatar' in request.FILES and obj.avatar:
-    try:
+    if 'avatar' in request.FILES and obj.avatar:
+        try:
         avatar_path = obj.avatar.path  # requires FileSystemStorage (default) on Heroku
         from PIL import Image  # local import to avoid breaking app if Pillow missing at boot
         img = Image.open(avatar_path)
