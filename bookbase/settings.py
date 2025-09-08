@@ -7,7 +7,6 @@ from pathlib import Path
 import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 # --------------------------------------------------------------------
 # Security
 # --------------------------------------------------------------------
@@ -39,12 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'books',  # Custom app for managing books
-    # Cloudinary for media
-    'cloudinary_storage',
-    'cloudinary',
+    'books',
 ]
-
 # --------------------------------------------------------------------
 # Middleware
 # --------------------------------------------------------------------
@@ -60,7 +55,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'bookbase.urls'
-
 # --------------------------------------------------------------------
 # Templates
 # --------------------------------------------------------------------
@@ -82,7 +76,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'bookbase.wsgi.application'
-
 # --------------------------------------------------------------------
 # Database
 # --------------------------------------------------------------------
@@ -91,20 +84,17 @@ DATABASES = {
     "default": dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
         conn_max_age=600,
-        ssl_require=os.environ.get("DATABASE_URL") is not None,  # Only require SSL if Postgres is used
+        ssl_require=not DEBUG,
     )
 }
-
 # --------------------------------------------------------------------
 # Password validation
-# --------------------------------------------------------------------
-AUTH_PASSWORD_VALIDATORS = [
+# --------------------------------------------------------------------AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
-
 # --------------------------------------------------------------------
 # Internationalization
 # --------------------------------------------------------------------
@@ -120,22 +110,23 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"] if (BASE_DIR / "static").exists() else []
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+# Storage backends
+if os.environ.get("CLOUDINARY_URL"):
+    INSTALLED_APPS += ["cloudinary", "cloudinary_storage"]
+    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+else:
+    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+
 STORAGES = {
-    "default": {
-        # Cloudinary will host user uploads (avatars)
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
-    },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
-# --------------------------------------------------------------------
-# Misc
-# --------------------------------------------------------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_REDIRECT_URL = 'home'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
