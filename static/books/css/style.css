@@ -248,7 +248,7 @@ footer .social-link i:hover {
 
 /* Make <h1> headings bolder on tablets & smaller devices */
 @media (max-width: 768px) {
-  h1 {
+  h1, h2 {
     -webkit-text-stroke: 0.5px #000; /* thin outline */
     text-shadow: 1px 1px 0 #000;
   }
