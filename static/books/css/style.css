@@ -244,3 +244,11 @@ footer .social-link i:hover {
   color: #5b82ca;             /* lighter hover blue */
   transform: scale(1.2);      /* pop effect on hover */
 }
+
+
+/* Make <h1> headings bolder on tablets & smaller devices */
+@media (max-width: 992px) {
+  h1 {
+    font-weight: 700;
+  }
+}
