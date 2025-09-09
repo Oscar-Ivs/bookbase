@@ -249,7 +249,9 @@ footer .social-link i:hover {
 /* Make <h1> headings bolder on tablets & smaller devices */
 @media (max-width: 992px) {
   h1 {
-    font-weight: 900;
-    color: red;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    color: black;
   }
 }
+
