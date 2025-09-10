@@ -48,12 +48,16 @@
                 <small id="{{ form.bio.id_for_label }}_helptext" class="form-text text-muted">
                   Edit your public bio (optional).
                 </small>
-                <button type="submit" class="btn btn-sm btn-primary mt-2">Save</button>
+                <div class="d-flex justify-content-end gap-2 mt-2">
+                  <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                  <button type="button" class="btn btn-sm btn-secondary" onclick="cancelBioEdit()">Cancel</button>
+                </div>
               </form>
 
+              <!-- Edit button only visible when not editing -->
               <button id="edit-bio-btn"
                       type="button"
-                      class="btn btn-sm btn-outline-dark position-absolute bottom-0 end-0 m-2">
+                      class="btn btn-sm btn-outline-dark mt-2">
                 Edit
               </button>
             </div>
@@ -148,13 +152,21 @@
     const editBtn = document.getElementById("edit-bio-btn");
     const bioText = document.getElementById("bio-text");
     const bioForm = document.getElementById("bio-form");
+
     if (editBtn) {
       editBtn.addEventListener("click", function () {
-        bioText.classList.toggle("d-none");
-        bioForm.classList.toggle("d-none");
+        bioText.classList.add("d-none");
+        bioForm.classList.remove("d-none");
+        editBtn.classList.add("d-none");
       });
     }
   });
+
+  function cancelBioEdit() {
+    document.getElementById("bio-text").classList.remove("d-none");
+    document.getElementById("bio-form").classList.add("d-none");
+    document.getElementById("edit-bio-btn").classList.remove("d-none");
+  }
 
   function enableUserEdit() {
     document.getElementById('user-edit-form').classList.remove('d-none');
