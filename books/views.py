@@ -54,9 +54,9 @@ def _author_str(authors) -> str:
         return "Unknown Author"
 
 
-# ============================================================================  
-# Authentication  
-# ============================================================================  
+# ============================================================================
+# Authentication
+# ============================================================================
 
 def register(request):
     """Register a new user and redirect home."""
@@ -77,12 +77,18 @@ def logout_view(request):
     return redirect("home")
 
 
-# ============================================================================  
-# Core Pages  
-# ============================================================================  
+# ============================================================================
+# Core Pages
+# ============================================================================
 
 def home(request):
-    return render(request, "home.html")
+    active_order = request.GET.get("order", "relevance")
+    active_query = request.GET.get("q", "")
+    return render(request, "home.html", {
+        "active_order": active_order,
+        "active_query": active_query,
+    })
+
 
 
 def about(request):
@@ -155,6 +161,7 @@ def profile(request):
     }
     return render(request, "profile.html", context)
 
+
 @login_required
 def my_collection(request):
     """
@@ -210,7 +217,6 @@ def my_collection(request):
             "view_mode": view_mode,
         },
     )
-
 
 # ============================================================================
 # Book CRUD
@@ -309,7 +315,10 @@ def fetch_books(request):
     Accepts: q, order (relevance|newest), startIndex, maxResults.
     """
     query = request.GET.get("q", "fiction")
-    order = request.GET.get("order", "relevance")
+    order = request.GET.get("order", "relevance").strip().lower()
+    if order not in ["relevance", "newest"]:
+        order = "relevance"
+
     start_index = int(request.GET.get("startIndex", 0))
     max_results = int(request.GET.get("maxResults", 12))  # default 12 for better LCP
 

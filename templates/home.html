@@ -5,7 +5,8 @@
 <div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-2 mb-3 mt-4">
   <h1 class="mb-0">
     <span style="display:inline-flex; align-items:center;">
-      <img src="{% static 'img/logo-b.png' %}" alt="Logo" height="60" style="margin-right:1px; transform: translateY(-10px);">
+      <img src="{% static 'img/logo-b.png' %}" alt="Logo" height="60"
+        style="margin-right:1px; transform: translateY(-10px);">
       ooks To Discover
     </span>
   </h1>
@@ -34,8 +35,8 @@
     <div class="d-flex align-items-center gap-2 ms-auto">
       <label for="sortSelect" class="mb-0">Sort by:</label>
       <select id="sortSelect" class="form-select form-select-sm" style="width: auto;">
-        <option value="relevance">Relevance</option>
-        <option value="newest">Newest</option>
+        <option value="relevance" {% if active_order == "relevance" %}selected{% endif %}>Relevance</option>
+        <option value="newest" {% if active_order == "newest" %}selected{% endif %}>Newest</option>
       </select>
     </div>
   </div>
@@ -72,7 +73,7 @@
     let startIndex = 0;
     const batchSize = 12; // keep in sync with views.fetch_books default/maxResults
     let currentQuery = '';
-    let currentSort = '';
+    let currentSort = sortSelect.value;
 
     function fetchBooks(reset = false) {
       if (reset) {
@@ -87,6 +88,10 @@
 
       currentQuery = query;
       currentSort = sort;
+
+      // Update URL in browser without reloading page
+      history.replaceState(null, '', `?q=${encodeURIComponent(query)}&order=${sort}`);
+
 
       spinner.classList.remove('d-none');
       loadMoreBtn.classList.add('d-none');
@@ -177,5 +182,4 @@
     fetchBooks(true);
   });
 </script>
-
 {% endblock %}
