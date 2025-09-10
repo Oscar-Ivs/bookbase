@@ -519,8 +519,6 @@ def mark_all_notifications_read(request):
         )
         messages.success(request, "All notifications marked as read.")
     return redirect("my_collection")
-
-
 # ============================================================================
 # Community
 # ============================================================================
@@ -531,10 +529,19 @@ def community_list(request):
     Public directory of users who chose to share their profile.
     - Sort options (username, most books, read/unread, recently joined)
     - Grid/List toggle, persisted per-account via session (guest isolated as 'guest')
+    - Sort option also persisted in session
     """
-    # ---- sort
-    sort = request.GET.get("sort", "username_asc")
+    # ---- Persisted sort
+    who = request.user.username if request.user.is_authenticated else "guest"
+    sess_sort_key = f"communitySort:{who}"
+    sort_from_query = request.GET.get("sort")
+    if sort_from_query:
+        request.session[sess_sort_key] = sort_from_query
+        sort = sort_from_query
+    else:
+        sort = request.session.get(sess_sort_key, "username_asc")
 
+    # ---- Build queryset
     public_profiles = (
         Profile.objects.filter(is_public=True)
         .select_related("user")
@@ -560,15 +567,14 @@ def community_list(request):
     }
     public_profiles = public_profiles.order_by(*sort_map.get(sort, ["user__username"]))
 
-    # ---- view mode persisted per account (or guest)
-    who = request.user.username if request.user.is_authenticated else "guest"
-    sess_key = f"communityView:{who}"
+    # ---- View mode persisted per account (or guest)
+    sess_view_key = f"communityView:{who}"
     view_from_query = request.GET.get("view")
     if view_from_query in ("grid", "list"):
-        request.session[sess_key] = view_from_query
+        request.session[sess_view_key] = view_from_query
         view_mode = view_from_query
     else:
-        view_mode = request.session.get(sess_key, "grid")
+        view_mode = request.session.get(sess_view_key, "grid")
 
     context = {
         "profiles": public_profiles,
