@@ -168,11 +168,18 @@ def my_collection(request):
     Show the current user's books with:
     - Sort controls via ?sort=
     - Grid/List toggle via ?view=
-    - Persist view per-account using session (keyed by username)
+    - Persist view + sort per-account using session (keyed by username)
     - Unread comment badges per book
     """
-    # ---- Sorting
-    sort = request.GET.get("sort", "title_asc")
+    # ---- Sorting (persist per user)
+    sess_sort_key = f"collectionSort:{request.user.username}"
+    sort_from_query = request.GET.get("sort")
+    if sort_from_query:
+        request.session[sess_sort_key] = sort_from_query
+        sort = sort_from_query
+    else:
+        sort = request.session.get(sess_sort_key, "title_asc")
+
     order_map = {
         "title_asc": ["title", "author"],
         "title_desc": ["-title", "author"],
@@ -185,13 +192,13 @@ def my_collection(request):
     order_by = order_map.get(sort, ["title", "author"])
 
     # ---- Per-user view preference via session
-    sess_key = f"collectionView:{request.user.username}"
+    sess_view_key = f"collectionView:{request.user.username}"
     view_from_query = request.GET.get("view")
     if view_from_query in ("grid", "list"):
-        request.session[sess_key] = view_from_query  # save per user
+        request.session[sess_view_key] = view_from_query
         view_mode = view_from_query
     else:
-        view_mode = request.session.get(sess_key, "grid")
+        view_mode = request.session.get(sess_view_key, "grid")
 
     # ---- Query books
     books = Book.objects.filter(user=request.user).order_by(*order_by)
@@ -217,6 +224,7 @@ def my_collection(request):
             "view_mode": view_mode,
         },
     )
+
 
 # ============================================================================
 # Book CRUD
