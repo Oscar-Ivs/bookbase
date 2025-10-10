@@ -1,51 +1,50 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
+
   <!-- Basic SEO -->
-<title>BookBase - Personal Book Collection Tracker</title>
-<meta name="description" content="BookBase lets you track, organize, and share your personal book collection with ease. Search, add, and browse books all in one place.">
-
-<!-- Keywords -->
-<meta name="keywords" content="books, book tracker, reading list, personal library, Django project, Code Institute">
-
-<!-- Author -->
-<meta name="author" content="Oscar Ivanovskis">
-
-<!-- Open Graph (Facebook, LinkedIn, Slack previews) -->
-<meta property="og:title" content="BookBase - Personal Book Collection Tracker">
-<meta property="og:description" content="Track and share your personal book collection. Browse books, manage your library, and connect with the reading community.">
-<meta property="og:image" content="https://bookbase-47ab71a77d09.herokuapp.com/static/img/logo-preview.png">
-<meta property="og:url" content="https://bookbase-47ab71a77d09.herokuapp.com/">
-<meta property="og:type" content="website">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="BookBase - Personal Book Collection Tracker">
-<meta name="twitter:description" content="Track and share your personal book collection. Browse books, manage your library, and connect with the reading community.">
-<meta name="twitter:image" content="https://bookbase-47ab71a77d09.herokuapp.com/static/img/logo-preview.png">
-
+  <title>BookBase - Personal Book Collection Tracker</title>
+  <meta name="description" content="BookBase lets you track, organize, and share your personal book collection with ease. Search, add, and browse books all in one place.">
+  <meta name="keywords" content="books, book tracker, reading list, personal library, Django project, Code Institute">
+  <meta name="author" content="Oscar Ivanovskis">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Favicons / CSS -->
-  <link rel="icon" href="{% static 'img/favicon_bookbase.ico' %}" type="image/x-icon">
+  <!-- Open Graph -->
+  <meta property="og:title" content="BookBase - Personal Book Collection Tracker">
+  <meta property="og:description" content="Track and share your personal book collection. Browse books, manage your library, and connect with the reading community.">
+  <meta property="og:image" content="https://bookbase.net/static/img/logo-preview.png">
+  <meta property="og:url" content="https://bookbase.net/">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookBase - Personal Book Collection Tracker">
+  <meta name="twitter:description" content="Track and share your personal book collection. Browse books, manage your library, and connect with the reading community.">
+  <meta name="twitter:image" content="https://bookbase.net/static/img/logo-preview.png">
+
+  <!-- Favicons (Google prefers a crawlable /favicon.ico on the same domain) -->
+  <!-- Primary: root-level icon for Google Search and most browsers -->
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <!-- Nice-to-haves for browsers/OS tiles -->
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/favicon-32.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/favicon-16.png' %}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/apple-touch-icon.png' %}">
+  <!-- Fallback for local/dev if /favicon.ico isn't present -->
+  <link rel="alternate icon" href="{% static 'img/favicon_bookbase.ico' %}" type="image/x-icon">
+
+  <!-- Fonts / CSS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'books/css/style.css' %}">
-  <style>
-    .brand-logo {
-      transform: translateY(-2px);
-    }
 
-    h1, H2 {
-      font-family: 'Great Vibes', cursive;
-      font-weight: 500;
-      letter-spacing: 0px;
-      font-size: 2.5rem;
-    }
+  <!-- Tiny inline style just for the logo nudge -->
+  <style>
+    .brand-logo { transform: translateY(-2px); }
+    h1, h2 { font-family: 'Great Vibes', cursive; font-weight: 500; letter-spacing: 0; font-size: 2.5rem; }
   </style>
 </head>
 
@@ -62,19 +61,16 @@
 
       <!-- Center: Tagline (hidden on < lg) -->
       <div class="d-none d-lg-block flex-grow-1 text-center">
-        <p class="navbar-text navbar-tagline text-muted mb-0">
-          Your personal book collection tracker
-        </p>
+        <p class="navbar-text navbar-tagline text-muted mb-0">Your personal book collection tracker</p>
       </div>
 
-
-      <!-- Mobile toggler (hamburger) -->
+      <!-- Mobile toggler -->
       <button class="navbar-toggler ms-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
         aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <!-- Collapsible nav (wrap your links inside this) -->
+      <!-- Collapsible nav -->
       <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
         {% with request.resolver_match.url_name as urlname %}
         <ul class="navbar-nav mb-2 mb-lg-0">
@@ -101,23 +97,14 @@
           <li class="nav-item">
             <a class="nav-link {% if urlname == 'profile' %}active{% endif %}" href="{% url 'profile' %}">Profile</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-          </li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
           {% else %}
-          <li class="nav-item">
-            <a class="nav-link {% if urlname == 'login' %}active{% endif %}" href="{% url 'login' %}">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if urlname == 'register' %}active{% endif %}" href="{% url 'register' %}">Register</a>
-          </li>
+          <li class="nav-item"><a class="nav-link {% if urlname == 'login' %}active{% endif %}" href="{% url 'login' %}">Login</a></li>
+          <li class="nav-item"><a class="nav-link {% if urlname == 'register' %}active{% endif %}" href="{% url 'register' %}">Register</a></li>
           {% endif %}
         </ul>
         {% endwith %}
       </div>
-
-
-
     </div>
   </nav>
 
@@ -126,29 +113,21 @@
     {% block content %}{% endblock %}
   </main>
 
-  <!-- Sticky Footer -->
+  <!-- Footer -->
   <footer class="container-fluid mt-5 mb-3">
-  <div class="d-flex justify-content-between align-items-center px-4">
-    <div></div>
-    <div>
-      <a href="https://www.x.com" target="_blank" class="mx-2 social-link">
-        <i class="fa-brands fa-x-twitter fa-lg"></i>
-      </a>
-      <a href="https://www.facebook.com" target="_blank" class="mx-2 social-link">
-        <i class="fa-brands fa-square-facebook fa-lg"></i>
-      </a>
+    <div class="d-flex justify-content-between align-items-center px-4">
+      <div></div>
+      <div>
+        <a href="https://www.x.com" target="_blank" class="mx-2 social-link"><i class="fa-brands fa-x-twitter fa-lg"></i></a>
+        <a href="https://www.facebook.com" target="_blank" class="mx-2 social-link"><i class="fa-brands fa-square-facebook fa-lg"></i></a>
+      </div>
+      <div class="text-muted text-end">&copy; 2025 BookBase</div>
     </div>
-    <div class="text-muted text-end">
-      &copy; 2025 BookBase
-    </div>
-  </div>
-</footer>
+  </footer>
 
-
-  <!-- Bootstrap JS & Font Awesome -->
+  <!-- JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://kit.fontawesome.com/147220bc71.js" crossorigin="anonymous"></script>
   {% block scripts %}{% endblock %}
 </body>
-
 </html>

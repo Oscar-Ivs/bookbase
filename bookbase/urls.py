@@ -24,6 +24,9 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('books.urls')),  # includes all routes from books app
+    path('favicon.ico', RedirectView.as_view(
+        url=static('img/favicon_bookbase.ico'), permanent=True
+    )),
 ]
 
 # Serve uploaded media (e.g. avatars) in development mode
